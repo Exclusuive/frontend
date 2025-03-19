@@ -1583,10 +1583,10 @@ esutils@^2.0.2:
   resolved "https://registry.npmjs.org/esutils/-/esutils-2.0.3.tgz"
   integrity sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==
 
-exclusuive-typescript-sdk@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.npmjs.org/exclusuive-typescript-sdk/-/exclusuive-typescript-sdk-1.0.5.tgz"
-  integrity sha512-u5KaxgVAbqkDpAJGedEWRrPYr1a0jcj5rk9/huLLrs9mj1c3ZdVLpzK0pyljOHp2hIuz6IxBf7E8UQjjiPfAFg==
+exclusuive-typescript-sdk@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/exclusuive-typescript-sdk/-/exclusuive-typescript-sdk-1.1.0.tgz#2625aefe04c3b90bad9b8ce388f56076f69186a6"
+  integrity sha512-jb8Y1mSsWts3HNoqZfEePZpCVQG3/0MAP094tA5ei40akl/BVRA07URrS0FmEQEk1k5Qv8G1Dq1GJcJg0DNyBg==
 
 fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
   version "3.1.3"

@@ -1,24 +1,24 @@
-import { useImageOverlay, ImageOverlay } from "exclusuive-typescript-sdk";
+import { ImageOverlay } from "exclusuive-typescript-sdk";
 
 const App = () => {
-  const { images } = useImageOverlay({
-    imageUrls: [
-      "https://myyonseinft.s3.us-east-1.amazonaws.com/MAJOR/test/background.PNG",
-      "https://myyonseinft.s3.us-east-1.amazonaws.com/MAJOR/test/character.png",
-      "https://myyonseinft.s3.us-east-1.amazonaws.com/MAJOR/test/clothes.PNG",
-    ],
-  });
-  console.log(images);
-  return (
-    <ImageOverlay
-      images={images}
-      sizes={[
-        { width: 300, height: 300 },
-        { width: 300, height: 300 },
-        { width: 300, height: 300 },
-      ]}
-    />
-  );
+  const images = [
+    {
+      layer: "background",
+      url: "https://myyonseinft.s3.us-east-1.amazonaws.com/MAJOR/test/background.PNG",
+    },
+    {
+      layer: "character",
+      url: "https://myyonseinft.s3.us-east-1.amazonaws.com/MAJOR/test/character.png",
+    },
+    {
+      layer: "effect",
+      url: "https://myyonseinft.s3.us-east-1.amazonaws.com/MAJOR/test/clothes.PNG",
+    },
+  ];
+
+  const layerInfo = ["background", "character", "effect"]; //
+
+  return <ImageOverlay images={images} layerInfo={layerInfo} size={{ width: 300, height: 300 }} />;
 };
 
 export default App;
