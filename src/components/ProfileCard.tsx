@@ -1,5 +1,4 @@
 import { ProfileCardProps } from "@/types/types";
-import { useState } from "react";
 import { FiBox, FiUsers, FiTool } from "react-icons/fi";
 
 const ProfileCard = ({ viewItem, setViewItem }: ProfileCardProps) => {

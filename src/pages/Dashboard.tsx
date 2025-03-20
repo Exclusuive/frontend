@@ -3,7 +3,7 @@ import ProfileCard from "@/components/ProfileCard";
 import { collections } from "@/types/examples";
 import { useState } from "react";
 
-export default function ProfilePage() {
+export default function Dashboard() {
   const [viewItem, setViewItem] = useState("All");
 
   const filteredCollections = collections.filter((collection) => {
