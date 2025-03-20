@@ -3,6 +3,7 @@ import LayerOption from "@/components/LayerOption";
 import { Button } from "@/components/ui/button";
 import { FiUpload } from "react-icons/fi";
 import { Layer } from "@/types/types";
+import { useNavigate } from "react-router-dom";
 
 export default function MakeCollection() {
   const [bannerImage, setBannerImage] = useState<string | null>(null);
@@ -12,6 +13,8 @@ export default function MakeCollection() {
   const [selectedLayer, setSelectedLayer] = useState<string>("");
   const [selectedType, setSelectedType] = useState<string>("");
   const [amountOfSUI, setAmountOfSUI] = useState<string>("");
+
+  const navigate = useNavigate();
 
   const handleImageUpload = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -42,6 +45,11 @@ export default function MakeCollection() {
         i === index ? { ...layer, name: newName, description: newDescription } : layer
       )
     );
+  };
+
+  const create = () => {
+    window.alert("Create Collection complete!");
+    navigate("/");
   };
 
   return (
@@ -142,7 +150,7 @@ export default function MakeCollection() {
                 <option value="" disabled>
                   Choose Type
                 </option>
-                <option value="Mint item upon request">Mint item upon request</option>
+                <option value="Mint item upon request">Mint item instantly</option>
                 <option value="Mint requires SUI">Mint requires SUI</option>
                 <option value="I will customize it">I will customize it</option>
               </select>
@@ -162,7 +170,10 @@ export default function MakeCollection() {
 
           {/* Create Button */}
           <div className="mt-6 flex justify-center">
-            <Button className="mt-3 w-full rounded-xl border border-blue-500 bg-transparent text-sm text-blue-500">
+            <Button
+              className="mt-3 w-full rounded-xl border border-blue-500 bg-transparent text-sm text-blue-500"
+              onClick={create}
+            >
               Create
             </Button>
           </div>
