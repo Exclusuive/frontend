@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./Layout";
+import SDK_TEST from "./pages/SDK_TEST";
 import Dashboard from "./pages/Dashboard";
 
 export default function Routers() {
@@ -8,6 +9,7 @@ export default function Routers() {
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/dev" element={<SDK_TEST />} />
         </Route>
       </Routes>
     </Router>
