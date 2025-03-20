@@ -1,13 +1,12 @@
+import { ProfileCardProps } from "@/types/types";
 import { useState } from "react";
 import { FiBox, FiUsers, FiTool } from "react-icons/fi";
 
-const ProfileCard = () => {
-  const [active, setActive] = useState("Overview");
-
+const ProfileCard = ({ viewItem, setViewItem }: ProfileCardProps) => {
   const menuItems = [
-    { name: "Overview", icon: <FiBox size={20} />, link: "#" },
-    { name: "Teams", icon: <FiUsers size={20} />, link: "#" },
-    { name: "Projects", icon: <FiTool size={20} />, link: "#" },
+    { name: "All", icon: <FiBox size={20} />, link: "#" },
+    { name: "View", icon: <FiUsers size={20} />, link: "#" },
+    { name: "Manage", icon: <FiTool size={20} />, link: "#" },
   ];
 
   return (
@@ -22,8 +21,8 @@ const ProfileCard = () => {
         {menuItems.map((item) => (
           <button
             key={item.name}
-            onClick={() => setActive(item.name)}
-            className={`flex cursor-pointer items-center space-x-2 rounded-lg px-4 py-2 transition-all ${active === item.name ? "bg-white text-black shadow-sm" : "text-gray-600"}`}
+            onClick={() => setViewItem(item.name)}
+            className={`flex cursor-pointer items-center space-x-2 rounded-lg px-4 py-2 transition-all ${viewItem === item.name ? "bg-white text-black shadow-sm" : "text-gray-600"}`}
           >
             {item.icon}
             <span>{item.name}</span>
