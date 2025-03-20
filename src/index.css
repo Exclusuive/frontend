@@ -74,6 +74,8 @@
 }
 
 @theme inline {
+  --color-suiblue: #4ca3ff;
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -118,4 +120,10 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.bg-banner {
+  background-image: url("/banner.png");
+  background-size: cover;
+  background-position: center;
 }
