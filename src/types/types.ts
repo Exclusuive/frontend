@@ -8,3 +8,8 @@ export interface ProfileCardProps {
   viewItem: string;
   setViewItem: (item: string) => void;
 }
+
+export interface Layer {
+  name: string;
+  description: string;
+}
