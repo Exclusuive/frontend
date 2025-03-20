@@ -1,24 +1,34 @@
-import { ImageOverlay } from "exclusuive-typescript-sdk";
+import CollectionCard from "@/components/CollectionCard";
+import ProfileCard from "@/components/ProfileCard";
+import { collections } from "@/types/examples";
+import { useState } from "react";
 
-const App = () => {
-  const images = [
-    {
-      layer: "background",
-      url: "https://myyonseinft.s3.us-east-1.amazonaws.com/MAJOR/test/background.PNG",
-    },
-    {
-      layer: "character",
-      url: "https://myyonseinft.s3.us-east-1.amazonaws.com/MAJOR/test/character.png",
-    },
-    {
-      layer: "effect",
-      url: "https://myyonseinft.s3.us-east-1.amazonaws.com/MAJOR/test/clothes.PNG",
-    },
-  ];
+export default function ProfilePage() {
+  const [viewItem, setViewItem] = useState("All");
 
-  const layerInfo = ["background", "character", "effect"]; //
+  const filteredCollections = collections.filter((collection) => {
+    if (viewItem === "All") return collections;
+    if (viewItem === "View") return !collection.showManage;
+    if (viewItem === "Manage") return collection.showManage;
+  });
 
-  return <ImageOverlay images={images} layerInfo={layerInfo} size={{ width: 300, height: 300 }} />;
-};
+  return (
+    <div className="h-full min-h-screen w-full bg-gray-100">
+      {/* collections Section */}
+      <div className="bg-banner mx-auto h-48 w-full"></div>
+      <ProfileCard viewItem={viewItem} setViewItem={setViewItem} />
+      <div className="mx-auto mt-8 grid w-full max-w-screen-xl grid-cols-1 gap-6 md:grid-cols-3">
+        {filteredCollections.map((Collection, index) => (
+          <CollectionCard key={index} {...Collection} />
+        ))}
 
-export default App;
+        {/* Create New Collection Card */}
+        {viewItem !== "View" && (
+          <div className="flex items-center justify-center rounded-lg bg-white p-6 shadow-md">
+            <button className="text-gray-500">+ Create a New Collection</button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
