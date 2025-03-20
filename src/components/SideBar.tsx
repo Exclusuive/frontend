@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { Home, Table, CreditCard, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const Sidebar = () => {
   const [active, setActive] = useState("Dashboard");
 
   const menuItems = [
     { name: "Dashboard", icon: <Home size={20} />, link: "#" },
-    { name: "Tables", icon: <Table size={20} />, link: "#" },
+    { name: "Collections", icon: <Table size={20} />, link: "#" },
     { name: "Billing", icon: <CreditCard size={20} />, link: "#" },
   ];
 
@@ -15,7 +16,9 @@ const Sidebar = () => {
     <aside className="fixed flex h-screen w-64 flex-col justify-between bg-white p-4 shadow-lg">
       {/* 상단 로고 및 제목 */}
       <div>
-        <h1 className="text-center text-lg font-bold text-gray-700">Exclusuive Dashboard</h1>
+        <Link to="/" className="w-full text-lg font-bold text-gray-700">
+          <p className="mx-auto text-center">Exclusuive Dashboard</p>
+        </Link>
         <nav className="mt-6">
           {menuItems.map((item) => (
             <button

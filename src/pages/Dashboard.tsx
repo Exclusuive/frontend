@@ -2,6 +2,7 @@ import CollectionCard from "@/components/CollectionCard";
 import ProfileCard from "@/components/ProfileCard";
 import { collections } from "@/types/examples";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function Dashboard() {
   const [viewItem, setViewItem] = useState("All");
@@ -24,9 +25,12 @@ export default function Dashboard() {
 
         {/* Create New Collection Card */}
         {viewItem !== "View" && (
-          <div className="flex items-center justify-center rounded-lg bg-white p-6 shadow-md">
-            <button className="text-gray-500">+ Create a New Collection</button>
-          </div>
+          <Link
+            to="/makecollection"
+            className="flex items-center justify-center rounded-lg bg-white p-6 shadow-md"
+          >
+            <div className="text-gray-500">+ Create a New Collection</div>
+          </Link>
         )}
       </div>
     </div>
