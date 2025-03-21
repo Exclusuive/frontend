@@ -1,10 +1,15 @@
 import { CollectionCardProps } from "@/types/types";
 import { Button } from "./ui/button";
 
-export default function CollectionCard({ title, description, showManage }: CollectionCardProps) {
+export default function CollectionCard({
+  bannerUrl,
+  title,
+  description,
+  showManage,
+}: CollectionCardProps) {
   return (
     <div className="overflow-hidden rounded-lg bg-white shadow-md">
-      <div className="h-40 bg-gray-300"></div>
+      <img src={bannerUrl} alt="banner" className="h-40 bg-gray-300"></img>
       <div className="p-4">
         <h3 className="font-semibold">{title}</h3>
         <p className="text-sm text-gray-500">{description}</p>

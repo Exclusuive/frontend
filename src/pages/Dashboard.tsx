@@ -20,7 +20,7 @@ export default function Dashboard() {
       <ProfileCard viewItem={viewItem} setViewItem={setViewItem} />
       <div className="mx-auto mt-8 grid w-full max-w-screen-xl grid-cols-1 gap-6 md:grid-cols-3">
         {filteredCollections.map((Collection, index) => (
-          <CollectionCard key={index} {...Collection} />
+          <CollectionCard bannerUrl={""} key={index} {...Collection} />
         ))}
 
         {/* Create New Collection Card */}
