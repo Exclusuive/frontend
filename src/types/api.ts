@@ -12,7 +12,7 @@ export interface Collection {
   id: string;
   type: string;
   name: string;
-  bannerImg?: string;
+  bannerimg?: string;
   description?: string;
   created_at?: string;
   updated_at?: string;

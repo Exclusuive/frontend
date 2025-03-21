@@ -9,7 +9,7 @@ export default function CollectionCard({
 }: CollectionCardProps) {
   return (
     <div className="overflow-hidden rounded-lg bg-white shadow-md">
-      <img src={bannerUrl} alt="banner" className="h-40 bg-gray-300"></img>
+      <img src={bannerUrl} alt="banner" className="h-40 w-full bg-gray-300"></img>
       <div className="p-4">
         <h3 className="font-semibold">{title}</h3>
         <p className="text-sm text-gray-500">{description}</p>
