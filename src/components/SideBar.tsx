@@ -2,15 +2,22 @@ import { useState } from "react";
 import { Home, Table, CreditCard, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const [active, setActive] = useState("Dashboard");
+  const navigate = useNavigate();
 
   const menuItems = [
-    { name: "Dashboard", icon: <Home size={20} />, link: "#" },
-    { name: "Collections", icon: <Table size={20} />, link: "#" },
+    { name: "Dashboard", icon: <Home size={20} />, link: "/" },
+    { name: "Collections", icon: <Table size={20} />, link: "/collections" },
     { name: "Billing", icon: <CreditCard size={20} />, link: "#" },
   ];
+
+  const handleClick = (itemName: string, route: string) => {
+    setActive(itemName);
+    navigate(route);
+  };
 
   return (
     <aside className="fixed flex h-screen w-64 flex-col justify-between bg-white p-4 shadow-lg">
@@ -23,7 +30,7 @@ const Sidebar = () => {
           {menuItems.map((item) => (
             <button
               key={item.name}
-              onClick={() => setActive(item.name)}
+              onClick={() => handleClick(item.name, item.link)}
               className={`flex w-full cursor-pointer items-center rounded-lg px-4 py-3 text-left ${
                 active === item.name ? "bg-blue-500 text-white" : "text-gray-600 hover:bg-gray-100"
               }`}
