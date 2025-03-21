@@ -5,23 +5,26 @@ import { FiUpload } from "react-icons/fi";
 import { Layer, MakeCollectionProps } from "@/types/types";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import { useCollectionForm } from "@/hooks/userCollectionForm";
 
 export default function MakeCollection({ goBack }: MakeCollectionProps) {
-  const [bannerImage, setBannerImage] = useState<string | null>(null);
+  const [bannerImagePreview, setBannerImagePreview] = useState<string | null>(null); // 미리보기용
+  const [bannerImageFile, setBannerImageFile] = useState<File | null>(null); // S3 업로드용
+  const [collectionName, setCollectionName] = useState<string>("");
+
   const [collectionInfo, setCollectionInfo] = useState<string>("");
   const [layers, setLayers] = useState<Layer[]>([]);
+  const { createCollectionWithImage } = useCollectionForm();
 
   const navigate = useNavigate();
 
-  const handleImageUpload = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    setImage: React.Dispatch<React.SetStateAction<string | null>>
-  ) => {
-    if (event.target.files && event.target.files[0]) {
-      const file = event.target.files[0];
-      const imageUrl = URL.createObjectURL(file);
-      setImage(imageUrl);
-    }
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const imageUrl = URL.createObjectURL(file);
+    setBannerImagePreview(imageUrl); // 미리보기용
+    setBannerImageFile(file); // S3 업로드용
   };
 
   const addLayer = () => {
@@ -43,10 +46,22 @@ export default function MakeCollection({ goBack }: MakeCollectionProps) {
       )
     );
   };
+  const create = async () => {
+    try {
+      await createCollectionWithImage({
+        type: "0x123...",
+        name: collectionName,
+        description: collectionInfo,
+        imageFile: bannerImageFile || undefined, // null이면 undefined 처리
+      });
 
-  const create = () => {
-    window.alert("Create Collection complete!");
-    navigate("/");
+      // Todo : Loader 넣기
+
+      window.alert("Create Collection complete!");
+      navigate("/");
+    } catch (e) {
+      window.alert("Something went wrong!");
+    }
   };
 
   return (
@@ -65,8 +80,8 @@ export default function MakeCollection({ goBack }: MakeCollectionProps) {
             {/* 왼쪽: 이미지 업로드 + Collection Name */}
             <div className="flex w-64 flex-col space-y-4">
               <label className="flex h-40 cursor-pointer flex-col items-center justify-center rounded-lg border p-6">
-                {bannerImage ? (
-                  <img src={bannerImage} alt="Banner" className="h-auto w-full rounded-lg" />
+                {bannerImagePreview ? (
+                  <img src={bannerImagePreview} alt="Banner" className="h-auto w-full rounded-lg" />
                 ) : (
                   <div>
                     <FiUpload className="mx-auto text-4xl" />
@@ -77,7 +92,7 @@ export default function MakeCollection({ goBack }: MakeCollectionProps) {
                   type="file"
                   className="hidden"
                   accept="image/*"
-                  onChange={(e) => handleImageUpload(e, setBannerImage)}
+                  onChange={handleImageUpload}
                 />
               </label>
 
@@ -85,9 +100,8 @@ export default function MakeCollection({ goBack }: MakeCollectionProps) {
                 type="text"
                 className="rounded-lg border px-4 py-2"
                 placeholder="Enter Collection Name"
-                // 상태 연결 예시
-                // value={collectionName}
-                // onChange={(e) => setCollectionName(e.target.value)}
+                value={collectionName}
+                onChange={(e) => setCollectionName(e.target.value)}
               />
             </div>
 

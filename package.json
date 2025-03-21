@@ -16,6 +16,7 @@
     "@tailwindcss/vite": "^4.0.14",
     "@tanstack/react-query": "^5.68.0",
     "autoprefixer": "^10.4.21",
+    "axios": "^1.8.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "exclusuive-typescript-sdk": "^1.1.1",
