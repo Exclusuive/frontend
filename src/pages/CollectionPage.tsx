@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import CollectionCard from "@/components/CollectionCard";
 import { getAllCollections } from "@/api/collections";
 import { Collection } from "@/types/api"; // 컬렉션 타입 정의
-import { Link } from "react-router-dom";
 
 export default function CollectionPage() {
   const [collections, setCollections] = useState<Collection[]>([]);
@@ -24,7 +23,7 @@ export default function CollectionPage() {
   }, []);
 
   if (loading) {
-    return <div className="mt-10 text-center">Loading Collections...</div>;
+    return <div className="pt-32 text-center">Loading Collections...</div>;
   }
 
   console.log(collections);
