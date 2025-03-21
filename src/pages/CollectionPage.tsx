@@ -30,7 +30,7 @@ export default function CollectionPage() {
   console.log(collections);
 
   return (
-    <div className="mx-auto mt-32 grid w-full max-w-screen-xl grid-cols-1 gap-6 md:grid-cols-3">
+    <div className="mx-auto grid w-full max-w-screen-xl grid-cols-1 gap-6 pt-32 md:grid-cols-3">
       {collections.map((collection, index) => (
         <CollectionCard
           key={collection.id || index}
