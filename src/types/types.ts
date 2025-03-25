@@ -27,3 +27,9 @@ export type CreateProps = {
   collectionInfo: string;
   bannerImageFile: File | null;
 };
+
+export type CreateCollectionTransactionProps = {
+  collectionInfo: string;
+  collectionName: string;
+  bannerImageFile: File | null;
+};

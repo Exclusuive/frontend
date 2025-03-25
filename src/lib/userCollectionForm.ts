@@ -1,5 +1,5 @@
 // hooks/useCollectionForm.ts
-import { useS3Uploader } from "../hooks/useS3Uploader";
+import { useS3Uploader } from "@/hooks/useS3Uploader";
 import { createCollection, updateCollection } from "@/api/collections";
 import { useState } from "react";
 
