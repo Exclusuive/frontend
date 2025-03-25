@@ -3,6 +3,8 @@ import { Home, Table, CreditCard, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import ProfileCard from "@/components/ProfileCard";
+import { collections } from "@/types/examples";
 
 const Sidebar = () => {
   const [active, setActive] = useState("Dashboard");
@@ -19,14 +21,25 @@ const Sidebar = () => {
     navigate(route);
   };
 
+    const [viewItem, setViewItem] = useState("All");
+  
+    const filteredCollections = collections.filter((collection) => {
+      if (viewItem === "All") return collections;
+      if (viewItem === "View") return !collection.showManage;
+      if (viewItem === "Manage") return collection.showManage;
+    });
+
   return (
-    <aside className="fixed flex h-screen w-64 flex-col justify-between bg-white p-4 shadow-lg">
+    <aside className="fixed flex h-screen w-64 flex-col justify-between bg-[#E6F7FF] p-4 shadow-lg">
       {/* 상단 로고 및 제목 */}
       <div>
         <Link to="/" className="w-full text-lg font-bold text-gray-700">
-          <p className="mx-auto text-center">Exclusuive Dashboard</p>
+          <p className="mx-auto text-center">Exclusuive</p>
         </Link>
-        <nav className="mt-6">
+        <div className="mt-20">
+          <ProfileCard viewItem={viewItem} setViewItem={setViewItem} />
+        </div>
+        <nav className="mt-20">
           {menuItems.map((item) => (
             <button
               key={item.name}

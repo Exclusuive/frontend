@@ -2,7 +2,7 @@ import { FiSearch, FiUser, FiSettings, FiBell } from "react-icons/fi";
 
 export default function Header() {
   return (
-    <div className="absolute top-4 right-4 px-4 text-white">
+    <div className="absolute w-full h-[11%] bg-white flex items-center border-b border-black">
       <div className="flex space-x-4">
         <div className="relative">
           <input
@@ -14,16 +14,11 @@ export default function Header() {
         </div>
 
         {/* Icons and Sign In */}
-        <div className="flex items-center space-x-4 font-semibold text-white">
-          <button className="flex cursor-pointer items-center space-x-1">
-            <FiUser />
-            <span>Sign In</span>
-          </button>
+        <div className="flex items-center space-x-4 font-semibold text-[#595959]">
           <FiSettings className="cursor-pointer" />
           <FiBell className="cursor-pointer" />
         </div>
       </div>
-      {/* Search Bar */}
     </div>
   );
 }

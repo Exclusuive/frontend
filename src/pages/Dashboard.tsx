@@ -1,5 +1,4 @@
 import CollectionCard from "@/components/CollectionCard";
-import ProfileCard from "@/components/ProfileCard";
 import { collections } from "@/types/examples";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -14,11 +13,12 @@ export default function Dashboard() {
   });
 
   return (
-    <div className="h-full min-h-screen w-full bg-gray-100">
+    <div className="h-full min-h-screen w-full bg-white">
       {/* collections Section */}
-      <div className="bg-banner mx-auto h-48 w-full"></div>
-      <ProfileCard viewItem={viewItem} setViewItem={setViewItem} />
-      <div className="mx-auto mt-8 grid w-full max-w-screen-xl grid-cols-1 gap-6 md:grid-cols-3">
+      <div className="mx-auto h-24 w-full"></div>
+      <div className="text-2xl font-bold ml-5 mb-10">Dashboard</div>
+      <div className="text-2xl ml-32">Collections</div>
+      <div className="mx-auto mt-8 grid w-[80%] max-w-screen-xl grid-cols-1 gap-6 md:grid-cols-2">
         {filteredCollections.map((Collection, index) => (
           <CollectionCard bannerUrl={""} key={index} {...Collection} />
         ))}

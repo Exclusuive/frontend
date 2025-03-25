@@ -25,8 +25,8 @@ const ProfileCard = ({ viewItem, setViewItem }: ProfileCardProps) => {
   }
 
   return (
-    <div className="mx-auto -mt-16 flex h-[120px] w-4/5 items-center rounded-lg border-[1.5px] border-white bg-white/80 p-5 shadow-md backdrop-blur-lg">
-      <img src="/pamchu.png" alt="profile" className="h-16 w-16 rounded-full" />
+    <div className="mx-auto h-[120px] w-4/5 flex flex-col items-center justify-center p-5">
+      <img src="/pamchu.png" alt="profile" className="h-30 w-auto rounded-full" />
       <div className="px-4">
         <h2 className="text-lg font-semibold">Esthera Jackson</h2>
         <p className="text-gray-500">esthera@simmmple.com</p>
