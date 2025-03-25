@@ -1,24 +1,14 @@
-import { ImageOverlay } from "exclusuive-typescript-sdk";
+import { useGetCollections } from "@/hooks/useGetCollections";
 
-const App = () => {
-  const images = [
-    {
-      layer: "background",
-      url: "https://myyonseinft.s3.us-east-1.amazonaws.com/MAJOR/test/background.PNG",
-    },
-    {
-      layer: "character",
-      url: "https://myyonseinft.s3.us-east-1.amazonaws.com/MAJOR/test/character.png",
-    },
-    {
-      layer: "effect",
-      url: "https://myyonseinft.s3.us-east-1.amazonaws.com/MAJOR/test/clothes.PNG",
-    },
-  ];
+export default function MyComponent() {
+  // const PACKAGE = "0x80d71658d5dbacef3cf4154d5465a24fc3264fb0388480790854dced69d5f345";
+  // const { data, isPending, error } = useSuiClientQuery("getDynamicFields", {
+  //   parentId: PACKAGE,
+  // });
+  // console.log(data);
 
-  const layerInfo = ["background", "character", "effect"]; //
+  const { collections } = useGetCollections();
+  console.log(collections);
 
-  return <ImageOverlay images={images} layerInfo={layerInfo} size={{ width: 300, height: 300 }} />;
-};
-
-export default App;
+  return <div style={{ padding: 20 }}></div>;
+}

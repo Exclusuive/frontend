@@ -9,6 +9,7 @@ export interface User {
 }
 
 export interface Collection {
+  showManage?: boolean;
   id: string;
   type: string;
   name: string;

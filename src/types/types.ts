@@ -1,7 +1,7 @@
 export interface CollectionCardProps {
-  bannerUrl: string;
-  title: string;
-  description: string;
+  bannerUrl: string | undefined;
+  title: string | undefined;
+  description: string | undefined;
   showManage: boolean;
 }
 
@@ -22,3 +22,14 @@ export interface MakeCollectionProps {
 export interface NFTOptionsProps {
   setSelectedOption: (option: "create" | "apply") => void;
 }
+export type CreateProps = {
+  collectionName: string;
+  collectionInfo: string;
+  bannerImageFile: File | null;
+};
+
+export type CreateCollectionTransactionProps = {
+  collectionInfo: string;
+  collectionName: string;
+  bannerImageFile: File | null;
+};
