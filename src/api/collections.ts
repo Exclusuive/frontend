@@ -17,9 +17,16 @@ export const getCollectionById = async (id: string): Promise<Collection> => {
   return response.data;
 };
 
+export const getCollectionsByObjectIds = async (objectIds: string[]): Promise<Collection[]> => {
+  const response = await axios.post(`${baseUrl}/by-object-ids`, {
+    objectIds,
+  });
+  return response.data;
+};
+
 // ✅ 컬렉션 생성
 export const createCollection = async (collection: {
-  type: string;
+  id: string;
   name: string;
   bannerImg?: string;
   description?: string;

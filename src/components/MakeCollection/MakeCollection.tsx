@@ -3,9 +3,8 @@ import LayerOption from "@/components/LayerOption";
 import { Button } from "@/components/ui/button";
 import { FiUpload } from "react-icons/fi";
 import { Layer, MakeCollectionProps } from "@/types/types";
-import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import { useCollectionForm } from "@/hooks/userCollectionForm";
+import { useCreateCollectionTransaction } from "@/hooks/useCreateCollectionTransaction";
 
 export default function MakeCollection({ goBack }: MakeCollectionProps) {
   const [bannerImagePreview, setBannerImagePreview] = useState<string | null>(null); // 미리보기용
@@ -14,9 +13,7 @@ export default function MakeCollection({ goBack }: MakeCollectionProps) {
 
   const [collectionInfo, setCollectionInfo] = useState<string>("");
   const [layers, setLayers] = useState<Layer[]>([]);
-  const { createCollectionWithImage } = useCollectionForm();
-
-  const navigate = useNavigate();
+  const { createCollectionTransaction } = useCreateCollectionTransaction();
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -45,23 +42,6 @@ export default function MakeCollection({ goBack }: MakeCollectionProps) {
         i === index ? { ...layer, name: newName, description: newDescription } : layer
       )
     );
-  };
-  const create = async () => {
-    try {
-      await createCollectionWithImage({
-        type: "0x123...",
-        name: collectionName,
-        description: collectionInfo,
-        imageFile: bannerImageFile || undefined, // null이면 undefined 처리
-      });
-
-      // Todo : Loader 넣기
-
-      window.alert("Create Collection complete!");
-      navigate("/");
-    } catch (e) {
-      window.alert("Something went wrong!");
-    }
   };
 
   return (
@@ -138,7 +118,13 @@ export default function MakeCollection({ goBack }: MakeCollectionProps) {
         <div className="mt-6 flex justify-center">
           <Button
             className="mt-3 w-full rounded-xl border border-blue-500 bg-transparent text-sm text-blue-500"
-            onClick={create}
+            onClick={() =>
+              createCollectionTransaction({
+                collectionInfo: collectionInfo,
+                collectionName: collectionName,
+                bannerImageFile: bannerImageFile,
+              })
+            }
           >
             Create
           </Button>
@@ -147,3 +133,5 @@ export default function MakeCollection({ goBack }: MakeCollectionProps) {
     </div>
   );
 }
+
+// Gaz6bJGuBf4X7KBCFhrBNLTE5dw4UPjh4VDZY1hLwnyE

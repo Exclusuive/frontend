@@ -1,5 +1,5 @@
 // hooks/useCollectionForm.ts
-import { useS3Uploader } from "./useS3Uploader";
+import { useS3Uploader } from "../hooks/useS3Uploader";
 import { createCollection, updateCollection } from "@/api/collections";
 import { useState } from "react";
 
@@ -10,7 +10,7 @@ export function useCollectionForm() {
 
   // ✅ 컬렉션 생성
   const createCollectionWithImage = async (collectionData: {
-    type: string;
+    id: string;
     name: string;
     description?: string;
     imageFile?: File;
@@ -20,11 +20,11 @@ export function useCollectionForm() {
       let bannerImg: string | undefined;
 
       if (collectionData.imageFile) {
-        bannerImg = await uploadToS3("banner", collectionData.type, collectionData.imageFile);
+        bannerImg = await uploadToS3("banner", collectionData.id, collectionData.imageFile);
       }
 
       const collection = await createCollection({
-        type: collectionData.type,
+        id: collectionData.id,
         name: collectionData.name,
         description: collectionData.description,
         bannerImg,
