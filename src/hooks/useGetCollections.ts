@@ -1,97 +1,82 @@
 import { useEffect, useState } from "react";
-import { useCurrentAccount, useSuiClientQuery } from "@mysten/dapp-kit";
-import { getCollectionsByObjectIds } from "@/api/collections";
+import { useCurrentAccount, useSuiClient, useSuiClientQuery } from "@mysten/dapp-kit";
 import { Collection } from "@/types/api";
 
-type CollectionWithOwner = Collection & {
-  objectId: string;
-  owner: string;
-};
-
 export const useGetCollections = () => {
-  const PACKAGE = "0xe47afcfd1189c1d1ec792428c952e07a6016046d5fdfdc7de3120c3ac249116f";
-  const MODULE = "collection";
-  const [collections, setCollections] = useState<CollectionWithOwner[]>([]);
+  const PACKAGE_ID = import.meta.env.VITE_PACKAGE_ID;
+  const MODULE_ID = import.meta.env.VITE_MODULE;
+  const TYPE = `${PACKAGE_ID}::${MODULE_ID}::CollectionCap`;
+  const BASE_TYPE = `${PACKAGE_ID}::${MODULE_ID}::BaseType`;
+  const CONFIG_KEY_TYPE = `${PACKAGE_ID}::${MODULE_ID}::ConfigKey<${BASE_TYPE}>`;
+
+  const [collections, setCollections] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const account = useCurrentAccount();
+  const suiClient = useSuiClient();
 
   const { data, isPending, error } = useSuiClientQuery("getOwnedObjects", {
     owner: account?.address || "",
+    filter: { StructType: TYPE },
     options: {
       showType: true,
-      showOwner: true,
       showContent: true,
     },
   });
 
   useEffect(() => {
-    const fetch = async () => {
+    const fetchCollections = async () => {
       if (!data || isPending || error) return;
 
-      const filtered = data.data.filter((obj) => {
-        const type = obj.data?.type;
-        return type?.startsWith(`${PACKAGE}::${MODULE}::`);
-      });
-
-      // collection_id, objectId, owner 추출
-      const mapping = filtered
+      const caps = data.data;
+      console.log(caps);
+      const collectionIds = caps
         .map((obj) => {
           const content = obj.data?.content;
-          const objectId = obj.data?.objectId;
-
-          let owner = "";
-          const rawOwner = obj.data?.owner;
-
-          if (typeof rawOwner === "object" && rawOwner !== null && "AddressOwner" in rawOwner) {
-            owner = rawOwner.AddressOwner;
+          if (
+            content?.dataType === "moveObject" &&
+            "fields" in content &&
+            "collection_id" in content.fields
+          ) {
+            return {
+              collectionId: content.fields.collection_id as string,
+              capId: obj.data?.objectId as string,
+            };
           }
-
-          if (content?.dataType === "moveObject") {
-            const fields = content.fields as any;
-            const collectionId = fields?.collection_id;
-            if (collectionId && objectId && owner) {
-              return {
-                collectionId,
-                objectId,
-                owner,
-              };
-            }
-          }
-
           return null;
         })
-        .filter(Boolean) as {
-        collectionId: string;
-        objectId: string;
-        owner: string;
-      }[];
+        .filter(Boolean) as { collectionId: string; capId: string }[];
 
-      if (mapping.length > 0) {
-        const uniqueCollectionIds = [...new Set(mapping.map((m) => m.collectionId))];
+      const fetchedCollections = await Promise.all(
+        collectionIds.map(async ({ collectionId, capId }) => {
+          try {
+            const res = await suiClient.getDynamicFieldObject({
+              parentId: collectionId,
+              name: {
+                type: CONFIG_KEY_TYPE,
+                value: "description",
+              },
+            });
+            console.log(res);
 
-        try {
-          const res = await getCollectionsByObjectIds(uniqueCollectionIds);
+            const fields = (res.data?.content as any)?.fields;
 
-          // 컬렉션 ID 기준으로 owner와 objectId 붙이기
-          const combined: CollectionWithOwner[] = res.map((collection) => {
-            const match = mapping.find((m) => m.collectionId === collection.id);
             return {
-              ...collection,
-              objectId: match?.objectId || "",
-              owner: match?.owner || "",
+              ...(fields as Collection),
+              objectId: collectionId,
+              capId,
             };
-          });
+          } catch (e) {
+            console.error("❌ Failed to fetch collection by ID", collectionId, e);
+            return null;
+          }
+        })
+      );
 
-          setCollections(combined);
-        } catch (err) {
-          console.error("컬렉션 조회 실패:", err);
-        }
-      }
-
+      setCollections(fetchedCollections.filter(Boolean) as any[]);
       setLoading(false);
     };
 
-    fetch();
+    fetchCollections();
   }, [data, isPending, error]);
 
   return { collections, loading };

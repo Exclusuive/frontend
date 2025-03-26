@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { FiUpload } from "react-icons/fi";
 import { Layer, MakeCollectionProps } from "@/types/types";
 import { ArrowLeft } from "lucide-react";
-import { useCreateCollectionTransaction } from "@/hooks/useCreateCollectionTransaction";
+import { useSendTransactions } from "@/hooks/useSendTransactions";
 
 export default function MakeCollection({ goBack }: MakeCollectionProps) {
   const [bannerImagePreview, setBannerImagePreview] = useState<string | null>(null); // 미리보기용
@@ -13,7 +13,7 @@ export default function MakeCollection({ goBack }: MakeCollectionProps) {
 
   const [collectionInfo, setCollectionInfo] = useState<string>("");
   const [layers, setLayers] = useState<Layer[]>([]);
-  const { createCollectionTransaction } = useCreateCollectionTransaction();
+  const { newCollection, addLayerType } = useSendTransactions();
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -119,10 +119,11 @@ export default function MakeCollection({ goBack }: MakeCollectionProps) {
           <Button
             className="mt-3 w-full rounded-xl border border-blue-500 bg-transparent text-sm text-blue-500"
             onClick={() =>
-              createCollectionTransaction({
-                collectionInfo: collectionInfo,
+              newCollection({
                 collectionName: collectionName,
+                description: collectionInfo,
                 bannerImageFile: bannerImageFile,
+                layers: layers,
               })
             }
           >
@@ -133,5 +134,3 @@ export default function MakeCollection({ goBack }: MakeCollectionProps) {
     </div>
   );
 }
-
-// Gaz6bJGuBf4X7KBCFhrBNLTE5dw4UPjh4VDZY1hLwnyE
