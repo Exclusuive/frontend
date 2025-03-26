@@ -1,4 +1,3 @@
-import { useGetCollections } from "@/hooks/useGetCollections";
 import { useSuiClientQuery } from "@mysten/dapp-kit";
 
 export default function MyComponent() {
