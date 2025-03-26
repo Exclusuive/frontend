@@ -1,7 +1,6 @@
 import CollectionCard from "@/components/CollectionCard";
 import ProfileCard from "@/components/ProfileCard";
 import { useExclusuiveQuery } from "@/hooks/useExclusuiveQuery";
-import { collections } from "@/types/examples";
 import { useCurrentAccount } from "@mysten/dapp-kit";
 import { useState } from "react";
 import { Link } from "react-router-dom";

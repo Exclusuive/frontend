@@ -1,4 +1,4 @@
-import { useSignAndExecuteTransaction, useSuiClient, useSuiClientQuery } from "@mysten/dapp-kit";
+import { useSignAndExecuteTransaction, useSuiClient } from "@mysten/dapp-kit";
 import { buildTx } from "@/lib/buildTx";
 import {
   AddInfoProps,
@@ -92,9 +92,6 @@ export const useSendTransactions = () => {
   };
 
   const addLayerType = async ({ id, capId, name, order }: AddLayerProps) => {
-    const PACKAGE_ID = import.meta.env.VITE_PACKAGE_ID;
-    const MODULE_ID = import.meta.env.VITE_MODULE;
-
     const tx = buildTx([
       {
         funcName: "add_layer_type",

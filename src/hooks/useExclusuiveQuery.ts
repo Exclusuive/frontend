@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { useCurrentAccount, useSuiClient, useSuiClientQuery } from "@mysten/dapp-kit";
-import { Collection } from "@/types/api";
+import { useSuiClient, useSuiClientQuery } from "@mysten/dapp-kit";
 
 export const useExclusuiveQuery = () => {
   const PACKAGE_ID = import.meta.env.VITE_PACKAGE_ID;

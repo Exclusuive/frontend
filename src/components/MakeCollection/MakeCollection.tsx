@@ -13,7 +13,7 @@ export default function MakeCollection({ goBack }: MakeCollectionProps) {
 
   const [collectionInfo, setCollectionInfo] = useState<string>("");
   const [layers, setLayers] = useState<Layer[]>([]);
-  const { newCollection, addLayerType } = useSendTransactions();
+  const { newCollection } = useSendTransactions();
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
