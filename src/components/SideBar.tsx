@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Home, Table, CreditCard, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import ProfileCard from "@/components/ProfileCard";
 import { collections } from "@/types/examples";
@@ -31,12 +30,8 @@ const Sidebar = () => {
 
   return (
     <aside className="fixed flex h-screen w-64 flex-col justify-between bg-[#E6F7FF] p-4 shadow-lg">
-      {/* 상단 로고 및 제목 */}
       <div>
-        <Link to="/" className="w-full text-lg font-bold text-gray-700">
-          <p className="mx-auto text-center">Exclusuive</p>
-        </Link>
-        <div className="mt-20">
+        <div className="mt-30">
           <ProfileCard viewItem={viewItem} setViewItem={setViewItem} />
         </div>
         <nav className="mt-20">
