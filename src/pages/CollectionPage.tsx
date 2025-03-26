@@ -36,7 +36,6 @@ export default function CollectionPage() {
           bannerUrl={collection.bannerimg || ""}
           title={collection.name}
           description={collection.description || ""}
-          showManage={false}
         />
       ))}
 

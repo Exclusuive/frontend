@@ -2,7 +2,6 @@ export interface CollectionCardProps {
   bannerUrl: string | undefined;
   title: string | undefined;
   description: string | undefined;
-  showManage: boolean;
 }
 
 export interface ProfileCardProps {
@@ -22,14 +21,38 @@ export interface MakeCollectionProps {
 export interface NFTOptionsProps {
   setSelectedOption: (option: "create" | "apply") => void;
 }
-export type CreateProps = {
+export type CreateCollectionProps = {
   collectionName: string;
-  collectionInfo: string;
-  bannerImageFile: File | null;
 };
 
-export type CreateCollectionTransactionProps = {
-  collectionInfo: string;
+export type AddInfoProps = {
+  id: string;
+  capId: string;
+  name: string;
+  content: string;
+};
+
+export type AddLayerProps = {
+  id: string;
+  capId: string;
+  name: string;
+  order: number;
+};
+
+export type NewCollectionProps = {
   collectionName: string;
+  description: string;
   bannerImageFile: File | null;
+  layers: Layer[];
+};
+
+export type Argument =
+  | { type: "string"; value: string }
+  | { type: "u64"; value: number | bigint }
+  | { type: "object"; value: string };
+
+export type TxCall = {
+  funcName: string;
+  typeArguments?: string[];
+  args: Argument[];
 };
