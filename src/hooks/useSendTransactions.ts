@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 import { useSignAndExecuteTransaction, useSuiClient } from "@mysten/dapp-kit";
+=======
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
+import { useSignAndExecuteTransaction, useSuiClient, useSuiClientQuery } from "@mysten/dapp-kit";
+>>>>>>> c9fb3fb7f2936775f53961287487ad766e8431c6
 import { buildTx } from "@/lib/buildTx";
 import {
   AddInfoProps,
