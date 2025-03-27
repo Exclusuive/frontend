@@ -1,5 +1,5 @@
 import { Layer } from "@/types/types";
-import React, { useState } from "react";
+import React from "react";
 import { FiPlus, FiTrash } from "react-icons/fi";
 
 interface EditLayerProps {
