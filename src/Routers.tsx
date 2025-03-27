@@ -15,6 +15,7 @@ export default function Routers() {
           <Route path="/collection/:id/:capId" element={<CollectionDetail />} />
           <Route path="/dev" element={<SDK_TEST />} />
         </Route>
+        <Route path="/preview/:id" element={<SDK_TEST />} />
       </Routes>
     </Router>
   );

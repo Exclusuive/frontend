@@ -9,11 +9,7 @@ export default function Dashboard() {
   const [viewItem, setViewItem] = useState("All");
   const account = useCurrentAccount();
   const { getCollectionInfos } = useExclusuiveQuery();
-  const { result, loading } = getCollectionInfos(account?.address || "");
-  console.log(result);
-  if (loading) {
-    return <div></div>;
-  }
+  const { result } = getCollectionInfos(account?.address || "");
   return (
     <div className="h-full min-h-screen w-full bg-gray-100">
       {/* collections Section */}
@@ -21,7 +17,7 @@ export default function Dashboard() {
 
       <ProfileCard viewItem={viewItem} setViewItem={setViewItem} />
       <div className="mx-auto mt-8 grid w-full max-w-screen-xl grid-cols-1 gap-6 md:grid-cols-3">
-        {result.map(
+        {result?.map(
           (
             collection: {
               capId: string;

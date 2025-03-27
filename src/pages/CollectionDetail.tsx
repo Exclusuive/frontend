@@ -11,7 +11,7 @@ export default function CollectionDetail() {
   const params = useParams();
   const { getCollectionDetail } = useExclusuiveQuery();
   const { result, loading } = getCollectionDetail(params.id || "");
-  const [selectedOption, setSelectedOption] = useState<"collection" | "layer" | "item">(
+  const [selectedOption, setSelectedOption] = useState<"collection" | "layer" | "item" | "mint">(
     "collection"
   );
   const [layers, setLayers] = useState<Layer[]>([]); // 초기값은 빈 배열로
@@ -36,6 +36,9 @@ export default function CollectionDetail() {
               {selectedOption === "collection" && <EditCollection />}
               {selectedOption === "layer" && <EditLayer layers={layers} setLayers={setLayers} />}
               {selectedOption === "item" && (
+                <AddItem layers={layers} id={params.id} capId={params.capId} />
+              )}
+              {selectedOption === "mint" && (
                 <AddItem layers={layers} id={params.id} capId={params.capId} />
               )}
             </div>
