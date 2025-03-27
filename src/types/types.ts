@@ -67,7 +67,7 @@ type Collection = {
 
 export interface CollectionInfoProps {
   data: Collection;
-  setSelectedOption: (option: "collection" | "layer" | "item") => void;
+  setSelectedOption: (option: "collection" | "layer" | "item" | "mint") => void;
 }
 
 export interface AddItemProps {

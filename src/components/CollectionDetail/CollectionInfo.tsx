@@ -25,7 +25,7 @@ const CollectionInfo = ({ data, setSelectedOption }: CollectionInfoProps) => {
           ))}
         </div>
 
-        <div className="mt-6 flex flex-wrap justify-between gap-3">
+        <div className="mt-6 grid grid-cols-3 justify-between gap-3">
           <Button
             className="min-w-[100px] flex-1 rounded-xl border border-blue-500 bg-transparent text-sm text-blue-500"
             onClick={() => setSelectedOption("collection")}
@@ -43,6 +43,12 @@ const CollectionInfo = ({ data, setSelectedOption }: CollectionInfoProps) => {
             onClick={() => setSelectedOption("item")}
           >
             Add Item
+          </Button>
+          <Button
+            className="min-w-[100px] flex-1 rounded-xl border border-blue-500 bg-transparent text-sm text-blue-500"
+            onClick={() => setSelectedOption("mint")}
+          >
+            Mint Base
           </Button>
         </div>
       </div>
