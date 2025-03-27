@@ -4,16 +4,15 @@ import { useState } from "react";
 
 interface LayerOptionProps extends Layer {
   onDelete: () => void;
-  onEdit: (name: string, description: string) => void;
+  onEdit: (name: string) => void;
 }
 
-export default function LayerOption({ name, description, onDelete, onEdit }: LayerOptionProps) {
+export default function LayerOption({ name, onDelete, onEdit }: LayerOptionProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [editedName, setEditedName] = useState(name);
-  const [editedDescription, setEditedDescription] = useState(description);
+  const [editedName, setEditedName] = useState(name!);
 
   const handleSave = () => {
-    onEdit(editedName, editedDescription);
+    onEdit(editedName);
     setIsEditing(false);
   };
 
@@ -28,16 +27,10 @@ export default function LayerOption({ name, description, onDelete, onEdit }: Lay
               value={editedName}
               onChange={(e) => setEditedName(e.target.value)}
             />
-            <textarea
-              className="w-full rounded-lg border p-2"
-              value={editedDescription}
-              onChange={(e) => setEditedDescription(e.target.value)}
-            />
           </div>
         ) : (
           <div>
             <h3 className="text-lg font-semibold">{name}</h3>
-            <p className="text-sm text-gray-500">{description}</p>
           </div>
         )}
       </div>

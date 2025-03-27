@@ -5,7 +5,7 @@ export const useExclusuiveQuery = () => {
   const PACKAGE_ID = import.meta.env.VITE_PACKAGE_ID;
   const MODULE_ID = import.meta.env.VITE_MODULE;
   const TYPE = `${PACKAGE_ID}::${MODULE_ID}::CollectionCap`;
-  const [result, setResult] = useState<any[]>([]);
+  const [result, setResult] = useState<any>();
   const [loading, setLoading] = useState(true);
   const suiClient = useSuiClient();
 
@@ -159,7 +159,7 @@ export const useExclusuiveQuery = () => {
                 {} as Record<string, any>
               );
 
-              return { ...merged, capId };
+              return { ...merged, capId, collectionId };
             } catch (e) {
               console.error("Failed to fetch collection info:", e);
               return null;
@@ -173,10 +173,69 @@ export const useExclusuiveQuery = () => {
       };
 
       fetchCollectionInfos();
-    }, [data, isPending, error]);
+    }, [data]);
 
     return { result, loading };
   };
 
-  return { getCollections, getCollectionInfo, getCollectionInfos };
+  const getCollectionDetail = (collectionId: string) => {
+    const { data, isPending, error } = useSuiClientQuery("getDynamicFields", {
+      parentId: collectionId,
+    });
+
+    useEffect(() => {
+      const fetchCollectionInfo = async () => {
+        if (!data || isPending || error) return;
+        const objectIds = data.data.map((item) => item.objectId);
+        const objects = [collectionId, ...objectIds];
+        const res = await suiClient.multiGetObjects({
+          ids: objects,
+          options: {
+            showContent: true,
+          },
+        });
+        const layers = (res[0].data?.content as any)?.fields?.layer_types.fields.contents.map(
+          (entry: any) => {
+            const { order, type } = entry.fields.value.fields;
+            return {
+              order: Number(order),
+              type,
+            };
+          }
+        );
+
+        // order 기준으로 정렬 (선택사항)
+        layers.sort((a: any, b: any) => a.order - b.order);
+
+        const name = {
+          name: "name",
+          content: (res[0].data?.content as any)?.fields?.base_type?.fields?.name ?? "Unknown",
+        };
+
+        const dynamic = res
+          .slice(1)
+          .filter((item) => item.data && item.data.content)
+          .map((item) => (item.data!.content as any).fields.value.fields);
+        const result = [name, ...dynamic];
+
+        // 각 요소를 하나의 객체로 병합
+        const merged = result.reduce(
+          (acc, item) => {
+            acc[item.name] = item.content;
+            return acc;
+          },
+          {} as Record<string, any>
+        );
+
+        // 최종 배열 형태로 감싸기
+        setResult({ ...merged, layers });
+        setLoading(false);
+      };
+
+      fetchCollectionInfo();
+    }, [data, isPending, error]);
+    return { result, loading };
+  };
+
+  return { getCollections, getCollectionInfo, getCollectionInfos, getCollectionDetail };
 };
