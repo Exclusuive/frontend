@@ -15,9 +15,9 @@ export default function Dashboard() {
   return (
     <div className="h-full min-h-screen w-full bg-white">
       {/* collections Section */}
-      <div className="mx-auto h-24 w-full"></div>
-      <div className="text-2xl font-bold ml-5 mb-10">Dashboard</div>
-      <div className="text-2xl ml-32">Collections</div>
+      <div className="text-3xl mb-1 pt-20 ml-5">Dashboard</div>
+      <div className="text-2xl ml-10">Collections</div>
+
       <div className="mx-auto mt-8 grid w-[80%] max-w-screen-xl grid-cols-1 gap-6 md:grid-cols-2">
         {filteredCollections.map((Collection, index) => (
           <CollectionCard bannerUrl={""} key={index} {...Collection} />

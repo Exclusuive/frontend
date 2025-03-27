@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { FiUpload } from "react-icons/fi";
 import { Layer, MakeCollectionProps } from "@/types/types";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
 import { useCollectionForm } from "@/hooks/userCollectionForm";
 
 export default function MakeCollection({ goBack }: MakeCollectionProps) {
@@ -65,16 +64,17 @@ export default function MakeCollection({ goBack }: MakeCollectionProps) {
   };
 
   return (
-    <div className="min-h-screen w-2/3 overflow-hidden bg-gray-100 p-6">
-      <Button
-        onClick={goBack}
-        className="mb-6 flex items-center justify-end gap-2 bg-gray-200 px-4 py-2 text-gray-700 hover:bg-gray-300"
-      >
-        <ArrowLeft size={20} />
-        Back
-      </Button>
-      <div className="w-full">
-        <div className="mb-6 rounded-lg bg-white p-6 shadow-md">
+    <div className="min-h-screen w-full p-6 bg-white pt-20">
+      <div className="text-3xl mb-6 ml-5">Dashboard</div>
+      <div className="ml-10 mr-10 flex justify-between">
+        <div className="text-2xl">Create a new collection</div>
+          <Button onClick={goBack} className="mr-10 flex items-center gap-2 self-start rounded-lg bg-[#5632A1] px-4 py-2 text-white hover:bg-gray-300">
+            Back
+          </Button>
+      </div>
+
+      <div className="h-full w-[90%] ml-10 mt-10">
+        <div className="mb-6 rounded-lg bg-[#EFEFEF] p-6 shadow-md">
           <h2 className="text-xl font-semibold">Collection Information</h2>
           <div className="mt-4 flex items-stretch space-x-6">
             {/* 왼쪽: 이미지 업로드 + Collection Name */}
@@ -115,7 +115,7 @@ export default function MakeCollection({ goBack }: MakeCollectionProps) {
           </div>
 
           {/* Layer Options with Scroll */}
-          <div className="mt-6 h-[400px] space-y-6 overflow-y-scroll rounded-lg bg-white p-4 shadow-sm">
+          <div className="mt-6 h-[400px] space-y-6 overflow-y-scroll rounded-lg bg-[#EFEFEF] p-4 shadow-sm">
             <h2 className="mb-4 text-xl font-semibold">Layer Options</h2>
             {layers.map((layer, index) => (
               <LayerOption

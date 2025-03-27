@@ -1,25 +1,24 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { NFTOptionsProps } from "@/types/types";
 
 const NFTOptions: React.FC<NFTOptionsProps> = ({ setSelectedOption }) => {
   return (
-    <div className="bg-white">
-      <div className="text-3xl mb-5">Dashboard</div>
-      <div className="flex justify-between">
-        <div className="text-xl">Create a new collection</div>
+    <div className="w-full bg-white flex flex-col gap-6 mt-10 ml-5">
+      <div className="text-3xl mb-1">Dashboard</div>
+
+      <div className="ml-10 flex justify-between">
+        <div className="text-2xl">Create a new collection</div>
         <Link to="/">
-          <Button className="flex items-center gap-2 self-start rounded-lg bg-gray-200 px-4 py-2 text-gray-700 hover:bg-gray-300">
-            <ArrowLeft size={20} /> Back
+          <Button className="mr-10 flex items-center gap-2 self-start rounded-lg bg-[#5632A1] px-4 py-2 text-white hover:bg-gray-300">
+            Back
           </Button>
         </Link>
-    </div>
-
-    <div className="flex flex-col items-center gap-6 mt-10">
+      </div>
 
         {/* 새 NFT 만들기 */}
+        <div className="ml-10 mr-10">
         <Card
           className="bg-[#EFEFEF] flex h-[200px] w-full min-w-[280px] cursor-pointer flex-col justify-between p-4 transition hover:shadow-lg"
           onClick={() => setSelectedOption("create")}
@@ -29,8 +28,10 @@ const NFTOptions: React.FC<NFTOptionsProps> = ({ setSelectedOption }) => {
             Mint new NFTs and apply exclusive policies during creation.
           </CardContent>
         </Card>
+        </div>
 
         {/* 기존 NFT 정책 적용 */}
+        <div className="ml-10 mr-10">
         <Card
           className="bg-[#EFEFEF] flex h-[200px] w-full min-w-[280px] cursor-pointer flex-col justify-between p-4 transition hover:shadow-lg"
           onClick={() => setSelectedOption("apply")}
@@ -44,6 +45,7 @@ const NFTOptions: React.FC<NFTOptionsProps> = ({ setSelectedOption }) => {
         </Card>
       </div>
       </div>
+
   );
 };
 
