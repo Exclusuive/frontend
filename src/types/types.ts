@@ -9,11 +9,6 @@ export interface ProfileCardProps {
   setViewItem: (item: string) => void;
 }
 
-export interface Layer {
-  name: string;
-  description: string;
-}
-
 export interface MakeCollectionProps {
   goBack: () => void;
 }
@@ -56,3 +51,29 @@ export type TxCall = {
   typeArguments?: string[];
   args: Argument[];
 };
+
+export type Layer = {
+  name?: string;
+  order?: number;
+  type?: string;
+};
+
+type Collection = {
+  name: string;
+  description: string;
+  bannerImg: string;
+  layers: Layer[];
+};
+
+export interface CollectionInfoProps {
+  data: Collection;
+  setSelectedOption: (option: "collection" | "layer" | "item") => void;
+}
+
+export interface AddItemProps {
+  id: string;
+  capId: string;
+  layer: string;
+  itemName: string;
+  itemImg: File | null;
+}

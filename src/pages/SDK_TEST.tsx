@@ -2,7 +2,7 @@ import { useSuiClientQuery } from "@mysten/dapp-kit";
 
 export default function MyComponent() {
   const PACKAGE = "0x233ca438154248974e0e80fbc2c5c92a4baf09d218e9116439b5c0baf71b3bbd";
-  const { data, isPending, error } = useSuiClientQuery("getDynamicFields", {
+  const { data } = useSuiClientQuery("getDynamicFields", {
     parentId: PACKAGE,
   });
   console.log(data);

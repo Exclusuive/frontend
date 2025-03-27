@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
-import { useSignAndExecuteTransaction, useSuiClient, useSuiClientQuery } from "@mysten/dapp-kit";
+import { useSignAndExecuteTransaction, useSuiClient } from "@mysten/dapp-kit";
 import { buildTx } from "@/lib/buildTx";
 import {
   AddInfoProps,
+  AddItemProps,
   AddLayerProps,
   CreateCollectionProps,
   NewCollectionProps,
@@ -16,6 +16,8 @@ export const useSendTransactions = () => {
   const [result, setResult] = useState<any>();
   const [isPending, setIsPending] = useState<boolean>(true);
   const [error, setError] = useState<any>();
+  const PACKAGE_ID = import.meta.env.VITE_PACKAGE_ID;
+  const MODULE_ID = import.meta.env.VITE_MODULE;
 
   const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction({
     execute: async ({ bytes, signature }) =>
@@ -93,9 +95,6 @@ export const useSendTransactions = () => {
   };
 
   const addLayerType = async ({ id, capId, name, order }: AddLayerProps) => {
-    const PACKAGE_ID = import.meta.env.VITE_PACKAGE_ID;
-    const MODULE_ID = import.meta.env.VITE_MODULE;
-
     const tx = buildTx([
       {
         funcName: "add_layer_type",
@@ -133,9 +132,6 @@ export const useSendTransactions = () => {
     bannerImageFile,
     layers,
   }: NewCollectionProps) => {
-    const PACKAGE_ID = import.meta.env.VITE_PACKAGE_ID;
-    const MODULE_ID = import.meta.env.VITE_MODULE;
-
     const tx = buildTx([
       {
         funcName: "default",
@@ -165,7 +161,7 @@ export const useSendTransactions = () => {
             args: [
               { type: "object", value: collectionObject?.objectId! },
               { type: "object", value: collectionCapObject?.objectId! },
-              { type: "string", value: layer.name },
+              { type: "string", value: layer.name! },
               { type: "u64", value: index },
             ],
           }));
@@ -226,10 +222,51 @@ export const useSendTransactions = () => {
     return { result, isPending, error };
   };
 
+  const addItemType = async ({ id, capId, layer, itemName, itemImg }: AddItemProps) => {
+    const uploadedUrl = await uploadToS3({
+      type: `${PACKAGE_ID}_${MODULE_ID}_collection/item`,
+      id: itemName,
+      file: itemImg,
+    });
+
+    const tx = buildTx([
+      {
+        funcName: "add_item_type",
+        args: [
+          { type: "object", value: id },
+          { type: "object", value: capId },
+          { type: "string", value: layer },
+
+          { type: "string", value: itemName },
+          { type: "string", value: uploadedUrl.fileUrl },
+        ],
+      },
+    ]);
+
+    signAndExecuteTransaction(
+      {
+        transaction: tx,
+        chain: "sui:testnet",
+      },
+      {
+        onSuccess: async (result) => {
+          setIsPending(false);
+          setResult(result);
+        },
+        onError(error) {
+          setIsPending(false);
+          setError(error);
+        },
+      }
+    );
+    return { result, isPending, error };
+  };
+
   return {
     addLayerType,
     createCollection,
     addCollectionInfo,
     newCollection,
+    addItemType,
   };
 };

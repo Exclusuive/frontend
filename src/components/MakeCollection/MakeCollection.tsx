@@ -13,7 +13,7 @@ export default function MakeCollection({ goBack }: MakeCollectionProps) {
 
   const [collectionInfo, setCollectionInfo] = useState<string>("");
   const [layers, setLayers] = useState<Layer[]>([]);
-  const { newCollection, addLayerType } = useSendTransactions();
+  const { newCollection } = useSendTransactions();
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -27,7 +27,6 @@ export default function MakeCollection({ goBack }: MakeCollectionProps) {
   const addLayer = () => {
     const newLayer: Layer = {
       name: `New Layer`,
-      description: "New layer description",
     };
     setLayers([...layers, newLayer]);
   };
@@ -36,12 +35,8 @@ export default function MakeCollection({ goBack }: MakeCollectionProps) {
     setLayers(layers.filter((_, i) => i !== index));
   };
 
-  const editLayer = (index: number, newName: string, newDescription: string) => {
-    setLayers(
-      layers.map((layer, i) =>
-        i === index ? { ...layer, name: newName, description: newDescription } : layer
-      )
-    );
+  const editLayer = (index: number, newName: string) => {
+    setLayers(layers.map((layer, i) => (i === index ? { ...layer, name: newName } : layer)));
   };
 
   return (
@@ -101,9 +96,8 @@ export default function MakeCollection({ goBack }: MakeCollectionProps) {
               <LayerOption
                 key={index}
                 name={layer.name}
-                description={layer.description}
                 onDelete={() => removeLayer(index)}
-                onEdit={(newName, newDescription) => editLayer(index, newName, newDescription)}
+                onEdit={(newName) => editLayer(index, newName)}
               />
             ))}
             <Button
