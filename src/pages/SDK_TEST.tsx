@@ -7,15 +7,15 @@ export default function ImageOnlyPage() {
   const images = [
     {
       layer: "background",
-      url: "https://myyonseinft.s3.us-east-1.amazonaws.com/MAJOR/test/background.PNG",
+      url: "https://dokpaminft-season2.s3.us-east-1.amazonaws.com/test/background.png",
     },
     {
       layer: "character",
-      url: "https://myyonseinft.s3.us-east-1.amazonaws.com/MAJOR/test/character.png",
+      url: "https://dokpaminft-season2.s3.us-east-1.amazonaws.com/test/character.png",
     },
     {
       layer: "effect",
-      url: "https://myyonseinft.s3.us-east-1.amazonaws.com/MAJOR/test/clothes.PNG",
+      url: "https://dokpaminft-season2.s3.us-east-1.amazonaws.com/test/clothes.png",
     },
   ];
 
@@ -47,7 +47,7 @@ export default function ImageOnlyPage() {
 
   return (
     <>
-      <canvas ref={canvasRef} width={300} height={300} style={{ display: "none" }} />
+      <canvas ref={canvasRef} width={1000} height={1000} style={{ display: "none" }} />
       {imgSrc && <img src={imgSrc} alt="Merged Image" />}
     </>
   );

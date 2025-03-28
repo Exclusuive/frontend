@@ -41,20 +41,31 @@ export type NewCollectionProps = {
   layers: Layer[];
 };
 
-export type Argument =
+export type TxArg =
   | { type: "string"; value: string }
-  | { type: "u64"; value: number | bigint }
-  | { type: "object"; value: string };
+  | { type: "u64"; value: number }
+  | { type: "object"; value: string }
+  | { type: "variable"; value: string };
 
-export type TxCall = {
-  funcName: string;
-  typeArguments?: string[];
-  args: Argument[];
-};
+export type TxCall =
+  | {
+      assign: string;
+      value: { type: "string"; value: string } | { type: "u64"; value: number };
+    }
+  | {
+      funcName: string;
+      args: TxArg[];
+      typeArguments?: string[];
+      assign?: string;
+    };
 
 export type Layer = {
   name?: string;
   order?: number;
+  type?: string;
+};
+
+export type Items = {
   type?: string;
 };
 
@@ -67,7 +78,9 @@ type Collection = {
 
 export interface CollectionInfoProps {
   data: Collection;
-  setSelectedOption: (option: "collection" | "layer" | "item" | "mint") => void;
+  setSelectedOption: (
+    option: "collection" | "layer" | "addItem" | "mintBase" | "mintItem" | "rules"
+  ) => void;
 }
 
 export interface AddItemProps {
@@ -77,3 +90,17 @@ export interface AddItemProps {
   itemName: string;
   itemImg: File | null;
 }
+
+export interface MintBaseProps {
+  id: string;
+  capId: string;
+  imgUrl: string;
+  toAddress: string;
+}
+
+export type MintItemProps = {
+  id: string;
+  capId: string;
+  baseId: string;
+  itemType: string;
+};

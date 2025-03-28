@@ -5,6 +5,8 @@ import {
   AddItemProps,
   AddLayerProps,
   CreateCollectionProps,
+  MintBaseProps,
+  MintItemProps,
   NewCollectionProps,
   TxCall,
 } from "@/types/types";
@@ -262,11 +264,94 @@ export const useSendTransactions = () => {
     return { result, isPending, error };
   };
 
+  const mintBase = async ({ id, capId, imgUrl, toAddress }: MintBaseProps) => {
+    const tx = buildTx([
+      {
+        funcName: "mint_and_tranfer_base",
+        args: [
+          { type: "object", value: id },
+          { type: "object", value: capId },
+          { type: "string", value: imgUrl },
+          { type: "object", value: toAddress },
+        ],
+      },
+    ]);
+
+    signAndExecuteTransaction(
+      {
+        transaction: tx,
+        chain: "sui:testnet",
+      },
+      {
+        onSuccess: async (result) => {
+          setIsPending(false);
+          setResult(result);
+        },
+        onError(error) {
+          setIsPending(false);
+          setError(error);
+        },
+      }
+    );
+    return { result, isPending, error };
+  };
+
+  const mintItem = async ({ id, capId, baseId, itemType }: MintItemProps) => {
+    setIsPending(true);
+
+    console.log(id, capId, baseId, itemType);
+
+    const tx = buildTx([
+      {
+        assign: "TYPE",
+        value: { type: "string", value: itemType }, // ⬅️ move-call 없이 assign만
+      },
+      {
+        funcName: "new_item",
+        args: [
+          { type: "object", value: id },
+          { type: "object", value: capId },
+          { type: "variable", value: "TYPE" },
+        ],
+        assign: "ITEM",
+      },
+      {
+        funcName: "equip_item_to_base",
+        args: [
+          { type: "object", value: id },
+          { type: "object", value: baseId },
+          { type: "variable", value: "ITEM" },
+        ],
+      },
+    ]);
+
+    signAndExecuteTransaction(
+      {
+        transaction: tx,
+        chain: "sui:testnet", // 또는 mainnet
+      },
+      {
+        onSuccess: (result) => {
+          setIsPending(false);
+          setResult(result);
+        },
+        onError: (error) => {
+          setIsPending(false);
+          setError(error);
+        },
+      }
+    );
+
+    return { result, isPending, error };
+  };
+
   return {
     addLayerType,
     createCollection,
     addCollectionInfo,
     newCollection,
     addItemType,
+    mintBase,
+    mintItem,
   };
 };
