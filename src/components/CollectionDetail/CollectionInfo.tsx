@@ -40,15 +40,27 @@ const CollectionInfo = ({ data, setSelectedOption }: CollectionInfoProps) => {
           </Button>
           <Button
             className="min-w-[100px] flex-1 rounded-xl border border-blue-500 bg-transparent text-sm text-blue-500"
-            onClick={() => setSelectedOption("item")}
+            onClick={() => setSelectedOption("addItem")}
           >
             Add Item
           </Button>
           <Button
             className="min-w-[100px] flex-1 rounded-xl border border-blue-500 bg-transparent text-sm text-blue-500"
-            onClick={() => setSelectedOption("mint")}
+            onClick={() => setSelectedOption("mintBase")}
           >
             Mint Base
+          </Button>
+          <Button
+            className="min-w-[100px] flex-1 rounded-xl border border-blue-500 bg-transparent text-sm text-blue-500"
+            onClick={() => setSelectedOption("mintItem")}
+          >
+            Mint Item
+          </Button>
+          <Button
+            className="min-w-[100px] flex-1 rounded-xl border border-blue-500 bg-transparent text-sm text-blue-500"
+            onClick={() => setSelectedOption("rules")}
+          >
+            Rules
           </Button>
         </div>
       </div>

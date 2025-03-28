@@ -194,6 +194,15 @@ export const useExclusuiveQuery = () => {
             showContent: true,
           },
         });
+        console.log(res);
+        const items = (res[0].data?.content as any)?.fields?.item_types.fields.contents.map(
+          (entry: any) => {
+            const { type } = entry.fields.value.fields;
+            return {
+              type,
+            };
+          }
+        );
         const layers = (res[0].data?.content as any)?.fields?.layer_types.fields.contents.map(
           (entry: any) => {
             const { order, type } = entry.fields.value.fields;
@@ -228,7 +237,7 @@ export const useExclusuiveQuery = () => {
         );
 
         // 최종 배열 형태로 감싸기
-        setResult({ ...merged, layers });
+        setResult({ ...merged, layers, items });
         setLoading(false);
       };
 

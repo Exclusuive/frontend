@@ -4,13 +4,13 @@ import React, { useState } from "react";
 import { FiUpload } from "react-icons/fi";
 import { Button } from "../ui/button";
 
-interface AddItemProps {
+interface RulesProps {
   id?: string;
   capId?: string;
   layers: Layer[];
 }
 
-const AddItem = ({ id, capId, layers }: AddItemProps) => {
+const Rules = ({ id, capId, layers }: RulesProps) => {
   const [selectedLayer, setSelectedLayer] = useState("");
   const [itemName, setItemName] = useState("");
   const [itemImagePreview, setItemImagePreview] = useState<string | null>(null);
@@ -29,6 +29,7 @@ const AddItem = ({ id, capId, layers }: AddItemProps) => {
 
   const handleSubmit = () => {
     if (!id || !capId) return;
+    setItemName("");
 
     addItemType({
       id: id,
@@ -41,7 +42,7 @@ const AddItem = ({ id, capId, layers }: AddItemProps) => {
 
   return (
     <div className="rounded-lg bg-white p-6 shadow-md">
-      <h2 className="mb-4 text-xl font-semibold">Add Item</h2>
+      <h2 className="mb-4 text-xl font-semibold">Rules</h2>
 
       <div className="mb-4 space-y-2">
         <label className="block text-sm font-medium text-gray-700">Select Layer</label>
@@ -63,17 +64,24 @@ const AddItem = ({ id, capId, layers }: AddItemProps) => {
 
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700">Item Name</label>
-        <input
-          type="text"
+        <select
           className="w-full rounded-lg border px-3 py-2 text-sm"
-          placeholder="Enter item name"
-          value={itemName}
-          onChange={(e) => setItemName(e.target.value)}
-        />
+          value={selectedLayer}
+          onChange={(e) => setSelectedLayer(e.target.value)}
+        >
+          <option value="" disabled>
+            -- Select Item --
+          </option>
+          {layers.map((item, index) => (
+            <option key={index} value={item.type}>
+              {item.type}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div className="mb-4">
-        <label className="mb-1 block text-sm font-medium text-gray-700">Upload Item Image</label>
+        <label className="mb-1 block text-sm font-medium text-gray-700">Rules</label>
         <label className="flex h-40 cursor-pointer flex-col items-center justify-center rounded-lg border p-4 text-gray-500">
           {itemImagePreview ? (
             <img src={itemImagePreview} alt="Item Preview" className="h-full object-contain" />
@@ -100,4 +108,4 @@ const AddItem = ({ id, capId, layers }: AddItemProps) => {
   );
 };
 
-export default AddItem;
+export default Rules;

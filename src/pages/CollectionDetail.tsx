@@ -4,22 +4,29 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import EditCollection from "@/components/CollectionDetail/EditCollection";
 import EditLayer from "@/components/CollectionDetail/EditLayer";
-import { Layer } from "@/types/types";
+import { Items, Layer } from "@/types/types";
 import AddItem from "@/components/CollectionDetail/AddItem";
+import MintBase from "@/components/CollectionDetail/MintBase";
+import MintItem from "@/components/CollectionDetail/MintItem";
+import Rules from "@/components/CollectionDetail/Rules";
 
 export default function CollectionDetail() {
   const params = useParams();
   const { getCollectionDetail } = useExclusuiveQuery();
   const { result, loading } = getCollectionDetail(params.id || "");
-  const [selectedOption, setSelectedOption] = useState<"collection" | "layer" | "item" | "mint">(
-    "collection"
-  );
+  const [selectedOption, setSelectedOption] = useState<
+    "collection" | "layer" | "addItem" | "mintBase" | "mintItem" | "rules"
+  >("collection");
   const [layers, setLayers] = useState<Layer[]>([]); // 초기값은 빈 배열로
+  const [items, setItems] = useState<Items[]>([]); // 초기값은 빈 배열로
+
   useEffect(() => {
     if (result) {
-      setLayers(result.layers); // result가 바뀔 때 초기 레이어 세팅
+      setLayers(result.layers); // result가 바뀔 때 초기 레이어 세팅\
+      setItems(result.items);
     }
   }, [result]);
+
   console.log(result);
 
   return (
@@ -35,11 +42,15 @@ export default function CollectionDetail() {
             <div className="w-1/2 p-6">
               {selectedOption === "collection" && <EditCollection />}
               {selectedOption === "layer" && <EditLayer layers={layers} setLayers={setLayers} />}
-              {selectedOption === "item" && (
+              {selectedOption === "addItem" && (
                 <AddItem layers={layers} id={params.id} capId={params.capId} />
               )}
-              {selectedOption === "mint" && (
-                <AddItem layers={layers} id={params.id} capId={params.capId} />
+              {selectedOption === "mintBase" && <MintBase id={params.id!} capId={params.capId!} />}
+              {selectedOption === "mintItem" && (
+                <MintItem items={items} id={params.id!} capId={params.capId!} />
+              )}
+              {selectedOption === "rules" && (
+                <Rules layers={layers} id={params.id} capId={params.capId} />
               )}
             </div>
           </div>
