@@ -1,6 +1,6 @@
 import { useSignAndExecuteTransaction, useSuiClient } from "@mysten/dapp-kit";
 import { buildTx } from "@/lib/buildTx";
-import { AddItemProps, TxCall } from "@/types/types";
+import { AddItemProps } from "@/types/types";
 import { useState } from "react";
 import { uploadToS3 } from "@/lib/uploadToS3";
 
