@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
 export default function Dashboard() {
   const account = useCurrentAccount();
   const { data, loading, error } = useGetUserManageCollections(account?.address || "");
-  console.log(data);
 
   if (!account) return <LoginError />;
   if (loading) return <div>Loading...</div>;
@@ -22,7 +21,7 @@ export default function Dashboard() {
     );
 
   return (
-    <div className="p-6">
+    <div className="h-full w-full p-6">
       <p className="text-[40px] font-bold">Manage Collections</p>
 
       <div className="mx-auto w-full">

@@ -7,6 +7,7 @@ import {
   useCurrentAccount,
   useConnectWallet,
 } from "@mysten/dapp-kit";
+import { Link } from "react-router-dom";
 
 const Sidebar = () => {
   const account = useCurrentAccount();
@@ -27,7 +28,9 @@ const Sidebar = () => {
     <aside className="bg-skyblue fixed z-1 flex h-screen w-64 flex-col justify-between bg-white p-4 shadow-lg">
       {/* 상단 로고 및 제목 */}
       <div>
-        <h1 className="text-center text-lg font-bold text-gray-700">Exclusuive Dashboard</h1>
+        <Link to={"/"}>
+          <h1 className="text-center text-lg font-bold text-gray-700">Exclusuive Dashboard</h1>
+        </Link>
         <img src="/basic.png" alt="profile" className="mx-auto my-4 h-32 w-32" />
         {account ? (
           <div>

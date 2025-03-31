@@ -4,10 +4,10 @@ import Header from "./components/Header";
 
 export default function Layout() {
   return (
-    <div className="h-screen w-screen">
+    <div className="h-screen w-screen overflow-x-hidden">
       <Sidebar />
       <Header></Header>
-      <div className="pt-16 pl-64">
+      <div className="flex h-full flex-col pt-16 pl-64">
         <Outlet />
       </div>
     </div>
