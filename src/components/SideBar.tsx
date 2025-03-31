@@ -15,10 +15,10 @@ const Sidebar = () => {
   const { mutate: disconnect } = useDisconnectWallet();
   const { mutate: connect } = useConnectWallet();
 
-  const [active, setActive] = useState("Dashboard");
+  const [active, setActive] = useState("Manage Collection");
 
   const menuItems = [
-    { name: "Dashboard", icon: <Home size={20} />, link: "#" },
+    // { name: "Dashboard", icon: <Home size={20} />, link: "#" },
     { name: "Manage Collection", icon: <Layers size={20} />, link: "#" },
     { name: "View NFTs", icon: <Image size={20} />, link: "#" },
   ];
