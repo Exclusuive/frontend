@@ -42,3 +42,20 @@ export async function uploadToS3({
     throw err;
   }
 }
+
+export async function syncImg(baseId: string) {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+  try {
+    const res = await fetch(`${backendUrl}/generate-image/${baseId}`, {
+      method: "GET",
+    });
+
+    if (!res.ok) throw new Error("Failed to Update Base Image");
+
+    return true;
+  } catch (err: any) {
+    console.error("S3 Upload Error:", err.message || err);
+    throw err;
+  }
+}

@@ -1,5 +1,8 @@
+import AddItem from "@/components/CollectionDetail/AddItem";
 import CollectionDashboard from "@/components/CollectionDetail/CollectionDashboard";
 import EditCollectionInfo from "@/components/CollectionDetail/EditCollectionInfo";
+import MintBase from "@/components/CollectionDetail/MintBase";
+import MintItem from "@/components/CollectionDetail/MintItem";
 import { Button } from "@/components/ui/button";
 import { useCollectionDetail } from "@/hooks/useGetCollectionInfo";
 import { useState } from "react";
@@ -16,18 +19,15 @@ export default function CollectionDetail() {
   if (!data) return <p>Collection not found.</p>;
 
   // 👉 각 메뉴에 대응하는 컴포넌트 정의
-  const AddItem = () => <div className="text-white">➕ Add Item</div>;
-  const MintBaseNFT = () => <div className="text-white">🧬 Mint Base NFT</div>;
-  const MintItemNFT = () => <div className="text-white">🎁 Mint Item NFT</div>;
   const EditMintingRules = () => <div className="text-white">⚙️ Edit Minting Rules</div>;
 
   // ✅ menuItems 배열 안에 컴포넌트 포함
   const menuItems = [
     { name: "Dashboard", component: <CollectionDashboard data={data} /> },
     { name: "Edit Collection Info", component: <EditCollectionInfo /> },
-    { name: "Add Item", component: <AddItem /> },
-    { name: "Mint Base NFT", component: <MintBaseNFT /> },
-    { name: "Mint Item NFT", component: <MintItemNFT /> },
+    { name: "Add Item", component: <AddItem data={data} /> },
+    { name: "Mint Base NFT", component: <MintBase /> },
+    { name: "Mint Item NFT", component: <MintItem data={data} /> },
     { name: "Edit Minting Rules", component: <EditMintingRules /> },
   ];
 

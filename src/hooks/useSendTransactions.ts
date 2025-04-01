@@ -1,8 +1,9 @@
 import { useSignAndExecuteTransaction, useSuiClient } from "@mysten/dapp-kit";
 import { buildTx } from "@/lib/buildTx";
-import { AddItemProps } from "@/types/types";
+import { AddItemProps, MintBaseProps, MintItemProps } from "@/types/types";
 import { useState } from "react";
-import { uploadToS3 } from "@/lib/uploadToS3";
+import { syncImg, uploadToS3 } from "@/lib/uploadToS3";
+import { v4 as uuidv4 } from "uuid";
 
 export const useSendTransactions = () => {
   const client = useSuiClient();
@@ -216,8 +217,10 @@ export const useSendTransactions = () => {
   //   };
 
   const addItemType = async ({ id, capId, layer, itemName, itemImg }: AddItemProps) => {
+    setIsPending(true);
+
     const uploadedUrl = await uploadToS3({
-      type: `${PACKAGE_ID}_${MODULE_ID}_collection/item`,
+      type: `${PACKAGE_ID}_${MODULE_ID}_collection/${id}/Item`,
       id: itemName,
       file: itemImg,
     });
@@ -254,86 +257,101 @@ export const useSendTransactions = () => {
     return { result, isPending, error };
   };
 
-  //   const mintBase = async ({ id, capId, imgUrl, toAddress }: MintBaseProps) => {
-  //     const tx = buildTx([
-  //       {
-  //         funcName: "mint_and_tranfer_base",
-  //         args: [
-  //           { type: "object", value: id },
-  //           { type: "object", value: capId },
-  //           { type: "string", value: imgUrl },
-  //           { type: "object", value: toAddress },
-  //         ],
-  //       },
-  //     ]);
+  const mintBase = async ({ id, capId, toAddress }: MintBaseProps) => {
+    setIsPending(true);
 
-  //     signAndExecuteTransaction(
-  //       {
-  //         transaction: tx,
-  //         chain: "sui:testnet",
-  //       },
-  //       {
-  //         onSuccess: async (result) => {
-  //           setIsPending(false);
-  //           setResult(result);
-  //         },
-  //         onError(error) {
-  //           setIsPending(false);
-  //           setError(error);
-  //         },
-  //       }
-  //     );
-  //     return { result, isPending, error };
-  //   };
+    const uuid = uuidv4();
 
-  //   const mintItem = async ({ id, capId, baseId, itemType }: MintItemProps) => {
-  //     setIsPending(true);
+    const res = await fetch("/white.png");
+    const blob = await res.blob();
+    const whitefile = new File([blob], "base.png", { type: "image/png" });
 
-  //     console.log(id, capId, baseId, itemType);
+    const uploadedUrl = await uploadToS3({
+      type: `${PACKAGE_ID}_${MODULE_ID}_collection/${id}/Base`,
+      id: `${uuid}`,
+      file: whitefile,
+    });
 
-  //     const tx = buildTx([
-  //       {
-  //         assign: "TYPE",
-  //         value: { type: "string", value: itemType }, // ⬅️ move-call 없이 assign만
-  //       },
-  //       {
-  //         funcName: "new_item",
-  //         args: [
-  //           { type: "object", value: id },
-  //           { type: "object", value: capId },
-  //           { type: "variable", value: "TYPE" },
-  //         ],
-  //         assign: "ITEM",
-  //       },
-  //       {
-  //         funcName: "equip_item_to_base",
-  //         args: [
-  //           { type: "object", value: id },
-  //           { type: "object", value: baseId },
-  //           { type: "variable", value: "ITEM" },
-  //         ],
-  //       },
-  //     ]);
+    const tx = buildTx([
+      {
+        funcName: "mint_and_tranfer_base",
+        args: [
+          { type: "object", value: id },
+          { type: "object", value: capId },
+          { type: "string", value: uploadedUrl.fileUrl },
+          { type: "object", value: toAddress },
+        ],
+      },
+    ]);
 
-  //     signAndExecuteTransaction(
-  //       {
-  //         transaction: tx,
-  //         chain: "sui:testnet", // 또는 mainnet
-  //       },
-  //       {
-  //         onSuccess: (result) => {
-  //           setIsPending(false);
-  //           setResult(result);
-  //         },
-  //         onError: (error) => {
-  //           setIsPending(false);
-  //           setError(error);
-  //         },
-  //       }
-  //     );
+    signAndExecuteTransaction(
+      {
+        transaction: tx,
+        chain: "sui:testnet",
+      },
+      {
+        onSuccess: async (result) => {
+          setIsPending(false);
+          setResult(result);
+        },
+        onError(error) {
+          setIsPending(false);
+          setError(error);
+        },
+      }
+    );
 
-  //     return { result, isPending, error };
-  //   };
+    return { result, isPending, error };
+  };
+
+  const mintItem = async ({ id, capId, baseId, itemType }: MintItemProps) => {
+    setIsPending(true);
+
+    const tx = buildTx([
+      {
+        assign: "TYPE",
+        value: { type: "string", value: itemType }, // ⬅️ move-call 없이 assign만
+      },
+      {
+        funcName: "new_item",
+        args: [
+          { type: "object", value: id },
+          { type: "object", value: capId },
+          { type: "variable", value: "TYPE" },
+        ],
+        assign: "ITEM",
+      },
+      {
+        funcName: "equip_item_to_base",
+        args: [
+          { type: "object", value: id },
+          { type: "object", value: baseId },
+          { type: "variable", value: "ITEM" },
+        ],
+      },
+    ]);
+
+    signAndExecuteTransaction(
+      {
+        transaction: tx,
+        chain: "sui:testnet", // 또는 mainnet
+      },
+      {
+        onSuccess: (result) => {
+          setIsPending(false);
+          setResult(result);
+        },
+        onError: (error) => {
+          setIsPending(false);
+          setError(error);
+        },
+      }
+    );
+
+    await syncImg(baseId);
+
+    return { result, isPending, error };
+  };
 
   return {
     // addLayerType,
@@ -341,7 +359,7 @@ export const useSendTransactions = () => {
     // addCollectionInfo,
     // newCollection,
     addItemType,
-    // mintBase,
-    // mintItem,
+    mintBase,
+    mintItem,
   };
 };

@@ -41,3 +41,16 @@ export interface UploadToS3Params {
   id: string;
   file: File | null;
 }
+
+export interface MintBaseProps {
+  id: string;
+  capId: string;
+  toAddress: string;
+}
+
+export type MintItemProps = {
+  id: string;
+  capId: string;
+  baseId: string;
+  itemType: string;
+};
