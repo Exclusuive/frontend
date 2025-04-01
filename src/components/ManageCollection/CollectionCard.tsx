@@ -2,7 +2,6 @@ import { CollectionCardProps } from "@/types/types";
 import { Link } from "react-router-dom";
 
 export default function CollectionCard({ item }: { item: CollectionCardProps }) {
-  console.log(item); // 여기서 item.id, item.capID, ...
   return (
     <Link to={`/collection/${item.collectionId}/${item.capId}`}>
       <div className="w-full overflow-hidden rounded-2xl bg-white shadow-md">
