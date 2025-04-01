@@ -22,8 +22,6 @@ export const useCheckUserNFTs = (address: string, collectionId: string | undefin
     },
   });
 
-  console.log(data);
-
   useEffect(() => {
     if (disabled || !data || isPending || error || !collectionId) return;
     const result = data.data
@@ -39,88 +37,14 @@ export const useCheckUserNFTs = (address: string, collectionId: string | undefin
         const content = item?.data?.content;
         const fields = (content as any).fields;
         return {
+          id: fields?.id.id,
           name: fields?.name,
           img_url: fields?.img_url,
         };
       });
 
-    console.log(result);
-
-    const fetchCollectionInfos = async () => {
-      setLoading(true);
-      setInternalError(null);
-
-      try {
-        const caps = data.data;
-
-        const collectionIds = caps
-          .map((obj: any) => {
-            const content = obj.data?.content;
-            if (
-              content?.dataType === "moveObject" &&
-              "fields" in content &&
-              "collection_id" in content.fields
-            ) {
-              return {
-                collectionId: content.fields.collection_id as string,
-                capId: obj.data?.objectId as string,
-              };
-            }
-            return null;
-          })
-          .filter(Boolean) as { collectionId: string; capId: string }[];
-
-        const allCollectionInfo = await Promise.all(
-          collectionIds.map(async ({ collectionId, capId }) => {
-            try {
-              const fieldsData = await suiClient.getDynamicFields({ parentId: collectionId });
-              const objectIds = fieldsData.data.map((item: any) => item.objectId);
-              const allObjectIds = [collectionId, ...objectIds];
-              const res = await suiClient.multiGetObjects({
-                ids: allObjectIds,
-                options: { showContent: true },
-              });
-
-              const name = {
-                name: "name",
-                content:
-                  (res[0].data?.content as any)?.fields?.base_type?.fields?.name ?? "Unknown",
-              };
-
-              const dynamic = res
-                .slice(1)
-                .filter((item: any) => item.data && item.data.content)
-                .map((item: any) => (item.data!.content as any).fields.value.fields);
-
-              const result = [name, ...dynamic];
-
-              const merged = result.reduce(
-                (acc, item) => {
-                  acc[item.name] = item.content;
-                  return acc;
-                },
-                {} as Record<string, any>
-              );
-
-              return { ...merged, capId, collectionId };
-            } catch (e) {
-              console.error("Failed to fetch collection info:", e);
-              return null;
-            }
-          })
-        );
-
-        const filteredInfo = allCollectionInfo.filter(Boolean);
-        setResult(filteredInfo);
-      } catch (e) {
-        console.error("Unexpected error during fetch:", e);
-        setInternalError(e as Error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCollectionInfos();
+    setResult(result);
+    setLoading(false);
   }, [data, isPending, error, disabled, collectionId]);
 
   return {

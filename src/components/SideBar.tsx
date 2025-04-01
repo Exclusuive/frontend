@@ -20,8 +20,8 @@ const Sidebar = () => {
 
   const menuItems = [
     // { name: "Dashboard", icon: <Home size={20} />, link: "#" },
-    { name: "Manage Collection", icon: <Layers size={20} />, link: "#" },
-    { name: "View NFTs", icon: <Image size={20} />, link: "#" },
+    { name: "Manage Collection", icon: <Layers size={20} />, link: "/" },
+    { name: "View Collections", icon: <Image size={20} />, link: "/viewcollections" },
   ];
 
   return (
@@ -62,8 +62,9 @@ const Sidebar = () => {
 
         <nav className="mt-6">
           {menuItems.map((item) => (
-            <button
+            <Link
               key={item.name}
+              to={item.link}
               onClick={() => setActive(item.name)}
               className={`flex w-full cursor-pointer items-center rounded-lg px-4 py-3 text-left ${
                 active === item.name ? "bg-black text-white" : "text-gray-600 hover:bg-gray-100"
@@ -71,7 +72,7 @@ const Sidebar = () => {
             >
               {item.icon}
               <span className="ml-3">{item.name}</span>
-            </button>
+            </Link>
           ))}
         </nav>
       </div>
