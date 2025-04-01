@@ -24,7 +24,7 @@ export default function Dashboard() {
     <div className="h-full w-full p-6">
       <p className="text-[40px] font-bold">Manage Collections</p>
 
-      <div className="mx-auto w-full">
+      <div className="mx-auto w-3/4">
         <div className="mb-4 flex w-full justify-end">
           <Link to="/createcollection" className="px-4 py-2">
             Create Collections
