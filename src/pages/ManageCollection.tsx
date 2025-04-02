@@ -32,7 +32,9 @@ export default function Dashboard() {
         </div>
         <div className="grid w-full grid-cols-2 justify-center gap-x-10 py-10">
           {data.map((item) => (
-            <CollectionCard item={item}></CollectionCard>
+            <Link to={`/collection/${item.collectionId}/${item.capId}`}>
+              <CollectionCard item={item}></CollectionCard>
+            </Link>
           ))}
         </div>
       </div>

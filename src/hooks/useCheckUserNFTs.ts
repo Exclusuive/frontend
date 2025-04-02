@@ -36,6 +36,7 @@ export const useCheckUserNFTs = (address: string, collectionId: string | undefin
       .map((item) => {
         const content = item?.data?.content;
         const fields = (content as any).fields;
+
         return {
           id: fields?.id.id,
           name: fields?.name,
