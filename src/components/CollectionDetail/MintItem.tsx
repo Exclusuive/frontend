@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useSendTransactions } from "@/hooks/useSendTransactions";
 import { Button } from "../ui/button";
 import { useParams } from "react-router-dom";
-import { QRCodeCanvas } from "qrcode.react";
 
 export default function MintItem({ data }: any) {
   const [selectedLayer, setSelectedLayer] = useState("");

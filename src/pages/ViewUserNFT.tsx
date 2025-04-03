@@ -16,7 +16,7 @@ export default function ViewUserNFT() {
 
   const selectedNFT = data?.find((nft: any) => nft.id === selectedId);
 
-  const { data: result, loading: loading2, error: error2 } = useGetNFTInfo(selectedId);
+  const { data: result } = useGetNFTInfo(selectedId);
 
   console.log(result);
   useEffect(() => {

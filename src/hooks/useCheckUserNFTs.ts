@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSuiClient, useSuiClientQuery } from "@mysten/dapp-kit";
+import { useSuiClientQuery } from "@mysten/dapp-kit";
 
 const PACKAGE_ID = import.meta.env.VITE_PACKAGE_ID;
 const MODULE_ID = import.meta.env.VITE_MODULE;
@@ -9,7 +9,6 @@ export const useCheckUserNFTs = (address: string, collectionId: string | undefin
   const [result, setResult] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [internalError, setInternalError] = useState<Error | null>(null);
-  const suiClient = useSuiClient();
 
   // address가 없으면 일찍 리턴
   const disabled = !address;
@@ -46,6 +45,7 @@ export const useCheckUserNFTs = (address: string, collectionId: string | undefin
 
     setResult(result);
     setLoading(false);
+    setInternalError(null);
   }, [data, isPending, error, disabled, collectionId]);
 
   return {
