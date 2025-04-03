@@ -32,10 +32,18 @@ export default function ViewUserNFT() {
       <div className="grid h-full grid-cols-1 gap-x-8 text-start xl:grid-cols-2">
         <div className="flex flex-col items-center space-y-4">
           <div className="text-start font-extrabold">My NFTs</div>
+
+          {selectedNFT && (
+            <img
+              src={selectedNFT.img_url}
+              alt={`NFT ${selectedNFT.id}`}
+              className="h-48 w-48 rounded-lg border shadow"
+            />
+          )}
           <select
             value={selectedId}
             onChange={(e) => setSelectedId(e.target.value)}
-            className="rounded border px-4 py-2 shadow"
+            className="w-full rounded border px-4 py-2 shadow"
           >
             <option value="">Select your NFT ID</option>
             {data.map((nft: any) => (
@@ -45,15 +53,6 @@ export default function ViewUserNFT() {
             ))}
           </select>
 
-          {selectedNFT && (
-            <img
-              src={selectedNFT.img_url}
-              alt={`NFT ${selectedNFT.id}`}
-              className="h-48 w-48 rounded-lg border shadow"
-            />
-          )}
-
-          <div>My Items</div>
           {result && (
             <div className="mt-4 w-full rounded bg-white p-4 shadow">
               <h3 className="mb-2 text-lg font-semibold">Layer Info</h3>
