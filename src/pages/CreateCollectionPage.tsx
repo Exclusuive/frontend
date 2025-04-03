@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 function Card({ text, setSelectedOption, goto }: any) {
   return (
     <div
-      className="flex h-70 w-70 items-center justify-center rounded-lg border border-black bg-white p-4"
+      className="flex h-80 w-80 cursor-pointer items-center justify-center rounded-lg border border-black bg-white p-4"
       onClick={() => setSelectedOption(goto)}
     >
       {text}
@@ -19,9 +19,9 @@ export default function CreateCollection() {
 
   return (
     <div className="pt-5 pr-18 pl-18">
-      <div className="pb-2 text-4xl">Dashboard</div>
+      <div className="pb-2 text-5xl">Dashboard</div>
       <div className="flex w-full items-center justify-between">
-        <div className="text-xl">Create a new collection</div>
+        <div className="text-2xl">Create a new collection</div>
         <button
           onClick={() => navigate("/")}
           className="cursor-pointer rounded-lg bg-blue-500 px-4 py-2 text-white transition hover:bg-blue-600"
@@ -29,9 +29,9 @@ export default function CreateCollection() {
           Back
         </button>
       </div>
-      <div className="flex min-h-screen items-center justify-center p-6">
+      <div className="flex items-center justify-center p-6 pt-30">
         {selectedOption === null && (
-          <div className="flex justify-center gap-10 pt-20">
+          <div className="flex justify-center gap-10">
             <Card
               text="I want to make new NFTs including exclusive policy."
               setSelectedOption={setSelectedOption}

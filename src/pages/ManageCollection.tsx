@@ -24,9 +24,9 @@ export default function Dashboard() {
 
   return (
     <div className="pt-5 pr-18 pl-18">
-      <div className="pb-2 text-4xl">Dashboard</div>
+      <div className="pb-2 text-5xl">Dashboard</div>
       <div className="flex w-full items-center justify-between">
-        <div className="text-xl">Collections</div>
+        <div className="text-2xl">Collections</div>
         <button
           onClick={() => navigate("/createcollection")}
           className="cursor-pointer rounded-lg bg-blue-500 px-4 py-2 text-white transition hover:bg-blue-600"
