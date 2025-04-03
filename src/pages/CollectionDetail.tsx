@@ -4,7 +4,7 @@ import EditCollectionInfo from "@/components/CollectionDetail/EditCollectionInfo
 import MintBase from "@/components/CollectionDetail/MintBase";
 import MintItem from "@/components/CollectionDetail/MintItem";
 import { Button } from "@/components/ui/button";
-import { useCollectionDetail } from "@/hooks/useGetCollectionInfo";
+import { useGetCollectionInfo } from "@/hooks/useGetCollectionInfo";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -12,7 +12,7 @@ export default function CollectionDetail() {
   const [menu, setMenu] = useState("Dashboard");
 
   const params = useParams();
-  const { data, loading, error } = useCollectionDetail(params.collectionId || "");
+  const { data, loading, error } = useGetCollectionInfo(params.collectionId || "");
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error occurred: {error.message}</p>;

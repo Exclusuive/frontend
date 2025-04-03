@@ -4,6 +4,8 @@ import ManageCollection from "./pages/ManageCollection";
 import CreateColelction from "./pages/CreateCollectionPage";
 import CollectionDetail from "./pages/CollectionDetail";
 import UserMintNFTs from "./pages/UserMintNFT";
+import ViewCollections from "./pages/ViewCollections";
+import ViewUserNFT from "./pages/ViewUserNFT";
 
 export default function Routers() {
   return (
@@ -13,6 +15,8 @@ export default function Routers() {
           <Route path="/" element={<ManageCollection />} />
           <Route path="/createcollection" element={<CreateColelction />} />
           <Route path="/collection/:collectionId/:capId" element={<CollectionDetail />} />
+          <Route path="/viewcollections" element={<ViewCollections />} />
+          <Route path="/viewNFT/:collectionId" element={<ViewUserNFT />} />
         </Route>
         <Route path="/mintNFTs/:collectionId" element={<UserMintNFTs />} />
       </Routes>

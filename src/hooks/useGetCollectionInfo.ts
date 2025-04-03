@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useSuiClient, useSuiClientQuery } from "@mysten/dapp-kit";
 import { SuiObjectResponse } from "@mysten/sui/client";
 
-export const useCollectionDetail = (collectionId: string) => {
+export const useGetCollectionInfo = (collectionId: string) => {
   const [result, setResult] = useState<Record<string, any> | null>(null);
   const [loading, setLoading] = useState(true);
   const suiClient = useSuiClient();

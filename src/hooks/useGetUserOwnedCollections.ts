@@ -5,7 +5,7 @@ const PACKAGE_ID = import.meta.env.VITE_PACKAGE_ID;
 const MODULE_ID = import.meta.env.VITE_MODULE;
 const COL_CAP_TYPE = `${PACKAGE_ID}::${MODULE_ID}::Base`;
 
-export const useCheckUserNFTs = (address: string, collectionId: string | undefined) => {
+export const useGetUserOwnedCollections = (address: string) => {
   const [result, setResult] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [internalError, setInternalError] = useState<Error | null>(null);
@@ -22,56 +22,32 @@ export const useCheckUserNFTs = (address: string, collectionId: string | undefin
     },
   });
 
-  console.log(data);
-
   useEffect(() => {
-    if (disabled || !data || isPending || error || !collectionId) return;
-    const result = data.data
-      .filter((item) => {
-        const content = item?.data?.content;
-        if (!content || !("fields" in content)) return false;
+    if (disabled || !data || isPending || error) return;
 
-        const fields = (content as any).fields;
-        const collection_id = fields?.type?.fields?.collection_id;
-        return collection_id === collectionId;
-      })
-      .map((item) => {
-        const content = item?.data?.content;
-        const fields = (content as any).fields;
-        return {
-          name: fields?.name,
-          img_url: fields?.img_url,
-        };
-      });
+    const uniqueCollectionIds = Array.from(
+      new Set(
+        data?.data
+          .map((item) => {
+            const content = item?.data?.content;
+            if (!content || !("fields" in content)) return null;
 
-    console.log(result);
+            const fields = (content as any).fields;
+            return fields?.type?.fields?.collection_id || null;
+          })
+          .filter((id): id is string => id !== null)
+      )
+    );
+
+    console.log(uniqueCollectionIds);
 
     const fetchCollectionInfos = async () => {
       setLoading(true);
       setInternalError(null);
 
       try {
-        const caps = data.data;
-
-        const collectionIds = caps
-          .map((obj: any) => {
-            const content = obj.data?.content;
-            if (
-              content?.dataType === "moveObject" &&
-              "fields" in content &&
-              "collection_id" in content.fields
-            ) {
-              return {
-                collectionId: content.fields.collection_id as string,
-                capId: obj.data?.objectId as string,
-              };
-            }
-            return null;
-          })
-          .filter(Boolean) as { collectionId: string; capId: string }[];
-
         const allCollectionInfo = await Promise.all(
-          collectionIds.map(async ({ collectionId, capId }) => {
+          uniqueCollectionIds.map(async (collectionId) => {
             try {
               const fieldsData = await suiClient.getDynamicFields({ parentId: collectionId });
               const objectIds = fieldsData.data.map((item: any) => item.objectId);
@@ -102,7 +78,7 @@ export const useCheckUserNFTs = (address: string, collectionId: string | undefin
                 {} as Record<string, any>
               );
 
-              return { ...merged, capId, collectionId };
+              return { ...merged, collectionId };
             } catch (e) {
               console.error("Failed to fetch collection info:", e);
               return null;
@@ -121,7 +97,7 @@ export const useCheckUserNFTs = (address: string, collectionId: string | undefin
     };
 
     fetchCollectionInfos();
-  }, [data, isPending, error, disabled, collectionId]);
+  }, [data, isPending, error, disabled]);
 
   return {
     data: result,
