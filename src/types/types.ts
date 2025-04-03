@@ -48,9 +48,21 @@ export interface MintBaseProps {
   toAddress: string;
 }
 
-export type MintItemProps = {
+export interface MintItemProps {
   id: string;
   capId: string;
   baseId: string;
   itemType: string;
+}
+
+export interface Layer {
+  name?: string;
+  order?: number;
+  type?: string;
+}
+export type NewCollectionProps = {
+  collectionName: string;
+  description: string;
+  bannerImageFile: File | null;
+  layers: Layer[];
 };

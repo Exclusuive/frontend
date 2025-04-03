@@ -17,7 +17,7 @@ export async function uploadToS3({
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        fileName: `${type}/${id}_${file.name}`,
+        fileName: `${type}/${id}`,
         fileType: file.type,
       }),
     });
