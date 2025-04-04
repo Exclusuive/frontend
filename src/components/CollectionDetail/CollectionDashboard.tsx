@@ -27,7 +27,7 @@ export default function CollectionDashboard({ data }: any) {
         <img
           src={data.bannerImg}
           alt="Collection"
-          className="aspect-video w-full rounded-xl border border-black object-cover"
+          className="aspect-video w-[100%] max-w-[400px] rounded-xl border border-black object-cover"
         />
         <div>
           <h2 className="py-4 text-2xl font-semibold">{data.name}</h2>
