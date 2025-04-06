@@ -36,7 +36,7 @@ export default function CollectionDetail() {
 
   return (
     <div className="flex h-full w-full flex-col items-center text-center">
-      <div className="flex w-full flex-wrap justify-center gap-x-5 py-10">
+      <div className="flex w-full flex-wrap justify-center gap-x-5 gap-y-2 py-10">
         {menuItems.map((item) => (
           <Button
             key={item.name}
@@ -50,7 +50,7 @@ export default function CollectionDetail() {
         ))}
       </div>
 
-      <div className="min-h-3/4 w-3/4 rounded-lg bg-gray-100 p-10 shadow-md">
+      <div className="w-3/4 rounded-lg bg-gray-100 p-10 shadow-md">
         {selected?.component ?? <div className="text-white">Unknown Page</div>}
       </div>
     </div>

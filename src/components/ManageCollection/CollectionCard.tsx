@@ -2,7 +2,7 @@ import { CollectionCardProps } from "@/types/types";
 
 export default function CollectionCard({ item }: { item: CollectionCardProps }) {
   return (
-    <div className="w-full overflow-hidden rounded-2xl bg-white shadow-md">
+    <div className="w-[300px] overflow-hidden rounded-2xl bg-white shadow-md">
       {/* Banner Image */}
       <div className="h-48 w-full bg-gray-400">
         <img src={item.bannerImg} alt="banner" className="h-full w-full object-cover" />

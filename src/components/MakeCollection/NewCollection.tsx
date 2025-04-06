@@ -39,7 +39,7 @@ export default function NewCollection() {
   };
 
   return (
-    <div className="min-h-screen w-2/3 overflow-hidden p-6">
+    <div className="w-full overflow-hidden">
       <div className="w-full">
         <div className="mb-6 rounded-lg bg-white p-6 shadow-md">
           <h2 className="text-xl font-semibold">Collection Information</h2>
