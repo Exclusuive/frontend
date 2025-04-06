@@ -23,11 +23,11 @@ export default function ViewCollections() {
     );
 
   return (
-    <div className="h-full w-full p-6">
-      <p className="text-[40px] font-bold">View Collections</p>
+    <div className="pt-5 pr-18 pl-18">
+      <div className="pb-2 text-5xl">View Collections</div> 
 
       <div className="mx-auto w-3/4">
-        <div className="grid w-full grid-cols-2 justify-center gap-x-10 py-10">
+        <div className="grid grid-cols-3 w-[680px] place-items-center gap-x-80 gap-y-10 py-10 pl-15">
           {data.map((item) => (
             <Link to={`/viewNFT/${item.collectionId}`}>
               <CollectionCard item={item}></CollectionCard>

@@ -36,7 +36,7 @@ export default function Dashboard() {
       </div>
 
       <div className="mx-auto w-3/4">
-        <div className="grid w-[680px] place-items-center grid-cols-2 gap-y-10 py-10">
+        <div className="grid grid-cols-3 w-[680px] place-items-center gap-x-80 gap-y-10 py-10 pl-15">
           {data.map((item) => (
             <Link to={`/collection/${item.collectionId}/${item.capId}`}>
               <CollectionCard item={item}></CollectionCard>
