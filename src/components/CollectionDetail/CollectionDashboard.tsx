@@ -22,7 +22,7 @@ export default function CollectionDashboard({ data }: any) {
   };
 
   return (
-    <div className="grid h-full grid-cols-1 gap-x-8 text-start xl:grid-cols-2">
+    <div className="grid gap-y-10 xl:gap-y-0 h-full grid-cols-1 gap-x-8 text-start xl:grid-cols-2">
       <div>
         <img
           src={data.bannerImg}
