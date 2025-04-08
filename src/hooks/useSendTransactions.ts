@@ -227,6 +227,7 @@ export const useSendTransactions = () => {
     description,
     bannerImageFile,
     layers,
+    onDone,
   }: NewCollectionProps) => {
     const tx = buildTx([
       {
@@ -299,6 +300,7 @@ export const useSendTransactions = () => {
             {
               onSuccess: () => {
                 console.log("DONE!");
+                if (onDone) onDone();
               },
               onError: () => {
                 console.log("SOMETHING WRONG WITH ADD CONFIG");

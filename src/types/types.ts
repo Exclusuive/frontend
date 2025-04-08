@@ -65,4 +65,5 @@ export type NewCollectionProps = {
   description: string;
   bannerImageFile: File | null;
   layers: Layer[];
+  onDone?: () => void;
 };
