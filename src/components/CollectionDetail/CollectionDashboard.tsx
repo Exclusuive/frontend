@@ -4,7 +4,7 @@ import { useSendTransactions } from "@/hooks/useSendTransactions";
 import { useParams } from "react-router-dom";
 
 export default function CollectionDashboard({ data }: any) {
-  const [menu, setMenu] = useState(data.layers[0].type);
+  const [menu, setMenu] = useState(() => data?.layer?.[0]?.type || "");
   const [selectedItem, setSelectedItem] = useState<string>("");
 
   const [recipient, setRecipient] = useState("");
@@ -21,8 +21,10 @@ export default function CollectionDashboard({ data }: any) {
     });
   };
 
+  console.log(data);
+
   return (
-    <div className="grid gap-y-10 xl:gap-y-0 h-full grid-cols-1 gap-x-8 text-start xl:grid-cols-2">
+    <div className="grid h-full grid-cols-1 gap-x-8 gap-y-10 text-start xl:grid-cols-2 xl:gap-y-0">
       <div>
         <img
           src={data.bannerImg}
@@ -100,7 +102,7 @@ export default function CollectionDashboard({ data }: any) {
             </Button>
           </div>
         ) : (
-          <div className="my-auto text-center text-xl">📝 Dashboard will be available Soon!</div>
+          <div className="my-auto text-center text-xl"></div>
         )}
       </div>
     </div>

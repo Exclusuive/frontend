@@ -7,17 +7,41 @@ import {
   NewCollectionProps,
   TxCall,
 } from "@/types/types";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { syncImg, uploadToS3 } from "@/lib/uploadToS3";
 import { v4 as uuidv4 } from "uuid";
+import { toast } from "sonner"; // ✅ 일반 함수 import
 
 export const useSendTransactions = () => {
   const client = useSuiClient();
   const [result, setResult] = useState<any>();
-  const [isPending, setIsPending] = useState<boolean>(true);
+  const [isPending, setIsPending] = useState<boolean>(false);
   const [error, setError] = useState<any>();
   const PACKAGE_ID = import.meta.env.VITE_PACKAGE_ID;
   const MODULE_ID = import.meta.env.VITE_MODULE;
+  const toastIdRef = useRef<any | null>(null);
+
+  const [toastState, setToastState] = useState<{
+    type: "loading" | "success" | "error" | null;
+    message: string;
+  }>({ type: null, message: "" });
+
+  useEffect(() => {
+    if (!toastState.type || !toastState.message) return;
+
+    if (toastState.type === "loading") {
+      toastIdRef.current = toast.loading(toastState.message);
+    } else if (toastState.type === "success" && toastIdRef.current !== null) {
+      toast.success(toastState.message, { id: toastIdRef.current });
+      toastIdRef.current = null;
+    } else if (toastState.type === "error" && toastIdRef.current !== null) {
+      toast.error(toastState.message, { id: toastIdRef.current });
+      toastIdRef.current = null;
+    }
+
+    // 상태 초기화
+    setToastState({ type: null, message: "" });
+  }, [toastState]);
 
   const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction({
     execute: async ({ bytes, signature }) =>
@@ -228,6 +252,7 @@ export const useSendTransactions = () => {
     bannerImageFile,
     layers,
   }: NewCollectionProps) => {
+    setToastState({ type: "loading", message: "Collection is being created..." });
     const tx = buildTx([
       {
         funcName: "default",
@@ -242,6 +267,20 @@ export const useSendTransactions = () => {
       },
       {
         onSuccess: async (result) => {
+          setToastState({
+            type: "success",
+            message: "Creating collection succeeded.",
+          });
+
+          // ✅ 잠깐 기다렸다가 다음 로딩 띄우기 (토스트가 보여질 시간 확보)
+          await new Promise((resolve) => setTimeout(resolve, 1500));
+
+          setToastState({
+            type: "loading",
+            message:
+              "Adding layers and information to the collection. Please confirm your transaction once again.",
+          });
+
           const createdObjects = result.objectChanges?.filter((obj) => obj.type === "created");
           const collectionObject = createdObjects!.find((obj) =>
             obj.objectType.endsWith("::Collection")
@@ -252,13 +291,12 @@ export const useSendTransactions = () => {
             obj.objectType.endsWith("::CollectionCap")
           );
 
-          const layerTxCalls: TxCall[] = layers.map((layer: any, index: any) => ({
+          const layerTxCalls: TxCall[] = layers.map((layer: any) => ({
             funcName: "add_layer_type",
             args: [
               { type: "object", value: collectionObject?.objectId! },
               { type: "object", value: collectionCapObject?.objectId! },
               { type: "string", value: layer.name! },
-              { type: "u64", value: index },
             ],
           }));
 
@@ -275,6 +313,7 @@ export const useSendTransactions = () => {
               args: [
                 { type: "object", value: collectionObject?.objectId! },
                 { type: "object", value: collectionCapObject?.objectId! },
+                { type: "string", value: "BaseType" },
                 { type: "string", value: "description" },
                 { type: "string", value: description },
               ],
@@ -285,6 +324,7 @@ export const useSendTransactions = () => {
               args: [
                 { type: "object", value: collectionObject?.objectId! },
                 { type: "object", value: collectionCapObject?.objectId! },
+                { type: "string", value: "BaseType" },
                 { type: "string", value: "bannerImg" },
                 { type: "string", value: uploadedUrl.fileUrl },
               ],
@@ -298,10 +338,17 @@ export const useSendTransactions = () => {
             },
             {
               onSuccess: () => {
-                console.log("DONE!");
+                setToastState({
+                  type: "success",
+                  message: "Done! Please return to the dashboard.",
+                });
               },
               onError: () => {
-                console.log("SOMETHING WRONG WITH ADD CONFIG");
+                setToastState({
+                  type: "error",
+                  message:
+                    "Something went wrong while adding config to the collection. Please return to the dashboard and edit your collection information again.",
+                });
               },
             }
           );
@@ -309,7 +356,12 @@ export const useSendTransactions = () => {
           setIsPending(false);
           setResult(result);
         },
+
         onError(error) {
+          setToastState({
+            type: "error",
+            message: "Something went wrong while creating the collection. Please try again.",
+          });
           setIsPending(false);
           setError(error);
         },
@@ -361,6 +413,7 @@ export const useSendTransactions = () => {
 
   const mintBase = async ({ id, capId, toAddress }: MintBaseProps) => {
     setIsPending(true);
+    setToastState({ type: "loading", message: "Minting Base Object..." });
 
     const uuid = uuidv4();
 
@@ -393,10 +446,17 @@ export const useSendTransactions = () => {
       },
       {
         onSuccess: async (result) => {
+          setToastState({ type: "success", message: "Minting Base Object succeded" });
+
           setIsPending(false);
           setResult(result);
         },
         onError(error) {
+          setToastState({
+            type: "error",
+            message: "Something went wrong when Minting Base Object. Please Try again.",
+          });
+
           setIsPending(false);
           setError(error);
         },
@@ -456,7 +516,7 @@ export const useSendTransactions = () => {
   };
 
   return {
-    // addLayerType,
+    addLayerType,
     // createCollection,
     // addCollectionInfo,
     newCollection,

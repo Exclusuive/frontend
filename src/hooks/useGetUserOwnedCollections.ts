@@ -60,7 +60,7 @@ export const useGetUserOwnedCollections = (address: string) => {
               const name = {
                 name: "name",
                 content:
-                  (res[0].data?.content as any)?.fields?.base_type?.fields?.name ?? "Unknown",
+                  (res[0].data?.content as any)?.fields?.base_type?.fields?.type ?? "Unknown",
               };
 
               const dynamic = res

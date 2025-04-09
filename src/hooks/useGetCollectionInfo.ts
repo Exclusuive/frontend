@@ -55,7 +55,7 @@ export const useGetCollectionInfo = (collectionId: string) => {
 
         const name = {
           name: "name",
-          content: content?.fields?.base_type?.fields?.name ?? "Unknown",
+          content: content?.fields?.base_type?.fields?.type ?? "Unknown",
         };
 
         const dynamic = res
