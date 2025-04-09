@@ -1,15 +1,18 @@
-import { useSendTransactions } from "@/hooks/useSendTransactions";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useSendTransactions } from "@/hooks/useSendTransactions";
 import { Button } from "../ui/button";
 import { FiUpload } from "react-icons/fi";
+import { useParams } from "react-router-dom";
 
-export default function AddItem({ data }: any) {
+export default function ManageItem({ data }: any) {
   const [selectedLayer, setSelectedLayer] = useState("");
   const [itemName, setItemName] = useState("");
   const [itemImagePreview, setItemImagePreview] = useState<string | null>(null);
   const [itemImageFile, setItemImageFile] = useState<File | null>(null);
-  const { addItemType } = useSendTransactions();
+  const [recipient, setRecipient] = useState("");
+  const [amount, setAmount] = useState(0);
+
+  const { mintItem } = useSendTransactions();
   const params = useParams();
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,23 +24,24 @@ export default function AddItem({ data }: any) {
     }
   };
 
-  const handleSubmit = () => {
-    if (!params.collectionId || !params.capId) return;
-
-    addItemType({
+  const handleMint = () => {
+    if (!recipient || !params.collectionId || !params.capId) return;
+    mintItem({
       id: params.collectionId,
       capId: params.capId,
       layer: selectedLayer,
       itemName: itemName,
       itemImg: itemImageFile,
+      toAddress: recipient,
+      amount: amount,
     });
   };
 
   return (
-    <div className="flex gap-x-5 text-start">
-      <div className="w-1/2">
+    <div className="">
+      {/* Add Item */}
+      <div className="flex flex-col gap-y-4 rounded-lg bg-white p-6">
         <h2 className="mb-6 text-2xl font-extrabold">Add New Item</h2>
-        {/* Layer Select */}
         <label className="mb-2 block font-semibold text-gray-700">Select Layer</label>
         <select
           value={selectedLayer}
@@ -60,9 +64,9 @@ export default function AddItem({ data }: any) {
           className="mb-4 w-full rounded border p-2"
           placeholder="Enter item name"
         />
-        {/* Image Upload */}
+
         <label className="mb-2 block font-semibold text-gray-700">Upload Item Image</label>
-        <label className="flex h-64 w-full flex-1 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border p-4">
+        <label className="flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border p-4">
           {itemImagePreview ? (
             <img
               src={itemImagePreview}
@@ -77,18 +81,32 @@ export default function AddItem({ data }: any) {
           )}
           <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
         </label>
-        {/* Submit Button */}
-        <Button
-          onClick={handleSubmit}
-          disabled={!selectedLayer || !itemName || !itemImagePreview}
-          className="my-10 w-full rounded-lg bg-blue-500 px-6 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
-        >
-          Add Item
-        </Button>
-      </div>
 
-      <div className="w-1/2">
-        <h2 className="mb-6 text-xl font-bold">Item property (Optional)</h2>
+        <label className="mb-2 block font-semibold text-gray-700">Recipient Address</label>
+        <input
+          type="text"
+          className="w-full rounded-lg border px-3 py-2 text-sm"
+          placeholder="0x..."
+          value={recipient}
+          onChange={(e) => setRecipient(e.target.value)}
+        />
+
+        <label className="mb-2 block font-semibold text-gray-700">Amount</label>
+        <input
+          type="number"
+          className="w-full rounded-lg border px-3 py-2 text-sm"
+          placeholder="0"
+          value={amount}
+          onChange={(e) => setAmount(Number(e.target.value))}
+        />
+
+        <Button
+          onClick={handleMint}
+          disabled={!recipient || !amount}
+          className="my-6 w-full rounded-lg bg-green-500 px-6 py-2 text-white hover:bg-green-600 disabled:opacity-50"
+        >
+          Mint Item
+        </Button>
       </div>
     </div>
   );

@@ -4,11 +4,13 @@ import { FiUpload } from "react-icons/fi";
 import { useSendTransactions } from "@/hooks/useSendTransactions";
 import { Layer } from "@/types/types";
 import LayerOption from "./LayerOptions";
+import { useNavigate } from "react-router-dom";
 
 export default function NewCollection() {
   const [bannerImagePreview, setBannerImagePreview] = useState<string | null>(null); // 미리보기용
   const [bannerImageFile, setBannerImageFile] = useState<File | null>(null); // S3 업로드용
   const [collectionName, setCollectionName] = useState<string>("");
+  const navigate = useNavigate();
 
   const [collectionInfo, setCollectionInfo] = useState<string>("");
   const [layers, setLayers] = useState<any[]>([]);
@@ -39,7 +41,7 @@ export default function NewCollection() {
   };
 
   const [showPopup, setShowPopup] = useState(false);
-  
+
   const handleCreate = () => {
     newCollection({
       collectionName,
@@ -129,22 +131,23 @@ export default function NewCollection() {
                   style={{ backgroundColor: "rgba(0, 0, 0, 0.3)" }}
                 />
 
-                <div className="fixed top-1/2 left-1/2 z-50 -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl w-[90%] max-w-sm py-6 px-4 shadow-lg">
-                  <p className="text-center text-base mb-6">🎉 Collection created successfully!</p>
-                  
+                <div className="fixed top-1/2 left-1/2 z-50 w-[90%] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-xl bg-white px-4 py-6 shadow-lg">
+                  <p className="mb-6 text-center text-base">🎉 Collection created successfully!</p>
+
                   <div className="flex justify-center space-x-4">
                     <button
-                      onClick={() => setShowPopup(false)}
-                      className="px-4 py-2 cursor-pointer text-blue-600 font-semibold border border-blue-500 rounded-md"
+                      onClick={() => {
+                        navigate("/");
+                        setShowPopup(false);
+                      }}
+                      className="cursor-pointer rounded-md border border-blue-500 px-4 py-2 font-semibold text-blue-600"
                     >
-                      Close
+                      Go to dashboard!
                     </button>
                   </div>
                 </div>
               </>
             )}
-
-
           </div>
         </div>
       </div>

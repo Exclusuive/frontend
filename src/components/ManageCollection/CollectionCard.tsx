@@ -5,7 +5,7 @@ export default function CollectionCard({ item }: { item: CollectionCardProps }) 
     <div className="w-[300px] overflow-hidden rounded-2xl bg-white shadow-md">
       {/* Banner Image */}
       <div className="h-48 w-full bg-gray-400">
-        <img src={item.bannerImg} alt="banner" className="h-full w-full object-cover" />
+        <img src={item.banner_url} alt="banner" className="h-full w-full object-cover" />
       </div>
 
       {/* Content */}

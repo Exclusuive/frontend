@@ -1,8 +1,7 @@
-import AddItem from "@/components/CollectionDetail/AddItem";
 import CollectionDashboard from "@/components/CollectionDetail/CollectionDashboard";
 import EditCollectionInfo from "@/components/CollectionDetail/EditCollectionInfo";
+import ManageItem from "@/components/CollectionDetail/ManageItem";
 import MintBase from "@/components/CollectionDetail/MintBase";
-import MintItem from "@/components/CollectionDetail/MintItem";
 import { Button } from "@/components/ui/button";
 import { useGetCollectionInfo } from "@/hooks/useGetCollectionInfo";
 import { useState } from "react";
@@ -24,11 +23,10 @@ export default function CollectionDetail() {
   // ✅ menuItems 배열 안에 컴포넌트 포함
   const menuItems = [
     { name: "Dashboard", component: <CollectionDashboard data={data} /> },
-    { name: "Edit Collection Info", component: <EditCollectionInfo /> },
-    { name: "Add Item", component: <AddItem data={data} /> },
-    { name: "Mint Base NFT", component: <MintBase /> },
-    { name: "Mint Item NFT", component: <MintItem data={data} /> },
-    { name: "Edit Minting Rules", component: <EditMintingRules /> },
+    { name: "Collection Info", component: <EditCollectionInfo data={data} /> },
+    { name: "Base", component: <MintBase /> },
+    { name: "Item", component: <ManageItem data={data} /> },
+    { name: "Supply Machine", component: <EditMintingRules /> },
   ];
 
   // 현재 선택된 메뉴에 해당하는 컴포넌트 찾기

@@ -16,7 +16,7 @@ export default function Dashboard() {
   if (!data.length)
     return (
       <div className="mb-4 flex w-full justify-center">
-        <Link to="/createcollection" className="px-4 py-2">
+        <Link to="/createcollection" className="border border-black px-4 py-2">
           Create Collections
         </Link>
       </div>
@@ -25,7 +25,7 @@ export default function Dashboard() {
   return (
     <div className="pt-5 pr-18 pl-18">
       <div className="pb-2 text-5xl">Dashboard</div>
-      <div className="flex flex-wrap w-full items-center justify-between">
+      <div className="flex w-full flex-wrap items-center justify-between">
         <div className="text-2xl">Collections</div>
         <button
           onClick={() => navigate("/createcollection")}
@@ -36,7 +36,7 @@ export default function Dashboard() {
       </div>
 
       <div className="mx-auto w-3/4">
-        <div className="grid grid-cols-3 w-[680px] place-items-center gap-x-80 gap-y-10 py-10 pl-15">
+        <div className="grid w-[680px] grid-cols-3 place-items-center gap-x-80 gap-y-10 py-10 pl-15">
           {data.map((item) => (
             <Link to={`/collection/${item.collectionId}/${item.capId}`}>
               <CollectionCard item={item}></CollectionCard>
