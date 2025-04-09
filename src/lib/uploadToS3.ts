@@ -47,7 +47,7 @@ export async function syncImg(baseId: string) {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   try {
-    const res = await fetch(`${backendUrl}/generate-image/${baseId}`, {
+    const res = await fetch(`${backendUrl}/collections/update-image/${baseId}`, {
       method: "GET",
     });
 

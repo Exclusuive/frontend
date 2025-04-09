@@ -1,9 +1,9 @@
 import { useSignAndExecuteTransaction, useSuiClient } from "@mysten/dapp-kit";
 import { buildTx } from "@/lib/buildTx";
 import {
-  AddItemProps,
   EditCollectionProps,
   EditLayerProps,
+  EquipItemProps,
   MintBaseProps,
   MintItemProps,
   NewCollectionProps,
@@ -621,12 +621,58 @@ export const useSendTransactions = () => {
     return { result, isPending, error };
   };
 
+  const equipItem = async ({ id, baseId, itemId }: EquipItemProps) => {
+    setIsPending(true);
+    setToastState({ type: "loading", message: "Equip Item tto the Base" });
+    const tx = buildTx([
+      {
+        funcName: "equip_item_to_base",
+        args: [
+          { type: "object", value: id },
+          { type: "object", value: baseId },
+          { type: "object", value: itemId },
+        ],
+      },
+    ]);
+
+    signAndExecuteTransaction(
+      {
+        transaction: tx,
+        chain: "sui:testnet", // 또는 mainnet
+      },
+      {
+        onSuccess: async (result) => {
+          syncImg(baseId);
+          await new Promise((resolve) => setTimeout(resolve, 1500));
+          setToastState({ type: "success", message: "Equiping Item Object succeded" });
+
+          setIsPending(false);
+          setResult(result);
+        },
+        onError: (error) => {
+          syncImg(baseId);
+
+          setToastState({
+            type: "error",
+            message: "Equiping Item Object failed. Please Try again.",
+          });
+          console.log(error);
+          setIsPending(false);
+          setError(error);
+        },
+      }
+    );
+
+    return { result, isPending, error };
+  };
+
   return {
     // addLayerType,
     // createCollection,
     // addCollectionInfo,
     editCollectionInfo,
     editLayerInfo,
+    equipItem,
     newCollection,
     mintBase,
     mintItem,

@@ -21,8 +21,6 @@ export default function CollectionDashboard({ data }: any) {
     // });
   };
 
-  console.log(data);
-
   return (
     <div className="grid h-full grid-cols-1 gap-x-8 gap-y-10 text-start xl:grid-cols-2 xl:gap-y-0">
       <div>

@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 import { useSuiClient, useSuiClientQuery } from "@mysten/dapp-kit";
 import { SuiObjectResponse } from "@mysten/sui/client";
 
-export const useGetNFTInfo = (collectionId: string) => {
+export const useGetBaseInfo = (baseId: string) => {
   const [result, setResult] = useState<Record<string, any> | null>(null);
   const [loading, setLoading] = useState(true);
   const suiClient = useSuiClient();
 
   const { data, isPending, error } = useSuiClientQuery("getDynamicFields", {
-    parentId: collectionId,
+    parentId: baseId,
   });
 
   useEffect(() => {
@@ -25,6 +25,7 @@ export const useGetNFTInfo = (collectionId: string) => {
           },
         });
 
+        console.log(res);
         // 경로 추출
         const result: any = res.map((item) => {
           const content = item?.data?.content;
@@ -34,11 +35,10 @@ export const useGetNFTInfo = (collectionId: string) => {
 
           // 타입 단언: 타입 시스템한테 알려주기
           const fields = (content as any).fields;
-
           const valueFields = fields.value.fields;
           const displayType = valueFields?.type?.fields?.type;
           const internalType = valueFields?.socket?.fields?.type?.fields?.type;
-          const imgUrl = valueFields?.socket?.fields?.type?.fields?.img_url;
+          const imgUrl = valueFields?.socket?.fields?.img_url;
           const order = valueFields?.type?.fields?.order;
 
           if (!displayType || !internalType || !imgUrl || !order) return {}; // 빠진 값이 있으면 skip
@@ -64,7 +64,7 @@ export const useGetNFTInfo = (collectionId: string) => {
     };
 
     fetchCollectionInfo();
-  }, [collectionId, data, isPending, error]);
+  }, [baseId, data, isPending, error]);
 
   return { data: result, loading, error };
 };

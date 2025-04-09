@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useCheckUserNFTs } from "@/hooks/useCheckUserNFTs";
+import { useCheckUserBases } from "@/hooks/useCheckUserBases";
 import { useWallets, useCurrentAccount, useConnectWallet } from "@mysten/dapp-kit";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -10,7 +10,7 @@ export default function UserMintNFTs() {
 
   const { mutate: connect } = useConnectWallet();
   const params = useParams();
-  const { data } = useCheckUserNFTs(account?.address || "", params.collectionId);
+  const { data } = useCheckUserBases(account?.address || "", params.collectionId);
   const [selectedId, setSelectedId] = useState("");
   const selectedNFT = data?.find((nft: any) => nft.id === selectedId);
 

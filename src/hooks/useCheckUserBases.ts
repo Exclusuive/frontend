@@ -5,7 +5,7 @@ const PACKAGE_ID = import.meta.env.VITE_PACKAGE_ID;
 const MODULE_ID = import.meta.env.VITE_MODULE;
 const COL_CAP_TYPE = `${PACKAGE_ID}::${MODULE_ID}::Base`;
 
-export const useCheckUserNFTs = (address: string, collectionId: string | undefined) => {
+export const useCheckUserBases = (address: string, collectionId: string | undefined) => {
   const [result, setResult] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [internalError, setInternalError] = useState<Error | null>(null);
@@ -38,8 +38,9 @@ export const useCheckUserNFTs = (address: string, collectionId: string | undefin
 
         return {
           id: fields?.id.id,
-          name: fields?.name,
+          name: fields?.type.fields.type,
           img_url: fields?.img_url,
+          collection_id: fields?.type.fields.collection_id,
         };
       });
 

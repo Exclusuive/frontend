@@ -83,3 +83,9 @@ export type EditLayerProps = {
   capId: string;
   layers: Layer[];
 };
+
+export interface EquipItemProps {
+  id: string;
+  baseId: string;
+  itemId: string;
+}

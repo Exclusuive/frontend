@@ -7,9 +7,9 @@ interface LayerOptionProps extends Layer {
   onEdit: (name: string) => void;
 }
 
-export default function LayerOption({ name, onDelete, onEdit }: LayerOptionProps) {
+export default function LayerOption({ type, onDelete, onEdit }: LayerOptionProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [editedName, setEditedName] = useState(name!);
+  const [editedName, setEditedName] = useState(type!);
 
   const handleSave = () => {
     onEdit(editedName);
@@ -30,7 +30,7 @@ export default function LayerOption({ name, onDelete, onEdit }: LayerOptionProps
           </div>
         ) : (
           <div>
-            <h3 className="text-lg font-semibold">{name}</h3>
+            <h3 className="text-lg font-semibold">{type}</h3>
           </div>
         )}
       </div>
