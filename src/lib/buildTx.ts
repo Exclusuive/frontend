@@ -28,9 +28,30 @@ export function buildTx(calls: TxCall[]) {
       continue;
     }
 
-    // 🔵 move-call
     const { funcName, args, typeArguments, assign } = call;
 
+    // ✅ 🔥 SPECIAL HANDLING FOR TRANSFER
+    if (funcName === "transfer") {
+      if (args.length !== 2) throw new Error("transfer expects exactly 2 arguments");
+
+      const objArg = args[0];
+      const addrArg = args[1];
+
+      if (objArg.type !== "variable") {
+        throw new Error("First argument of transfer must be a variable");
+      }
+      if (addrArg.type !== "object") {
+        throw new Error("Second argument of transfer must be an address");
+      }
+
+      const objectToTransfer = assigned[objArg.value];
+      const recipient = tx.pure.address(addrArg.value);
+
+      tx.transferObjects([objectToTransfer], recipient);
+      continue;
+    }
+
+    // 🔵 move-call (기존 로직 그대로)
     const resolvedArgs = args.map((arg) => {
       switch (arg.type) {
         case "string":

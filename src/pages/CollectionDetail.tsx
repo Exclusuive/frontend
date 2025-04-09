@@ -26,7 +26,6 @@ export default function CollectionDetail() {
     { name: "Collection Info", component: <EditCollectionInfo data={data} /> },
     { name: "Base", component: <MintBase /> },
     { name: "Item", component: <ManageItem data={data} /> },
-    // { name: "Mint Item NFT", component: <MintItem data={data} /> },
     { name: "Supply Machine", component: <EditMintingRules /> },
   ];
 

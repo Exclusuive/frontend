@@ -4,11 +4,13 @@ import { FiUpload } from "react-icons/fi";
 import { useSendTransactions } from "@/hooks/useSendTransactions";
 import { Layer } from "@/types/types";
 import LayerOption from "./LayerOptions";
+import { useNavigate } from "react-router-dom";
 
 export default function NewCollection() {
   const [bannerImagePreview, setBannerImagePreview] = useState<string | null>(null); // 미리보기용
   const [bannerImageFile, setBannerImageFile] = useState<File | null>(null); // S3 업로드용
   const [collectionName, setCollectionName] = useState<string>("");
+  const navigate = useNavigate();
 
   const [collectionInfo, setCollectionInfo] = useState<string>("");
   const [layers, setLayers] = useState<any[]>([]);
@@ -36,6 +38,20 @@ export default function NewCollection() {
 
   const editLayer = (index: number, newName: string) => {
     setLayers(layers.map((layer, i) => (i === index ? { ...layer, name: newName } : layer)));
+  };
+
+  const [showPopup, setShowPopup] = useState(false);
+
+  const handleCreate = () => {
+    newCollection({
+      collectionName,
+      description: collectionInfo,
+      bannerImageFile,
+      layers,
+      onDone: () => {
+        setShowPopup(true);
+      },
+    });
   };
 
   return (
@@ -103,17 +119,35 @@ export default function NewCollection() {
           <div className="mt-6 flex justify-center">
             <Button
               className="mt-3 w-full rounded-xl border border-blue-500 bg-transparent text-sm text-blue-500"
-              onClick={() =>
-                newCollection({
-                  collectionName: collectionName,
-                  description: collectionInfo,
-                  bannerImageFile: bannerImageFile,
-                  layers: layers,
-                })
-              }
+              onClick={handleCreate}
             >
               Create
             </Button>
+
+            {showPopup && (
+              <>
+                <div
+                  className="fixed inset-0 z-40"
+                  style={{ backgroundColor: "rgba(0, 0, 0, 0.3)" }}
+                />
+
+                <div className="fixed top-1/2 left-1/2 z-50 w-[90%] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-xl bg-white px-4 py-6 shadow-lg">
+                  <p className="mb-6 text-center text-base">🎉 Collection created successfully!</p>
+
+                  <div className="flex justify-center space-x-4">
+                    <button
+                      onClick={() => {
+                        navigate("/");
+                        setShowPopup(false);
+                      }}
+                      className="cursor-pointer rounded-md border border-blue-500 px-4 py-2 font-semibold text-blue-600"
+                    >
+                      Go to dashboard!
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -28,7 +28,6 @@ export const useGetCollectionInfo = (collectionId: string) => {
 
         const content = res[0].data?.content as any;
 
-        console.log(content);
         const itemsByLayer = (content?.fields?.item_types?.fields?.contents ?? []).reduce(
           (acc: Record<string, { type: string; img_url: string }[]>, entry: any) => {
             const valueFields = entry.fields.value.fields;
@@ -47,12 +46,11 @@ export const useGetCollectionInfo = (collectionId: string) => {
 
         const layers =
           content?.fields?.layer_types?.fields?.contents.map((entry: any) => {
-            const { order, type } = entry.fields.value.fields;
-            return { order: Number(order), type };
+            const { type } = entry.fields;
+            return { type };
           }) ?? [];
 
-        layers.sort((a: any, b: any) => a.order - b.order);
-
+        console.log(layers);
         const name = {
           name: "name",
           content: content?.fields?.base_type?.fields?.type ?? "Unknown",

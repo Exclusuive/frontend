@@ -2,7 +2,7 @@ export interface CollectionCardProps {
   collectionId: string;
   capId: string;
   name: string;
-  bannerImg: string;
+  banner_url: string;
   description: string;
 }
 
@@ -51,18 +51,35 @@ export interface MintBaseProps {
 export interface MintItemProps {
   id: string;
   capId: string;
-  baseId: string;
-  itemType: string;
+  layer: string;
+  itemName: string;
+  itemImg: File | null;
+  toAddress: string;
+  amount: number;
 }
 
 export interface Layer {
-  name?: string;
-  order?: number;
   type?: string;
 }
 export type NewCollectionProps = {
   collectionName: string;
   description: string;
   bannerImageFile: File | null;
+  layers: Layer[];
+  onDone?: () => void;
+};
+
+export type EditCollectionProps = {
+  id: string;
+  capId: string;
+  collectionName: string;
+  description: string;
+  bannerImageFile: File | null;
+  changedField: "description" | "bannerImageFile" | "both";
+};
+
+export type EditLayerProps = {
+  id: string;
+  capId: string;
   layers: Layer[];
 };

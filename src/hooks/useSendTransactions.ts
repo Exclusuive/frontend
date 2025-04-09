@@ -2,9 +2,12 @@ import { useSignAndExecuteTransaction, useSuiClient } from "@mysten/dapp-kit";
 import { buildTx } from "@/lib/buildTx";
 import {
   AddItemProps,
+  EditCollectionProps,
+  EditLayerProps,
   MintBaseProps,
   MintItemProps,
   NewCollectionProps,
+  TxArg,
   TxCall,
 } from "@/types/types";
 import { useEffect, useRef, useState } from "react";
@@ -251,6 +254,7 @@ export const useSendTransactions = () => {
     description,
     bannerImageFile,
     layers,
+    onDone,
   }: NewCollectionProps) => {
     setToastState({ type: "loading", message: "Collection is being created..." });
     const tx = buildTx([
@@ -325,7 +329,7 @@ export const useSendTransactions = () => {
                 { type: "object", value: collectionObject?.objectId! },
                 { type: "object", value: collectionCapObject?.objectId! },
                 { type: "string", value: "BaseType" },
-                { type: "string", value: "bannerImg" },
+                { type: "string", value: "banner_url" },
                 { type: "string", value: uploadedUrl.fileUrl },
               ],
             },
@@ -342,6 +346,8 @@ export const useSendTransactions = () => {
                   type: "success",
                   message: "Done! Please return to the dashboard.",
                 });
+                console.log("DONE!");
+                if (onDone) onDone();
               },
               onError: () => {
                 setToastState({
@@ -370,27 +376,18 @@ export const useSendTransactions = () => {
     return { result, isPending, error };
   };
 
-  const addItemType = async ({ id, capId, layer, itemName, itemImg }: AddItemProps) => {
-    setIsPending(true);
+  const editLayerInfo = async ({ id, capId, layers }: EditLayerProps) => {
+    setToastState({ type: "loading", message: "Editing Layers..." });
+    const layerTxCalls: TxCall[] = layers.map((layer: any) => ({
+      funcName: "add_layer_type",
+      args: [
+        { type: "object", value: id },
+        { type: "object", value: capId },
+        { type: "string", value: layer.type },
+      ],
+    }));
 
-    const uploadedUrl = await uploadToS3({
-      type: `${PACKAGE_ID}_${MODULE_ID}_collection/item/${id}`,
-      id: itemName,
-      file: itemImg,
-    });
-
-    const tx = buildTx([
-      {
-        funcName: "add_item_type",
-        args: [
-          { type: "object", value: id },
-          { type: "object", value: capId },
-          { type: "string", value: layer },
-          { type: "string", value: itemName },
-          { type: "string", value: uploadedUrl.fileUrl },
-        ],
-      },
-    ]);
+    const tx = buildTx([...layerTxCalls]);
 
     signAndExecuteTransaction(
       {
@@ -398,16 +395,101 @@ export const useSendTransactions = () => {
         chain: "sui:testnet",
       },
       {
-        onSuccess: async (result) => {
-          setIsPending(false);
-          setResult(result);
+        onSuccess: () => {
+          setToastState({
+            type: "success",
+            message: "Done! Please return to the dashboard.",
+          });
+          console.log("DONE!");
         },
-        onError(error) {
-          setIsPending(false);
-          setError(error);
+        onError: () => {
+          setToastState({
+            type: "error",
+            message:
+              "Something went wrong while Editing Collection Information. Please return to the dashboard and edit your collection information again.",
+          });
         },
       }
     );
+
+    setIsPending(false);
+    setResult(result);
+    return { result, isPending, error };
+  };
+
+  const editCollectionInfo = async ({
+    id,
+    capId,
+    collectionName,
+    description,
+    bannerImageFile,
+    changedField,
+  }: EditCollectionProps) => {
+    setToastState({ type: "loading", message: "Editing Collection information..." });
+
+    const uploadedUrl = await uploadToS3({
+      type: `${PACKAGE_ID}_${MODULE_ID}_collection/banner`,
+      id: id,
+      file: bannerImageFile,
+    });
+
+    const txData: TxCall[] = [];
+
+    if (changedField === "description" || changedField === "both") {
+      txData.push({
+        funcName: "add_config_to_type",
+        typeArguments: [`${PACKAGE_ID}::${MODULE_ID}::BaseType`],
+        args: [
+          { type: "object", value: id } as TxArg,
+          { type: "object", value: capId } as TxArg,
+          { type: "string", value: collectionName } as TxArg,
+          { type: "string", value: "description" } as TxArg,
+          { type: "string", value: description } as TxArg,
+        ],
+      });
+    }
+
+    if (changedField === "bannerImageFile" || changedField === "both") {
+      txData.push({
+        funcName: "add_config_to_type",
+        typeArguments: [`${PACKAGE_ID}::${MODULE_ID}::BaseType`],
+        args: [
+          { type: "object", value: id } as TxArg,
+          { type: "object", value: capId } as TxArg,
+          { type: "string", value: collectionName } as TxArg,
+          { type: "string", value: "banner_url" } as TxArg,
+          { type: "string", value: uploadedUrl.fileUrl } as TxArg,
+        ],
+      });
+    }
+
+    const tx = buildTx(txData);
+
+    signAndExecuteTransaction(
+      {
+        transaction: tx,
+        chain: "sui:testnet",
+      },
+      {
+        onSuccess: () => {
+          setToastState({
+            type: "success",
+            message: "Done! Please return to the dashboard.",
+          });
+          console.log("DONE!");
+        },
+        onError: () => {
+          setToastState({
+            type: "error",
+            message:
+              "Something went wrong while Editing Collection Information. Please return to the dashboard and edit your collection information again.",
+          });
+        },
+      }
+    );
+
+    setIsPending(false);
+    setResult(result);
     return { result, isPending, error };
   };
 
@@ -466,32 +548,52 @@ export const useSendTransactions = () => {
     return { result, isPending, error };
   };
 
-  const mintItem = async ({ id, capId, baseId, itemType }: MintItemProps) => {
+  const mintItem = async ({
+    id,
+    capId,
+    layer,
+    itemName,
+    itemImg,
+    toAddress,
+    amount,
+  }: MintItemProps) => {
     setIsPending(true);
+    setToastState({ type: "loading", message: "Minting Item Object..." });
 
-    const tx = buildTx([
-      {
-        assign: "TYPE",
-        value: { type: "string", value: itemType }, // ⬅️ move-call 없이 assign만
-      },
-      {
-        funcName: "new_item",
-        args: [
-          { type: "object", value: id },
-          { type: "object", value: capId },
-          { type: "variable", value: "TYPE" },
-        ],
-        assign: "ITEM",
-      },
-      {
-        funcName: "equip_item_to_base",
-        args: [
-          { type: "object", value: id },
-          { type: "object", value: baseId },
-          { type: "variable", value: "ITEM" },
-        ],
-      },
-    ]);
+    const uploadedUrl = await uploadToS3({
+      type: `${PACKAGE_ID}_${MODULE_ID}_collection/item/${id}`,
+      id: itemName,
+      file: itemImg,
+    });
+
+    const txCalls: TxCall[] = [];
+
+    for (let i = 0; i < amount; i++) {
+      const itemVarName = `ITEM_${i}`;
+
+      txCalls.push(
+        {
+          funcName: "new_item",
+          args: [
+            { type: "object", value: id },
+            { type: "object", value: capId },
+            { type: "string", value: layer },
+            { type: "string", value: itemName },
+            { type: "string", value: uploadedUrl.fileUrl },
+          ],
+          assign: itemVarName,
+        },
+        {
+          funcName: "transfer",
+          args: [
+            { type: "variable", value: itemVarName },
+            { type: "object", value: toAddress },
+          ],
+        }
+      );
+    }
+
+    const tx = buildTx(txCalls);
 
     signAndExecuteTransaction(
       {
@@ -500,27 +602,32 @@ export const useSendTransactions = () => {
       },
       {
         onSuccess: (result) => {
+          setToastState({ type: "success", message: "Minting Item Object succeded" });
+
           setIsPending(false);
           setResult(result);
         },
         onError: (error) => {
+          setToastState({
+            type: "error",
+            message: "Minting Item Object failed. Please Try again.",
+          });
           setIsPending(false);
           setError(error);
         },
       }
     );
 
-    await syncImg(baseId);
-
     return { result, isPending, error };
   };
 
   return {
-    addLayerType,
+    // addLayerType,
     // createCollection,
     // addCollectionInfo,
+    editCollectionInfo,
+    editLayerInfo,
     newCollection,
-    addItemType,
     mintBase,
     mintItem,
   };

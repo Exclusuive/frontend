@@ -12,13 +12,13 @@ export default function CollectionDashboard({ data }: any) {
   const params = useParams();
 
   const handleMint = () => {
-    if (!recipient || !params.collectionId || !params.capId) return;
-    mintItem({
-      id: params.collectionId,
-      capId: params.capId,
-      baseId: recipient,
-      itemType: selectedItem,
-    });
+    if (!recipient || !params.collectionId || !params.capId || selectedItem) return;
+    // mintItem({
+    //   id: params.collectionId,
+    //   capId: params.capId,
+    //   toAddress: recipient,
+    //   itemName: selectedItem,
+    // });
   };
 
   console.log(data);
@@ -27,7 +27,7 @@ export default function CollectionDashboard({ data }: any) {
     <div className="grid h-full grid-cols-1 gap-x-8 gap-y-10 text-start xl:grid-cols-2 xl:gap-y-0">
       <div>
         <img
-          src={data.bannerImg}
+          src={data.banner_url}
           alt="Collection"
           className="aspect-video w-[100%] max-w-[400px] rounded-xl border border-black object-cover"
         />
