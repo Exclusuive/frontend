@@ -38,6 +38,20 @@ export default function NewCollection() {
     setLayers(layers.map((layer, i) => (i === index ? { ...layer, name: newName } : layer)));
   };
 
+  const [showPopup, setShowPopup] = useState(false);
+  
+  const handleCreate = () => {
+    newCollection({
+      collectionName,
+      description: collectionInfo,
+      bannerImageFile,
+      layers,
+      onDone: () => {
+        setShowPopup(true);
+      },
+    });
+  };
+
   return (
     <div className="w-full overflow-hidden">
       <div className="w-full">
@@ -103,17 +117,34 @@ export default function NewCollection() {
           <div className="mt-6 flex justify-center">
             <Button
               className="mt-3 w-full rounded-xl border border-blue-500 bg-transparent text-sm text-blue-500"
-              onClick={() =>
-                newCollection({
-                  collectionName: collectionName,
-                  description: collectionInfo,
-                  bannerImageFile: bannerImageFile,
-                  layers: layers,
-                })
-              }
+              onClick={handleCreate}
             >
               Create
             </Button>
+
+            {showPopup && (
+              <>
+                <div
+                  className="fixed inset-0 z-40"
+                  style={{ backgroundColor: "rgba(0, 0, 0, 0.3)" }}
+                />
+
+                <div className="fixed top-1/2 left-1/2 z-50 -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl w-[90%] max-w-sm py-6 px-4 shadow-lg">
+                  <p className="text-center text-base mb-6">🎉 Collection created successfully!</p>
+                  
+                  <div className="flex justify-center space-x-4">
+                    <button
+                      onClick={() => setShowPopup(false)}
+                      className="px-4 py-2 cursor-pointer text-blue-600 font-semibold border border-blue-500 rounded-md"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
+
+
           </div>
         </div>
       </div>
