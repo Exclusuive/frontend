@@ -1,6 +1,10 @@
 export interface Collection {
-  id: string;
+  collection_id: string;
+  capId: string;
   name: string;
-  description?: string;
+  description: string;
   img_url: string;
+  tickets?: string[];
+  properties?: string[];
+  items?: string[];
 }

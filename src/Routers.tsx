@@ -9,7 +9,8 @@ export default function Routers() {
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Dashboard />} />
-          <Route path="collections" element={<CollectionsLayout />}>
+          <Route path="collections" element={<CollectionsLayout create={true} />}>
+            <Route path="" element={<Dashboard />} />
             <Route path="editinfo" element={<Dashboard />} />
             <Route path="bases" element={<Dashboard />} />
             <Route path="items" element={<Dashboard />} />

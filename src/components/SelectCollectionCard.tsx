@@ -1,27 +1,45 @@
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import clsx from "clsx";
 import { Collection } from "@/types/types";
+import clsx from "clsx";
+import { Button } from "./ui/button";
 
 type Props = {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   items: Collection[];
-  onClick: (colId: string) => void;
+  create: boolean;
+  onClick: (collection_id: string) => void;
 };
 
-export default function SelectCollectionCard({ items, onClick }: Props) {
+export default function SelectCollectionModal({
+  open,
+  items,
+  onClick,
+  create,
+  onOpenChange,
+}: Props) {
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-semibold">Pick your Collection</h2>
-        <p className="text-muted-foreground text-sm">Choose one to view or customize your NFTs.</p>
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {items.map((item) => {
-          return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="w-2/3 min-w-2/3 overflow-y-auto [&>button]:hidden">
+        <DialogHeader>
+          <DialogTitle className="text-2xl">Pick your Collection</DialogTitle>
+          <p className="text-muted-foreground text-sm">
+            Choose one to view or customize your NFTs.
+          </p>
+        </DialogHeader>
+        <div className="grid grid-cols-1 gap-4 pt-2 md:grid-cols-2 lg:grid-cols-3">
+          {items.map((item) => (
             <Card
-              key={item.id}
+              key={item.collection_id}
+              onClick={() => onClick(item.collection_id)}
               className={clsx("cursor-pointer border-2 transition-all hover:shadow-lg")}
-              onClick={() => onClick(item.id)}
             >
               <CardHeader>
                 <img
@@ -32,12 +50,17 @@ export default function SelectCollectionCard({ items, onClick }: Props) {
               </CardHeader>
               <CardContent>
                 <CardTitle className="text-lg">{item.name}</CardTitle>
-                <p className="text-muted-foregrodund line-clamp-2 text-sm">{item.description}</p>
+                <p className="text-muted-foreground line-clamp-2 text-sm">{item.description}</p>
               </CardContent>
             </Card>
-          );
-        })}
-      </div>
-    </div>
+          ))}
+        </div>
+        {create && (
+          <DialogFooter>
+            <Button onClick={() => onOpenChange(false)}>Create New Collection</Button>
+          </DialogFooter>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 }
