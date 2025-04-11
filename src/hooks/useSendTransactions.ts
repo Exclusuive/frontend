@@ -1,9 +1,13 @@
 import { useSignAndExecuteTransaction, useSuiClient } from "@mysten/dapp-kit";
 import { buildTx } from "@/lib/buildTx";
 import {
+  AddCollectionTypeProps,
+  AddSelectionProps,
+  CreateSupplierProps,
   EditCollectionProps,
   EditLayerProps,
   EquipItemProps,
+  GivePropertyProps,
   MintBaseProps,
   MintItemProps,
   NewCollectionProps,
@@ -300,7 +304,7 @@ export const useSendTransactions = () => {
             args: [
               { type: "object", value: collectionObject?.objectId! },
               { type: "object", value: collectionCapObject?.objectId! },
-              { type: "string", value: layer.name! },
+              { type: "string", value: layer.type! },
             ],
           }));
 
@@ -317,7 +321,7 @@ export const useSendTransactions = () => {
               args: [
                 { type: "object", value: collectionObject?.objectId! },
                 { type: "object", value: collectionCapObject?.objectId! },
-                { type: "string", value: "BaseType" },
+                { type: "string", value: collectionName },
                 { type: "string", value: "description" },
                 { type: "string", value: description },
               ],
@@ -328,7 +332,7 @@ export const useSendTransactions = () => {
               args: [
                 { type: "object", value: collectionObject?.objectId! },
                 { type: "object", value: collectionCapObject?.objectId! },
-                { type: "string", value: "BaseType" },
+                { type: "string", value: collectionName },
                 { type: "string", value: "banner_url" },
                 { type: "string", value: uploadedUrl.fileUrl },
               ],
@@ -427,7 +431,7 @@ export const useSendTransactions = () => {
   }: EditCollectionProps) => {
     setToastState({ type: "loading", message: "Editing Collection information..." });
 
-    const uploadedUrl = await uploadToS3({
+    await uploadToS3({
       type: `${PACKAGE_ID}_${MODULE_ID}_collection/banner`,
       id: id,
       file: bannerImageFile,
@@ -437,7 +441,7 @@ export const useSendTransactions = () => {
 
     if (changedField === "description" || changedField === "both") {
       txData.push({
-        funcName: "add_config_to_type",
+        funcName: "update_config_to_type",
         typeArguments: [`${PACKAGE_ID}::${MODULE_ID}::BaseType`],
         args: [
           { type: "object", value: id } as TxArg,
@@ -445,20 +449,6 @@ export const useSendTransactions = () => {
           { type: "string", value: collectionName } as TxArg,
           { type: "string", value: "description" } as TxArg,
           { type: "string", value: description } as TxArg,
-        ],
-      });
-    }
-
-    if (changedField === "bannerImageFile" || changedField === "both") {
-      txData.push({
-        funcName: "add_config_to_type",
-        typeArguments: [`${PACKAGE_ID}::${MODULE_ID}::BaseType`],
-        args: [
-          { type: "object", value: id } as TxArg,
-          { type: "object", value: capId } as TxArg,
-          { type: "string", value: collectionName } as TxArg,
-          { type: "string", value: "banner_url" } as TxArg,
-          { type: "string", value: uploadedUrl.fileUrl } as TxArg,
         ],
       });
     }
@@ -548,15 +538,7 @@ export const useSendTransactions = () => {
     return { result, isPending, error };
   };
 
-  const mintItem = async ({
-    id,
-    capId,
-    layer,
-    itemName,
-    itemImg,
-    toAddress,
-    amount,
-  }: MintItemProps) => {
+  const mintItem = async ({ id, capId, layer, itemName, itemImg, toAddress }: MintItemProps) => {
     setIsPending(true);
     setToastState({ type: "loading", message: "Minting Item Object..." });
 
@@ -566,34 +548,19 @@ export const useSendTransactions = () => {
       file: itemImg,
     });
 
-    const txCalls: TxCall[] = [];
-
-    for (let i = 0; i < amount; i++) {
-      const itemVarName = `ITEM_${i}`;
-
-      txCalls.push(
-        {
-          funcName: "new_item",
-          args: [
-            { type: "object", value: id },
-            { type: "object", value: capId },
-            { type: "string", value: layer },
-            { type: "string", value: itemName },
-            { type: "string", value: uploadedUrl.fileUrl },
-          ],
-          assign: itemVarName,
-        },
-        {
-          funcName: "transfer",
-          args: [
-            { type: "variable", value: itemVarName },
-            { type: "object", value: toAddress },
-          ],
-        }
-      );
-    }
-
-    const tx = buildTx(txCalls);
+    const tx = buildTx([
+      {
+        funcName: "mint_item",
+        args: [
+          { type: "object", value: id },
+          { type: "object", value: capId },
+          { type: "string", value: layer },
+          { type: "string", value: itemName },
+          { type: "string", value: uploadedUrl.fileUrl },
+          { type: "object", value: toAddress },
+        ],
+      },
+    ]);
 
     signAndExecuteTransaction(
       {
@@ -645,7 +612,6 @@ export const useSendTransactions = () => {
           syncImg(baseId);
           await new Promise((resolve) => setTimeout(resolve, 1500));
           setToastState({ type: "success", message: "Equiping Item Object succeded" });
-
           setIsPending(false);
           setResult(result);
         },
@@ -666,15 +632,234 @@ export const useSendTransactions = () => {
     return { result, isPending, error };
   };
 
+  const addPropertyType = async ({ id, capId, type }: AddCollectionTypeProps) => {
+    setIsPending(true);
+    setToastState({ type: "loading", message: "Adding Property Type" });
+    const tx = buildTx([
+      {
+        funcName: "add_property_type",
+        args: [
+          { type: "object", value: id },
+          { type: "object", value: capId },
+          { type: "string", value: type },
+        ],
+      },
+    ]);
+
+    signAndExecuteTransaction(
+      {
+        transaction: tx,
+        chain: "sui:testnet", // 또는 mainnet
+      },
+      {
+        onSuccess: async (result) => {
+          setToastState({ type: "success", message: "Adding Property Done!" });
+
+          setIsPending(false);
+          setResult(result);
+        },
+        onError: (error) => {
+          setToastState({
+            type: "error",
+            message: "Addint Property failed. Please Try again.",
+          });
+          console.log(error);
+          setIsPending(false);
+          setError(error);
+        },
+      }
+    );
+
+    return { result, isPending, error };
+  };
+
+  const addTicketType = async ({ id, capId, type }: AddCollectionTypeProps) => {
+    setIsPending(true);
+    setToastState({ type: "loading", message: "Adding Ticket Type" });
+    const tx = buildTx([
+      {
+        funcName: "add_ticket_type",
+        args: [
+          { type: "object", value: id },
+          { type: "object", value: capId },
+          { type: "string", value: type },
+        ],
+      },
+    ]);
+
+    signAndExecuteTransaction(
+      {
+        transaction: tx,
+        chain: "sui:testnet", // 또는 mainnet
+      },
+      {
+        onSuccess: async (result) => {
+          setToastState({ type: "success", message: "Adding Ticket Type Done..." });
+
+          setIsPending(false);
+          setResult(result);
+        },
+        onError: (error) => {
+          setToastState({
+            type: "error",
+            message: "Adding Ticket Type Failed. Please Try again.",
+          });
+          console.log(error);
+          setIsPending(false);
+          setError(error);
+        },
+      }
+    );
+
+    return { result, isPending, error };
+  };
+
+  const giveProperty = async ({ id, capId, type, value }: GivePropertyProps) => {
+    setIsPending(true);
+    setToastState({ type: "loading", message: "Give Property" });
+    const tx = buildTx([
+      {
+        funcName: "new_property",
+        args: [
+          { type: "object", value: id },
+          { type: "object", value: capId },
+          { type: "string", value: type },
+          { type: "u64", value: value },
+        ],
+        assign: "PROPERTY_ID",
+      },
+    ]);
+
+    signAndExecuteTransaction(
+      {
+        transaction: tx,
+        chain: "sui:testnet", // 또는 mainnet
+      },
+      {
+        onSuccess: async (result) => {
+          setToastState({ type: "success", message: "Adding Ticket Type Done..." });
+
+          setIsPending(false);
+          setResult(result);
+        },
+        onError: (error) => {
+          setToastState({
+            type: "error",
+            message: "Adding Ticket Type Failed. Please Try again.",
+          });
+          console.log(error);
+          setIsPending(false);
+          setError(error);
+        },
+      }
+    );
+
+    return { result, isPending, error };
+  };
+
+  const createSupplier = async ({ id, capId }: CreateSupplierProps) => {
+    setIsPending(true);
+    setToastState({ type: "loading", message: "Creating Supply Machine" });
+    const tx = buildTx([
+      {
+        funcName: "create_supplyer",
+        args: [
+          { type: "object", value: id },
+          { type: "object", value: capId },
+        ],
+      },
+    ]);
+
+    signAndExecuteTransaction(
+      {
+        transaction: tx,
+        chain: "sui:testnet", // 또는 mainnet
+      },
+      {
+        onSuccess: async (result) => {
+          setToastState({ type: "success", message: "Adding Ticket Type Done..." });
+
+          setIsPending(false);
+          setResult(result);
+        },
+        onError: (error) => {
+          setToastState({
+            type: "error",
+            message: "Adding Ticket Type Failed. Please Try again.",
+          });
+          console.log(error);
+          setIsPending(false);
+          setError(error);
+        },
+      }
+    );
+
+    return { result, isPending, error };
+  };
+
+  const addSelection = async ({
+    collectionId,
+    supplyId,
+    supplyCapId,
+    price,
+  }: AddSelectionProps) => {
+    setIsPending(true);
+    setToastState({ type: "loading", message: "Creating Supply Machine Selection" });
+    console.log(collectionId);
+    const tx = buildTx([
+      {
+        funcName: "add_selection_to_supplyer",
+        typeArguments: [`${PACKAGE_ID}::${MODULE_ID}::Item`],
+        args: [
+          { type: "object", value: collectionId },
+          { type: "object", value: supplyId },
+          { type: "object", value: supplyCapId },
+          { type: "u64", value: price },
+        ],
+      },
+    ]);
+
+    signAndExecuteTransaction(
+      {
+        transaction: tx,
+        chain: "sui:testnet", // 또는 mainnet
+      },
+      {
+        onSuccess: async (result) => {
+          setToastState({ type: "success", message: "Adding Item Type Done..." });
+
+          setIsPending(false);
+          setResult(result);
+        },
+        onError: (error) => {
+          setToastState({
+            type: "error",
+            message: "Adding Item Type Failed. Please Try again.",
+          });
+          console.log(error);
+          setIsPending(false);
+          setError(error);
+        },
+      }
+    );
+
+    return { result, isPending, error };
+  };
+
   return {
     // addLayerType,
     // createCollection,
     // addCollectionInfo,
+    addPropertyType,
+    addTicketType,
     editCollectionInfo,
     editLayerInfo,
     equipItem,
     newCollection,
     mintBase,
     mintItem,
+    giveProperty,
+    createSupplier,
+    addSelection,
   };
 };

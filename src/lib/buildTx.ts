@@ -1,7 +1,7 @@
 import { TxArg, TxCall } from "@/types/types";
 import { Transaction } from "@mysten/sui/transactions";
 
-const PACKAGE_ID = import.meta.env.VITE_PACKAGE_ID;
+const PACKAGE_ID = import.meta.env.VITE_MOVE_CALL_PACKAGE_ID;
 const MODULE_ID = import.meta.env.VITE_MODULE;
 
 export function buildTx(calls: TxCall[]) {
@@ -45,6 +45,7 @@ export function buildTx(calls: TxCall[]) {
       }
 
       const objectToTransfer = assigned[objArg.value];
+
       const recipient = tx.pure.address(addrArg.value);
 
       tx.transferObjects([objectToTransfer], recipient);

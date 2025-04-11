@@ -19,13 +19,12 @@ export const useGetBaseInfo = (baseId: string) => {
 
       try {
         const res: SuiObjectResponse[] = await suiClient.multiGetObjects({
-          ids: objectIds,
+          ids: [baseId, ...objectIds],
           options: {
             showContent: true,
           },
         });
 
-        console.log(res);
         // 경로 추출
         const result: any = res.map((item) => {
           const content = item?.data?.content;

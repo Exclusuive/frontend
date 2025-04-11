@@ -2,6 +2,7 @@ import CollectionDashboard from "@/components/CollectionDetail/CollectionDashboa
 import EditCollectionInfo from "@/components/CollectionDetail/EditCollectionInfo";
 import ManageItem from "@/components/CollectionDetail/ManageItem";
 import MintBase from "@/components/CollectionDetail/MintBase";
+import SupplyMachine from "@/components/CollectionDetail/SupplyMachine";
 import { Button } from "@/components/ui/button";
 import { useGetCollectionInfo } from "@/hooks/useGetCollectionInfo";
 import { useState } from "react";
@@ -9,6 +10,7 @@ import { useParams } from "react-router-dom";
 
 export default function CollectionDetail() {
   const [menu, setMenu] = useState("Dashboard");
+  const [refreshKey, setRefreshKey] = useState(Date.now());
 
   const params = useParams();
   const { data, loading, error } = useGetCollectionInfo(params.collectionId || "");
@@ -17,16 +19,18 @@ export default function CollectionDetail() {
   if (error) return <p>Error occurred: {error.message}</p>;
   if (!data) return <p>Collection not found.</p>;
 
-  // 👉 각 메뉴에 대응하는 컴포넌트 정의
-  const EditMintingRules = () => <div className="text-white">⚙️ Edit Minting Rules</div>;
-
   // ✅ menuItems 배열 안에 컴포넌트 포함
   const menuItems = [
-    { name: "Dashboard", component: <CollectionDashboard data={data} /> },
-    { name: "Collection Info", component: <EditCollectionInfo data={data} /> },
+    { name: "Dashboard", component: <CollectionDashboard data={data} refreshKey={refreshKey} /> },
+    {
+      name: "Collection Info",
+      component: (
+        <EditCollectionInfo data={data} refreshKey={refreshKey} setRefreshKey={setRefreshKey} />
+      ),
+    },
     { name: "Base", component: <MintBase /> },
     { name: "Item", component: <ManageItem data={data} /> },
-    { name: "Supply Machine", component: <EditMintingRules /> },
+    { name: "Supply Machine", component: <SupplyMachine /> },
   ];
 
   // 현재 선택된 메뉴에 해당하는 컴포넌트 찾기

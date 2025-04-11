@@ -4,6 +4,7 @@ import { useGetBaseInfo } from "@/hooks/useGetBaseInfo";
 import { useGetCollectionInfo } from "@/hooks/useGetCollectionInfo";
 import { useGetItemInfo } from "@/hooks/useGetItemInfo";
 import { useSendTransactions } from "@/hooks/useSendTransactions";
+import { syncImg } from "@/lib/uploadToS3";
 import { useCurrentAccount } from "@mysten/dapp-kit";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -11,18 +12,20 @@ import { useParams } from "react-router-dom";
 export default function ViewUserNFT() {
   const params = useParams();
   const account = useCurrentAccount();
-  const [selectedItem, setSelectedItem] = useState<string>("");
   const [selectedId, setSelectedId] = useState("");
   const { equipItem } = useSendTransactions();
+  const [refreshKey, setRefreshKey] = useState(Date.now());
 
   const { data, loading, error } = useCheckUserBases(
     account?.address || "",
     params.collectionId || ""
   );
   const { data: account_item_data } = useGetItemInfo(account?.address!, params.collectionId!);
-  const [menu, setMenu] = useState(Object.keys(account_item_data)[0]);
 
-  const selectedNFT = data?.find((nft: any) => nft.id === selectedId);
+  const [menu, setMenu] = useState(Object.keys(account_item_data)[0]);
+  const [selectedItem, setSelectedItem] = useState<string>(Object.keys(account_item_data)[0]);
+
+  let selectedNFT = data?.find((nft: any) => nft.id === selectedId);
   const { data: base_data } = useGetBaseInfo(selectedNFT?.id || "");
 
   const handleEquip = () => {
@@ -32,6 +35,7 @@ export default function ViewUserNFT() {
       baseId: selectedNFT.id,
       itemId: selectedItem,
     });
+    setRefreshKey(Date.now()); // 유니크한 값으로 바꿔줌
   };
 
   if (loading) return <p>Loading...</p>;
@@ -45,11 +49,21 @@ export default function ViewUserNFT() {
           <div className="text-start font-extrabold">My NFTs</div>
 
           {selectedNFT && (
-            <img
-              src={selectedNFT.img_url}
-              alt={`NFT ${selectedNFT.id}`}
-              className="h-48 w-48 rounded-lg border shadow"
-            />
+            <div className="relative inline-block">
+              <img
+                src={`${selectedNFT.img_url}?refresh=${refreshKey}`}
+                alt={`NFT ${selectedNFT.id}`}
+                className="h-48 w-48 rounded-lg border shadow"
+              />
+              <button
+                onClick={() => {
+                  setRefreshKey(Date.now()); // 유니크한 값으로 바꿔줌
+                }}
+                className="absolute top-1 right-1 cursor-pointer rounded-full p-1"
+              >
+                🔄
+              </button>
+            </div>
           )}
           <select
             value={selectedId}
@@ -127,7 +141,7 @@ export default function ViewUserNFT() {
 
           <Button
             onClick={handleEquip}
-            disabled={!selectedItem}
+            // disabled={!selectedItem}
             className="w-full rounded-lg bg-blue-500 px-6 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
           >
             Equip Item to Base

@@ -27,14 +27,13 @@ export const useGetCollectionInfo = (collectionId: string) => {
         });
 
         const content = res[0].data?.content as any;
-
         const itemsByLayer = (content?.fields?.item_types?.fields?.contents ?? []).reduce(
           (acc: Record<string, { type: string; img_url: string }[]>, entry: any) => {
-            const valueFields = entry.fields.value.fields;
+            const valueFields = entry.fields;
 
-            const type = valueFields.type; // "pppl"
+            const type = valueFields.item_type; // "pppl"
             const img_url = valueFields.img_url; // "https://..."
-            const layer = valueFields.layer_type.fields.type; // "Base", "Eyes", 등
+            const layer = valueFields.type.fields.type; // "Base", "Eyes", 등
 
             if (!acc[layer]) acc[layer] = [];
             acc[layer].push({ type, img_url });
@@ -50,7 +49,17 @@ export const useGetCollectionInfo = (collectionId: string) => {
             return { type };
           }) ?? [];
 
-        console.log(layers);
+        const properties =
+          content?.fields?.property_types?.fields?.contents.map((entry: any) => {
+            const { type } = entry.fields;
+            return { type };
+          }) ?? [];
+        const tickets =
+          content?.fields?.ticket_types?.fields?.contents.map((entry: any) => {
+            const { type } = entry.fields;
+            return { type };
+          }) ?? [];
+
         const name = {
           name: "name",
           content: content?.fields?.base_type?.fields?.type ?? "Unknown",
@@ -69,7 +78,7 @@ export const useGetCollectionInfo = (collectionId: string) => {
           {} as Record<string, any>
         );
 
-        setResult({ ...merged, layers, items: itemsByLayer });
+        setResult({ ...merged, layers, properties, tickets, items: itemsByLayer });
       } catch (e) {
         console.error("Error fetching collection detail:", e);
       } finally {

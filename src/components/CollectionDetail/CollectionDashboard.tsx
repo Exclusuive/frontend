@@ -3,13 +3,15 @@ import { Button } from "../ui/button";
 import { useSendTransactions } from "@/hooks/useSendTransactions";
 import { useParams } from "react-router-dom";
 
-export default function CollectionDashboard({ data }: any) {
+export default function CollectionDashboard({ data, refreshKey }: any) {
   const [menu, setMenu] = useState(() => data?.layer?.[0]?.type || "");
   const [selectedItem, setSelectedItem] = useState<string>("");
 
   const [recipient, setRecipient] = useState("");
   const { mintItem } = useSendTransactions();
   const params = useParams();
+
+  console.log(data);
 
   const handleMint = () => {
     if (!recipient || !params.collectionId || !params.capId || selectedItem) return;
@@ -25,7 +27,7 @@ export default function CollectionDashboard({ data }: any) {
     <div className="grid h-full grid-cols-1 gap-x-8 gap-y-10 text-start xl:grid-cols-2 xl:gap-y-0">
       <div>
         <img
-          src={data.banner_url}
+          src={`${data.banner_url}?refresh=${refreshKey}`}
           alt="Collection"
           className="aspect-video w-[100%] max-w-[400px] rounded-xl border border-black object-cover"
         />
@@ -38,6 +40,26 @@ export default function CollectionDashboard({ data }: any) {
             <span className="text-md mt-2" key={idx}>
               {layer.type}
               {idx < data.layers.length - 1 && " > "}
+            </span>
+          ))}
+
+          <h2 className="py-4 text-xl font-bold">Item Properties</h2>
+          {data.properties.map((property: any, idx: number) => (
+            <span
+              className="text-md mt-2 mr-3 rounded-lg border border-black bg-gray-100 px-4 py-2 text-black"
+              key={idx}
+            >
+              {property.type}
+            </span>
+          ))}
+
+          <h2 className="py-4 text-xl font-bold">Tickets</h2>
+          {data.tickets.map((ticket: any, idx: number) => (
+            <span
+              className="text-md mt-2 mr-3 rounded-lg border border-black bg-gray-100 px-4 py-2 text-black"
+              key={idx}
+            >
+              {ticket.type}
             </span>
           ))}
         </div>

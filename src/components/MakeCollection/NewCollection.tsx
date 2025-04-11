@@ -27,7 +27,7 @@ export default function NewCollection() {
 
   const addLayer = () => {
     const newLayer: Layer = {
-      name: `New Layer`,
+      type: `New Layer`,
     };
     setLayers([...layers, newLayer]);
   };
@@ -37,7 +37,7 @@ export default function NewCollection() {
   };
 
   const editLayer = (index: number, newName: string) => {
-    setLayers(layers.map((layer, i) => (i === index ? { ...layer, name: newName } : layer)));
+    setLayers(layers.map((layer, i) => (i === index ? { ...layer, type: newName } : layer)));
   };
 
   const [showPopup, setShowPopup] = useState(false);
@@ -103,7 +103,7 @@ export default function NewCollection() {
             {layers.map((layer, index) => (
               <LayerOption
                 key={index}
-                name={layer.name}
+                type={layer.type}
                 onDelete={() => removeLayer(index)}
                 onEdit={(newName: string) => editLayer(index, newName)}
               />

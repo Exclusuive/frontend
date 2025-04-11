@@ -55,7 +55,6 @@ export interface MintItemProps {
   itemName: string;
   itemImg: File | null;
   toAddress: string;
-  amount: number;
 }
 
 export interface Layer {
@@ -88,4 +87,30 @@ export interface EquipItemProps {
   id: string;
   baseId: string;
   itemId: string;
+}
+
+export interface AddCollectionTypeProps {
+  id: string;
+  capId: string;
+  type: string;
+}
+
+export interface GivePropertyProps {
+  id: string;
+  capId: string;
+  type: string;
+  value: number;
+  toAddress: string;
+}
+
+export interface CreateSupplierProps {
+  id: string;
+  capId: string;
+}
+
+export interface AddSelectionProps {
+  collectionId: string;
+  supplyId: string;
+  supplyCapId: string;
+  price: number;
 }

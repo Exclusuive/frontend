@@ -10,7 +10,7 @@ type Layer = {
   type: string;
 };
 
-export default function EditCollectionInfo({ data }: any) {
+export default function EditCollectionInfo({ data, refreshKey, setRefreshKey }: any) {
   const [bannerImagePreview, setBannerImagePreview] = useState<string>(data?.banner_url || "");
   const [bannerImageFile, setBannerImageFile] = useState<File | null>(null);
   const [initialDescription] = useState<string>(data?.description || "");
@@ -18,7 +18,12 @@ export default function EditCollectionInfo({ data }: any) {
   const [collectionName, setCollectionName] = useState<string>(data?.name || "");
   const [collectionInfo, setCollectionInfo] = useState<string>(data?.description || "");
   const [layers, setLayers] = useState<Layer[]>(data?.layers || []);
-  const { editCollectionInfo, editLayerInfo } = useSendTransactions();
+  const { editCollectionInfo, editLayerInfo, addPropertyType, addTicketType } =
+    useSendTransactions();
+
+  const [property, setProperty] = useState<string>("");
+  const [ticket, setTicket] = useState<string>("");
+
   const params = useParams();
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,6 +97,30 @@ export default function EditCollectionInfo({ data }: any) {
             ? "description"
             : "bannerImageFile",
     });
+
+    setRefreshKey(Date.now());
+  };
+
+  const handleAddProperty = async () => {
+    if (!property) {
+      return;
+    }
+    await addPropertyType({
+      id: params.collectionId || "",
+      capId: params.capId || "",
+      type: property,
+    });
+  };
+
+  const handleAddTicket = async () => {
+    if (!ticket) {
+      return;
+    }
+    await addTicketType({
+      id: params.collectionId || "",
+      capId: params.capId || "",
+      type: ticket,
+    });
   };
 
   return (
@@ -104,7 +133,11 @@ export default function EditCollectionInfo({ data }: any) {
             <div className="flex w-64 flex-col space-y-4">
               <label className="flex h-40 cursor-pointer flex-col items-center justify-center rounded-lg border p-6">
                 {bannerImagePreview ? (
-                  <img src={bannerImagePreview} alt="Banner" className="h-auto w-full rounded-lg" />
+                  <img
+                    src={`${bannerImagePreview}`}
+                    alt="Banner"
+                    className="h-auto w-full rounded-lg"
+                  />
                 ) : (
                   <div>
                     <p className="text-center text-sm text-gray-500">Upload Banner Image</p>
@@ -189,6 +222,48 @@ export default function EditCollectionInfo({ data }: any) {
           <div className="mt-6 flex justify-center">
             <Button className="w-full rounded-xl bg-blue-500 text-white" onClick={handlEditLayer}>
               Change Layers
+            </Button>
+          </div>
+
+          <div className="mx-auto w-1/2 py-10">
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Add Property Type</label>
+              <input
+                type="text"
+                className="w-full rounded-lg border px-3 py-2 text-sm"
+                placeholder="Strength, Luck, etc..."
+                value={property}
+                onChange={(e) => setProperty(e.target.value)}
+              />
+            </div>
+
+            <Button
+              onClick={handleAddProperty}
+              disabled={!property}
+              className="w-full rounded-lg bg-blue-500 px-6 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
+            >
+              Add Property Type
+            </Button>
+          </div>
+
+          <div className="mx-auto w-1/2 py-10">
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Add Ticket Type</label>
+              <input
+                type="text"
+                className="w-full rounded-lg border px-3 py-2 text-sm"
+                placeholder="Whitelist, Founder, etc..."
+                value={ticket}
+                onChange={(e) => setTicket(e.target.value)}
+              />
+            </div>
+
+            <Button
+              onClick={handleAddTicket}
+              disabled={!ticket}
+              className="w-full rounded-lg bg-blue-500 px-6 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
+            >
+              add TicketType
             </Button>
           </div>
         </div>

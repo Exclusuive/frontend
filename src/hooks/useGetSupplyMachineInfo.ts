@@ -3,9 +3,9 @@ import { useSuiClient, useSuiClientQuery } from "@mysten/dapp-kit";
 
 const PACKAGE_ID = import.meta.env.VITE_PACKAGE_ID;
 const MODULE_ID = import.meta.env.VITE_MODULE;
-const COL_CAP_TYPE = `${PACKAGE_ID}::${MODULE_ID}::CollectionCap`;
+const COL_CAP_TYPE = `${PACKAGE_ID}::${MODULE_ID}::SupplyerCap`;
 
-export const useGetUserManageCollections = (address: string) => {
+export const useGetSupplyMachines = (address: string) => {
   const [result, setResult] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [internalError, setInternalError] = useState<Error | null>(null);
@@ -22,7 +22,6 @@ export const useGetUserManageCollections = (address: string) => {
       showContent: true,
     },
   });
-  console.log(data);
   useEffect(() => {
     if (disabled || !data || isPending || error) return;
 
@@ -33,33 +32,35 @@ export const useGetUserManageCollections = (address: string) => {
       try {
         const caps = data.data;
 
-        const collectionIds = caps
+        const supplyMachineIds = caps
           .map((obj: any) => {
             const content = obj.data?.content;
             if (
               content?.dataType === "moveObject" &&
               "fields" in content &&
-              "collection_id" in content.fields
+              "supplyer_id" in content.fields
             ) {
               return {
-                collectionId: content.fields.collection_id as string,
+                supplyId: content.fields.supplyer_id as string,
                 capId: obj.data?.objectId as string,
               };
             }
             return null;
           })
-          .filter(Boolean) as { collectionId: string; capId: string }[];
+          .filter(Boolean) as { supplyId: string; capId: string }[];
 
         const allCollectionInfo = await Promise.all(
-          collectionIds.map(async ({ collectionId, capId }) => {
+          supplyMachineIds.map(async ({ supplyId, capId }) => {
             try {
-              const fieldsData = await suiClient.getDynamicFields({ parentId: collectionId });
+              const fieldsData = await suiClient.getDynamicFields({ parentId: supplyId });
               const objectIds = fieldsData.data.map((item: any) => item.objectId);
-              const allObjectIds = [collectionId, ...objectIds];
+              const allObjectIds = [supplyId, ...objectIds];
               const res = await suiClient.multiGetObjects({
                 ids: allObjectIds,
                 options: { showContent: true },
               });
+
+              console.log(res);
 
               const name = {
                 name: "name",
@@ -82,7 +83,7 @@ export const useGetUserManageCollections = (address: string) => {
                 {} as Record<string, any>
               );
 
-              return { ...merged, capId, collectionId };
+              return { ...merged, capId, supplyId };
             } catch (e) {
               console.error("Failed to fetch collection info:", e);
               return null;

@@ -31,7 +31,7 @@ const Sidebar = () => {
         <Link to={"/"}>
           <h1 className="text-center text-lg font-bold text-gray-700">Exclusuive Dashboard</h1>
         </Link>
-        <img src="/basic.png" alt="profile" className="mx-auto my-4 h-32 w-32" />
+        <img src="/DOKPAMI.png" alt="profile" className="mx-auto my-4 h-32 w-32" />
         {account ? (
           <div>
             <p className="my-5 text-center text-lg font-bold">{account.label}</p>
