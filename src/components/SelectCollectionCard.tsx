@@ -29,7 +29,7 @@ export default function SelectCollectionModal({
 }: Props) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="h-[75vh] max-h-[75vh] w-2/3 min-w-2/3 overflow-y-auto [&>button]:hidden">
+      <DialogContent className="max-h-[75vh] w-2/3 min-w-2/3 overflow-y-auto [&>button]:hidden">
         <DialogHeader>
           <DialogTitle className="text-2xl">Pick your Collection</DialogTitle>
           <p className="text-muted-foreground text-sm">
