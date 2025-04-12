@@ -1,6 +1,6 @@
 import { useSignAndExecuteTransaction, useSuiClient } from "@mysten/dapp-kit";
 import { CollectionFormData, MintItemProps, TransactionResult, TxCall } from "@/types/contract";
-import { syncImg, uploadToS3 } from "@/lib/uploadToS3";
+import { uploadToS3 } from "@/lib/uploadToS3";
 import { buildTx } from "@/lib/buildTx";
 import { useToast } from "@/hooks/useToast";
 import { updateCollectionIdParam } from "@/lib/utils";
