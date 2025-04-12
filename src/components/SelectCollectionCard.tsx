@@ -12,10 +12,11 @@ import { Button } from "./ui/button";
 
 type Props = {
   open: boolean;
-  onOpenChange: (open: boolean) => void;
+  onCreate: () => void;
   items: Collection[];
   create: boolean;
   onClick: (collection_id: string) => void;
+  onOpenChange: (open: boolean) => void;
 };
 
 export default function SelectCollectionModal({
@@ -23,18 +24,19 @@ export default function SelectCollectionModal({
   items,
   onClick,
   create,
+  onCreate,
   onOpenChange,
 }: Props) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-2/3 min-w-2/3 overflow-y-auto [&>button]:hidden">
+      <DialogContent className="h-[75vh] max-h-[75vh] w-2/3 min-w-2/3 overflow-y-auto [&>button]:hidden">
         <DialogHeader>
           <DialogTitle className="text-2xl">Pick your Collection</DialogTitle>
           <p className="text-muted-foreground text-sm">
             Choose one to view or customize your NFTs.
           </p>
         </DialogHeader>
-        <div className="grid grid-cols-1 gap-4 pt-2 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 overflow-y-auto pt-2 md:grid-cols-2 lg:grid-cols-3">
           {items.map((item) => (
             <Card
               key={item.collection_id}
@@ -57,7 +59,7 @@ export default function SelectCollectionModal({
         </div>
         {create && (
           <DialogFooter>
-            <Button onClick={() => onOpenChange(false)}>Create New Collection</Button>
+            <Button onClick={onCreate}>Create New Collection</Button>
           </DialogFooter>
         )}
       </DialogContent>
