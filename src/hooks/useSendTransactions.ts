@@ -1,6 +1,6 @@
 import { useSignAndExecuteTransaction, useSuiClient } from "@mysten/dapp-kit";
-import { CollectionFormData, TransactionResult, TxCall } from "@/types/contract";
-import { uploadToS3 } from "@/lib/uploadToS3";
+import { CollectionFormData, MintItemProps, TransactionResult, TxCall } from "@/types/contract";
+import { syncImg, uploadToS3 } from "@/lib/uploadToS3";
 import { buildTx } from "@/lib/buildTx";
 import { useToast } from "@/hooks/useToast";
 import { updateCollectionIdParam } from "@/lib/utils";
@@ -143,6 +143,7 @@ export const useSendTransactions = () => {
       });
       updateCollectionIdParam(
         collectionObject.objectId,
+        collectionCapObject.objectId,
         new URLSearchParams(window.location.search),
         window.location,
         navigate
@@ -158,7 +159,66 @@ export const useSendTransactions = () => {
     }
   };
 
+  const mintItem = async ({
+    id,
+    capId,
+    layer,
+    itemName,
+    itemImg,
+    itemImageUrl,
+    toAddress,
+  }: MintItemProps) => {
+    try {
+      setToastState({ type: "loading", message: "Minting Item Object..." });
+
+      let imageUrl = itemImageUrl;
+
+      // Only upload to S3 if we have a new image file
+      if (itemImg) {
+        const uploadedUrl = await uploadToS3({
+          type: `${PACKAGE_ID}_${MODULE_ID}_collection/item/${id}`,
+          id: itemName,
+          file: itemImg,
+        });
+        imageUrl = uploadedUrl.fileUrl;
+      }
+
+      console.log(id, capId, layer, itemName, itemImg, itemImageUrl, toAddress);
+
+      if (!imageUrl) {
+        throw new Error("No image URL provided for minting");
+      }
+
+      const tx = buildTx([
+        {
+          funcName: "mint_item",
+          args: [
+            { type: "object", value: id },
+            { type: "object", value: capId },
+            { type: "string", value: layer },
+            { type: "string", value: itemName },
+            { type: "string", value: imageUrl },
+            { type: "object", value: toAddress },
+          ],
+        },
+      ]);
+
+      const result = await executeTransaction(tx);
+
+      setToastState({ type: "success", message: "Minting Item Object succeeded" });
+
+      return { success: true, result };
+    } catch (error) {
+      setToastState({
+        type: "error",
+        message: "Minting Item Object failed. Please try again.",
+      });
+      return { success: false, error };
+    }
+  };
+
   return {
     newCollection,
+    mintItem,
   };
 };

@@ -37,3 +37,23 @@ export interface CollectionFormData {
   description: string;
   layers: Layer[];
 }
+
+export type MintItemData = {
+  layer: string;
+  recipient: string;
+  itemName?: string;
+  itemImage?: File;
+  itemId?: string;
+  itemImageUrl?: string;
+  properties?: Array<{ type: string; value: number }>;
+};
+
+export interface MintItemProps {
+  id: string;
+  capId: string;
+  layer: string;
+  itemName: string;
+  itemImg: File | null;
+  itemImageUrl?: string;
+  toAddress: string;
+}

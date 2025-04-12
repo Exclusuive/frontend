@@ -18,10 +18,12 @@ export default function CollectionsLayout({ create }: { create: boolean }) {
 
   // Add useEffect to handle location changes
   useEffect(() => {
-    setOpen(true);
-  }, [location.pathname]);
-  const handleSelect = (collection_id: string) => {
-    updateCollectionIdParam(collection_id, searchParams, location, navigate);
+    if (!selectedId) {
+      setOpen(true);
+    }
+  }, [location.pathname, selectedId]);
+  const handleSelect = (collection_id: string, cap_id: string) => {
+    updateCollectionIdParam(collection_id, cap_id, searchParams, location, navigate);
     setOpen(false);
   };
 

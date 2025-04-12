@@ -41,8 +41,6 @@ export const useGetManageCollections = (
         const caps = data.data;
         const collectionIdPairs = extractCollectionIds(caps); // ✅ 유틸 적용
 
-        console.log(1);
-
         const allCollectionInfo = await Promise.all(
           collectionIdPairs.map(async ({ collection_id, cap_id }) => {
             try {

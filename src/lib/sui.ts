@@ -1,4 +1,4 @@
-import { SuiClient } from "@mysten/sui/client";
+import { SuiClient } from "@mysten/sui.js/client";
 
 export function mergeFields(data: { name: string; content: any }[]) {
   return data.reduce(
@@ -30,15 +30,12 @@ export function extractCollectionIds(data: any[]) {
     .filter(Boolean) as { collection_id: string; cap_id: string }[];
 }
 
-export async function getDynamicObjectIds(
-  suiClient: SuiClient,
-  parentId: string
-): Promise<string[]> {
+export async function getDynamicObjectIds(suiClient: any, parentId: string): Promise<string[]> {
   const { data } = await suiClient.getDynamicFields({ parentId });
   return data.map((item: any) => item.objectId);
 }
 
-export async function getMultiObjectFields(suiClient: SuiClient, objectIds: string[]) {
+export async function getMultiObjectFields(suiClient: any, objectIds: string[]) {
   const response = await suiClient.multiGetObjects({
     ids: objectIds,
     options: { showContent: true },
