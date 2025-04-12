@@ -4,8 +4,7 @@ export interface Collection {
   name: string;
   description: string;
   img_url: string;
-  tickets?: string[];
-  properties?: string[];
+
   items?: string[];
 }
 
@@ -21,6 +20,7 @@ export interface CollectionItem {
 export interface CollectionWithDetails extends Omit<Collection, "items"> {
   layer_types: string[];
   property_types: string[];
+  ticket_types: string[];
   supplier_type?: string;
   items: CollectionItem[];
 }

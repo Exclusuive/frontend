@@ -99,9 +99,9 @@ export const useSendTransactions = () => {
       const layerTxCalls: TxCall[] = layers.map((layer) => ({
         funcName: "add_layer_type",
         args: [
-          { type: "object", value: collectionObject.objectId },
-          { type: "object", value: collectionCapObject.objectId },
-          { type: "string", value: layer.name },
+          { type: "object" as const, value: collectionObject.objectId },
+          { type: "object" as const, value: collectionCapObject.objectId },
+          { type: "string" as const, value: layer.name },
         ],
       }));
 
@@ -112,11 +112,11 @@ export const useSendTransactions = () => {
           funcName: "add_config_to_type",
           typeArguments: [`${PACKAGE_ID}::${MODULE_ID}::BaseType`],
           args: [
-            { type: "object", value: collectionObject.objectId },
-            { type: "object", value: collectionCapObject.objectId },
-            { type: "string", value: name },
-            { type: "string", value: "description" },
-            { type: "string", value: description },
+            { type: "object" as const, value: collectionObject.objectId },
+            { type: "object" as const, value: collectionCapObject.objectId },
+            { type: "string" as const, value: name },
+            { type: "string" as const, value: "description" },
+            { type: "string" as const, value: description },
           ],
         },
         // Add banner image
@@ -124,11 +124,11 @@ export const useSendTransactions = () => {
           funcName: "add_config_to_type",
           typeArguments: [`${PACKAGE_ID}::${MODULE_ID}::BaseType`],
           args: [
-            { type: "object", value: collectionObject.objectId },
-            { type: "object", value: collectionCapObject.objectId },
-            { type: "string", value: name },
-            { type: "string", value: "img_url" },
-            { type: "string", value: uploadedUrl.fileUrl },
+            { type: "object" as const, value: collectionObject.objectId },
+            { type: "object" as const, value: collectionCapObject.objectId },
+            { type: "string" as const, value: name },
+            { type: "string" as const, value: "img_url" },
+            { type: "string" as const, value: uploadedUrl.fileUrl },
           ],
         },
         // Add layers
@@ -193,12 +193,12 @@ export const useSendTransactions = () => {
         {
           funcName: "mint_item",
           args: [
-            { type: "object", value: id },
-            { type: "object", value: capId },
-            { type: "string", value: layer },
-            { type: "string", value: itemName },
-            { type: "string", value: imageUrl },
-            { type: "object", value: toAddress },
+            { type: "object" as const, value: id },
+            { type: "object" as const, value: capId },
+            { type: "string" as const, value: layer },
+            { type: "string" as const, value: itemName },
+            { type: "string" as const, value: imageUrl },
+            { type: "object" as const, value: toAddress },
           ],
         },
       ]);
@@ -217,8 +217,258 @@ export const useSendTransactions = () => {
     }
   };
 
+  // Update collection information (description and image)
+  const updateCollectionInfo = async ({
+    id,
+    capId,
+    collectionName,
+    description,
+    img,
+  }: {
+    id: string;
+    capId: string;
+    collectionName: string;
+    description: string;
+    img: File | null;
+  }) => {
+    try {
+      setToastState({ type: "loading", message: "Updating collection information..." });
+      // Only upload to S3 if we have a new image file
+      if (img) {
+        await uploadToS3({
+          type: `${PACKAGE_ID}_${MODULE_ID}_collection`,
+          id: id,
+          file: img,
+        });
+      }
+
+      const tx = buildTx([
+        // Update description
+        {
+          funcName: "update_config_to_type",
+          typeArguments: [`${PACKAGE_ID}::${MODULE_ID}::BaseType`],
+          args: [
+            { type: "object" as const, value: id },
+            { type: "object" as const, value: capId },
+            { type: "string" as const, value: collectionName },
+            { type: "string" as const, value: "description" },
+            { type: "string" as const, value: description },
+          ],
+        },
+      ]);
+
+      await executeTransaction(tx);
+
+      setToastState({ type: "success", message: "Collection information updated successfully" });
+
+      return { success: true };
+    } catch (error) {
+      setToastState({
+        type: "error",
+        message: "Failed to update collection information. Please try again.",
+      });
+      return { success: false, error };
+    }
+  };
+
+  // Add a new layer to the collection
+  const addLayer = async ({
+    id,
+    capId,
+    layerName,
+  }: {
+    id: string;
+    capId: string;
+    layerName: string;
+  }) => {
+    try {
+      setToastState({ type: "loading", message: "Adding new layer..." });
+
+      const tx = buildTx([
+        {
+          funcName: "add_layer_type",
+          args: [
+            { type: "object" as const, value: id },
+            { type: "object" as const, value: capId },
+            { type: "string" as const, value: layerName },
+          ],
+        },
+      ]);
+
+      await executeTransaction(tx);
+
+      setToastState({ type: "success", message: "Layer added successfully" });
+
+      return { success: true };
+    } catch (error) {
+      setToastState({
+        type: "error",
+        message: "Failed to add layer. Please try again.",
+      });
+      return { success: false, error };
+    }
+  };
+
+  // Reorder layers in the collection
+  const reorderLayers = async ({
+    id,
+    capId,
+    layers,
+  }: {
+    id: string;
+    capId: string;
+    layers: string[];
+  }) => {
+    try {
+      setToastState({ type: "loading", message: "Reordering layers..." });
+
+      const tx = buildTx([
+        {
+          funcName: "reorder_layers",
+          args: [
+            { type: "object" as const, value: id },
+            { type: "object" as const, value: capId },
+            { type: "variable" as const, value: JSON.stringify(layers) },
+          ],
+        },
+      ]);
+
+      await executeTransaction(tx);
+
+      setToastState({ type: "success", message: "Layers reordered successfully" });
+
+      return { success: true };
+    } catch (error) {
+      setToastState({
+        type: "error",
+        message: "Failed to reorder layers. Please try again.",
+      });
+      return { success: false, error };
+    }
+  };
+
+  // Add a new property type to the collection
+  const addPropertyType = async ({
+    id,
+    capId,
+    propertyType,
+  }: {
+    id: string;
+    capId: string;
+    propertyType: string;
+  }) => {
+    try {
+      setToastState({ type: "loading", message: "Adding new property type..." });
+
+      const tx = buildTx([
+        {
+          funcName: "add_property_type",
+          args: [
+            { type: "object" as const, value: id },
+            { type: "object" as const, value: capId },
+            { type: "string" as const, value: propertyType },
+          ],
+        },
+      ]);
+
+      await executeTransaction(tx);
+
+      setToastState({ type: "success", message: "Property type added successfully" });
+
+      return { success: true };
+    } catch (error) {
+      setToastState({
+        type: "error",
+        message: "Failed to add property type. Please try again.",
+      });
+      return { success: false, error };
+    }
+  };
+
+  // Add a new supplier to the collection
+  const addSupplier = async ({
+    id,
+    capId,
+    supplier,
+  }: {
+    id: string;
+    capId: string;
+    supplier: string;
+  }) => {
+    try {
+      setToastState({ type: "loading", message: "Adding new supplier..." });
+
+      const tx = buildTx([
+        {
+          funcName: "create_supplier",
+          args: [
+            { type: "object" as const, value: id },
+            { type: "object" as const, value: capId },
+            { type: "string" as const, value: supplier },
+          ],
+        },
+      ]);
+
+      await executeTransaction(tx);
+
+      setToastState({ type: "success", message: "Supplier added successfully" });
+
+      return { success: true };
+    } catch (error) {
+      setToastState({
+        type: "error",
+        message: "Failed to add supplier. Please try again.",
+      });
+      return { success: false, error };
+    }
+  };
+
+  // Add a new ticket type to the collection
+  const addTicketType = async ({
+    id,
+    capId,
+    ticketType,
+  }: {
+    id: string;
+    capId: string;
+    ticketType: string;
+  }) => {
+    try {
+      setToastState({ type: "loading", message: "Adding new ticket type..." });
+
+      const tx = buildTx([
+        {
+          funcName: "add_ticket_type",
+          args: [
+            { type: "object" as const, value: id },
+            { type: "object" as const, value: capId },
+            { type: "string" as const, value: ticketType },
+          ],
+        },
+      ]);
+
+      await executeTransaction(tx);
+
+      setToastState({ type: "success", message: "Ticket type added successfully" });
+
+      return { success: true };
+    } catch (error) {
+      setToastState({
+        type: "error",
+        message: "Failed to add ticket type. Please try again.",
+      });
+      return { success: false, error };
+    }
+  };
+
   return {
     newCollection,
     mintItem,
+    updateCollectionInfo,
+    addLayer,
+    reorderLayers,
+    addPropertyType,
+    addSupplier,
+    addTicketType,
   };
 };

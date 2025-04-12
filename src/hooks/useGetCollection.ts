@@ -32,6 +32,8 @@ export const useGetCollection = (collectionId: string, capId: string) => {
           },
         });
 
+        console.log(res);
+
         const content = res[0].data?.content;
 
         // Safely cast the content to our typed interface
@@ -109,12 +111,6 @@ export const useGetCollection = (collectionId: string, capId: string) => {
           name: typedContent.fields.base_type.fields.type,
           description: result.description ?? "",
           img_url: result.img_url ?? "",
-          tickets: typedContent.fields.ticket_types.fields.contents.map(
-            (entry) => entry.fields.type
-          ),
-          properties: typedContent.fields.property_types.fields.contents.map(
-            (entry) => entry.fields.type
-          ),
         };
 
         // Extract layer types
@@ -124,6 +120,10 @@ export const useGetCollection = (collectionId: string, capId: string) => {
 
         // Extract property types
         const propertyTypes = typedContent.fields.property_types.fields.contents.map(
+          (entry) => entry.fields.type
+        );
+
+        const ticketTypes = typedContent.fields.ticket_types.fields.contents.map(
           (entry) => entry.fields.type
         );
 
@@ -147,6 +147,7 @@ export const useGetCollection = (collectionId: string, capId: string) => {
           property_types: propertyTypes,
           supplier_type: supplierType,
           items: items,
+          ticket_types: ticketTypes,
         };
 
         setCollection(collectionWithDetails);
