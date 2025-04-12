@@ -4,7 +4,9 @@ import Dashboard from "./pages/Dashboard";
 import CollectionsLayout from "./components/CollectionsLayout";
 import Home from "./pages/ManageCollection/Home";
 import ManageItemNFT from "./pages/ManageCollection/ManageItemNFT";
+import ManageBaseNFT from "./pages/ManageCollection/ManageBaseNFT";
 import EditCollectionInfo from "./pages/ManageCollection/EditCollectionInfo";
+
 export default function Routers() {
   return (
     <Router>
@@ -14,7 +16,7 @@ export default function Routers() {
           <Route path="collections" element={<CollectionsLayout create={true} />}>
             <Route path="" element={<Home />} />
             <Route path="editinfo" element={<EditCollectionInfo />} />
-            <Route path="bases" element={<Dashboard />} />
+            <Route path="bases" element={<ManageBaseNFT />} />
             <Route path="items" element={<ManageItemNFT />} />
             <Route path="suppliers" element={<Dashboard />} />
           </Route>

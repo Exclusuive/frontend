@@ -5,6 +5,7 @@ import { buildTx } from "@/lib/buildTx";
 import { useToast } from "@/hooks/useToast";
 import { updateCollectionIdParam } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 
 export const useSendTransactions = () => {
   const client = useSuiClient();
@@ -461,6 +462,58 @@ export const useSendTransactions = () => {
     }
   };
 
+  const mintBase = async ({
+    id,
+    capId,
+    recipient,
+  }: {
+    id: string;
+    capId: string;
+    recipient: string;
+  }) => {
+    try {
+      setToastState({ type: "loading", message: "Minting base NFT..." });
+
+      const uuid = uuidv4();
+
+      const res = await fetch("/white.png");
+      const blob = await res.blob();
+      const whitefile = new File([blob], "base.png", { type: "image/png" });
+
+      const uploadedUrl = await uploadToS3({
+        type: `${PACKAGE_ID}_${MODULE_ID}_collection/base`,
+        id: `${uuid}`,
+        file: whitefile,
+      });
+
+      console.log(uploadedUrl);
+
+      const tx = buildTx([
+        {
+          funcName: "mint_and_tranfer_base",
+          args: [
+            { type: "object" as const, value: id },
+            { type: "object" as const, value: capId },
+            { type: "string" as const, value: uploadedUrl.fileUrl },
+            { type: "object" as const, value: recipient },
+          ],
+        },
+      ]);
+
+      await executeTransaction(tx);
+
+      setToastState({ type: "success", message: "Base NFT minted successfully" });
+
+      return { success: true };
+    } catch (error) {
+      setToastState({
+        type: "error",
+        message: "Failed to mint base NFT. Please try again.",
+      });
+      return { success: false, error };
+    }
+  };
+
   return {
     newCollection,
     mintItem,
@@ -470,5 +523,6 @@ export const useSendTransactions = () => {
     addPropertyType,
     addSupplier,
     addTicketType,
+    mintBase,
   };
 };
