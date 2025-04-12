@@ -1,4 +1,4 @@
-import { SuiClient } from "@mysten/sui.js/client";
+import { SuiClient } from "@mysten/sui/client";
 
 export function mergeFields(data: { name: string; content: any }[]) {
   return data.reduce(
