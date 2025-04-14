@@ -6,7 +6,7 @@ import Home from "./pages/ManageCollection/Home";
 import ManageItemNFT from "./pages/ManageCollection/ManageItemNFT";
 import ManageBaseNFT from "./pages/ManageCollection/ManageBaseNFT";
 import EditCollectionInfo from "./pages/ManageCollection/EditCollectionInfo";
-
+import ManageSupplierContract from "./pages/ManageCollection/ManageSupplierContract";
 export default function Routers() {
   return (
     <Router>
@@ -18,7 +18,7 @@ export default function Routers() {
             <Route path="editinfo" element={<EditCollectionInfo />} />
             <Route path="bases" element={<ManageBaseNFT />} />
             <Route path="items" element={<ManageItemNFT />} />
-            <Route path="suppliers" element={<Dashboard />} />
+            <Route path="suppliers" element={<ManageSupplierContract />} />
           </Route>
         </Route>
       </Routes>

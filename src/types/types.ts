@@ -65,3 +65,40 @@ export interface CollectionFields {
     item_types: ContentArray<ItemTypeContent>;
   };
 }
+
+// Define Supplier type
+export interface Supplier {
+  supplier_id: string;
+  supplier_cap_id: string;
+  collection_id: string;
+  name: string;
+  balance: number;
+  selections?: Selection[];
+}
+
+export interface Selection {
+  fields: {
+    number: number;
+    price: number;
+    conditions?: Condition[];
+    product?: Product;
+  };
+}
+
+export interface Product {
+  id: string;
+
+  fields?: {
+    name: string;
+    conditions?: Condition[];
+  };
+}
+
+export interface Condition {
+  ticket_type: string;
+  requirements: string;
+  fields?: {
+    ticket_type: string;
+    requirements: string;
+  };
+}

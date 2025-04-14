@@ -1,7 +1,7 @@
 import { TxArg, TxCall } from "@/types/contract";
 import { Transaction } from "@mysten/sui/transactions";
 
-const PACKAGE_ID = import.meta.env.VITE_PACKAGE_ID;
+const PACKAGE_ID = import.meta.env.VITE_MOVE_CALL_PACKAGE_ID;
 const MODULE_ID = import.meta.env.VITE_MODULE;
 
 export function buildTx(calls: TxCall[]) {
@@ -27,17 +27,39 @@ export function buildTx(calls: TxCall[]) {
       continue;
     }
 
-    // 🔵 move-call
     const { funcName, args, typeArguments, assign } = call;
 
-    const resolvedArgs = args.map((arg) => {
+    // ✅ 🔥 SPECIAL HANDLING FOR TRANSFER
+    if (funcName === "transfer") {
+      if (args.length !== 2) throw new Error("transfer expects exactly 2 arguments");
+
+      const objArg = args[0];
+      const addrArg = args[1];
+
+      if (objArg.type !== "variable") {
+        throw new Error("First argument of transfer must be a variable");
+      }
+      if (addrArg.type !== "object") {
+        throw new Error("Second argument of transfer must be an address");
+      }
+
+      const objectToTransfer = assigned[objArg.value];
+
+      const recipient = tx.pure.address(String(addrArg.value));
+
+      tx.transferObjects([objectToTransfer], recipient);
+      continue;
+    }
+
+    // 🔵 move-call (기존 로직 그대로)
+    const resolvedArgs = args.map((arg: any) => {
       switch (arg.type) {
         case "string":
-          return tx.pure.string(String(arg.value));
+          return tx.pure.string(arg.value);
         case "u64":
           return tx.pure.u64(arg.value);
         case "object":
-          return tx.object(String(arg.value));
+          return tx.object(arg.value);
         case "variable":
           if (!(arg.value in assigned)) {
             throw new Error(`Variable ${arg.value} not found`);

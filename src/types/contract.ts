@@ -55,5 +55,6 @@ export interface MintItemProps {
   itemName: string;
   itemImg: File | null;
   itemImageUrl?: string;
+  properties?: Array<{ type: string; value: number }>;
   toAddress: string;
 }

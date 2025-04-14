@@ -114,14 +114,14 @@ export const CreateCollectionDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+      {/* <DialogTrigger asChild>
         {trigger || (
           <Button variant="outline" size="sm">
             <PlusCircle className="mr-2 h-4 w-4" />
             New Collection
           </Button>
         )}
-      </DialogTrigger>
+      </DialogTrigger> */}
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Create Collection</DialogTitle>

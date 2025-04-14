@@ -166,6 +166,7 @@ export const useSendTransactions = () => {
     layer,
     itemName,
     itemImg,
+    properties,
     itemImageUrl,
     toAddress,
   }: MintItemProps) => {
@@ -190,15 +191,49 @@ export const useSendTransactions = () => {
         throw new Error("No image URL provided for minting");
       }
 
+      let propertiesTxCalls: TxCall[] = [];
+      if (properties) {
+        propertiesTxCalls = properties
+          .map((property, index) => [
+            {
+              funcName: "new_property",
+              args: [
+                { type: "object" as const, value: id },
+                { type: "object" as const, value: capId },
+                { type: "string" as const, value: property.type },
+                { type: "u64" as const, value: property.value },
+              ],
+              assign: `propertyId${index}`,
+            },
+            {
+              funcName: "attach_property_to_item",
+              args: [
+                { type: "object" as const, value: id },
+                { type: "variable" as const, value: "itemId" },
+                { type: "variable" as const, value: `propertyId${index}` },
+              ],
+            },
+          ])
+          .flat();
+      }
+
       const tx = buildTx([
         {
-          funcName: "mint_item",
+          funcName: "new_item",
           args: [
             { type: "object" as const, value: id },
             { type: "object" as const, value: capId },
             { type: "string" as const, value: layer },
             { type: "string" as const, value: itemName },
             { type: "string" as const, value: imageUrl },
+          ],
+          assign: "itemId",
+        },
+        ...propertiesTxCalls,
+        {
+          funcName: "transfer",
+          args: [
+            { type: "variable" as const, value: "itemId" },
             { type: "object" as const, value: toAddress },
           ],
         },
@@ -214,6 +249,7 @@ export const useSendTransactions = () => {
         type: "error",
         message: "Minting Item Object failed. Please try again.",
       });
+      console.log(error);
       return { success: false, error };
     }
   };
@@ -514,6 +550,193 @@ export const useSendTransactions = () => {
     }
   };
 
+  const addSelection = async ({
+    id,
+    supplierCapId,
+    supplierId,
+    price,
+    selectionType,
+  }: {
+    id: string;
+    supplierCapId: string;
+    supplierId: string;
+    price: number;
+    selectionType: string;
+  }) => {
+    try {
+      setToastState({ type: "loading", message: "Adding new selection..." });
+
+      console.log(id, supplierId, supplierCapId, price, selectionType);
+
+      const tx = buildTx([
+        {
+          funcName: "add_selection_to_supplier",
+          typeArguments: [`${PACKAGE_ID}::${MODULE_ID}::${selectionType}`],
+          args: [
+            { type: "object" as const, value: id },
+            { type: "object" as const, value: supplierId },
+            { type: "object" as const, value: supplierCapId },
+            { type: "u64" as const, value: price },
+          ],
+        },
+      ]);
+
+      await executeTransaction(tx);
+
+      setToastState({ type: "success", message: "Selection added successfully" });
+
+      return { success: true };
+    } catch (error) {
+      setToastState({
+        type: "error",
+        message: "Failed to add selection. Please try again.",
+      });
+      return { success: false, error };
+    }
+  };
+
+  const addProduct = async ({
+    id,
+    capId,
+    supplierId,
+    supplierCapId,
+    selectionNumber,
+    productType,
+    quantity,
+    // Item specific parameters
+    layer,
+    itemName,
+    img_url,
+    // Property specific parameters
+    propertyName,
+    propertyValue,
+    // Ticket specific parameters
+    ticketName,
+  }: {
+    id: string;
+    capId: string;
+    supplierId: string;
+    supplierCapId: string;
+    selectionNumber: number;
+    productType: "Item" | "Property" | "Ticket";
+    quantity: number;
+    // Item specific parameters
+    layer?: string;
+    itemName?: string;
+    img_url?: string;
+    // Property specific parameters
+    propertyName?: string;
+    propertyValue?: string;
+    // Ticket specific parameters
+    ticketName?: string;
+  }) => {
+    try {
+      setToastState({ type: "loading", message: "Adding product to selection..." });
+
+      // Prepare the transaction calls array
+      const txCalls: TxCall[] = [];
+
+      // Validate required parameters based on product type
+      if (productType === "Item") {
+        if (!layer || !itemName) {
+          throw new Error("Layer and itemName are required for Item type");
+        }
+      } else if (productType === "Property") {
+        if (!propertyName || !propertyValue) {
+          throw new Error("propertyName and propertyValue are required for Property type");
+        }
+      } else if (productType === "Ticket") {
+        if (!ticketName) {
+          throw new Error("ticketName is required for Ticket type");
+        }
+      }
+
+      console.log(selectionNumber);
+
+      // Create products and add them to the supplier
+      for (let i = 0; i < quantity; i++) {
+        // Variable name to store the created product ID for this iteration
+        const productIdVar = `productId${i}`;
+
+        // Create the product based on productType
+        if (productType === "Item" && layer && itemName) {
+          // Create new item and assign the result to a variable
+          txCalls.push({
+            funcName: "new_item",
+            assign: productIdVar,
+            args: [
+              { type: "object" as const, value: id },
+              { type: "object" as const, value: capId },
+              { type: "string" as const, value: layer },
+              { type: "string" as const, value: itemName },
+              { type: "string" as const, value: img_url || "" },
+            ],
+          });
+        } else if (productType === "Property" && propertyName && propertyValue) {
+          // Create new property and assign the result to a variable
+          txCalls.push({
+            funcName: "new_property",
+            assign: productIdVar,
+            args: [
+              { type: "object" as const, value: id },
+              { type: "object" as const, value: capId },
+              { type: "string" as const, value: propertyName },
+              { type: "u64" as const, value: propertyValue },
+            ],
+          });
+        } else if (productType === "Ticket" && ticketName) {
+          // Create new ticket and assign the result to a variable
+          txCalls.push({
+            funcName: "new_ticket",
+            assign: productIdVar,
+            args: [
+              { type: "object" as const, value: id },
+              { type: "object" as const, value: capId },
+              { type: "string" as const, value: ticketName },
+            ],
+          });
+        }
+
+        // Add the product to the supplier
+        txCalls.push({
+          funcName: "add_product_to_supplier",
+          typeArguments: [`${PACKAGE_ID}::${MODULE_ID}::${productType}`],
+          args: [
+            { type: "object" as const, value: id },
+            { type: "object" as const, value: supplierId },
+            { type: "object" as const, value: supplierCapId },
+            { type: "u64" as const, value: selectionNumber },
+            { type: "variable" as const, value: productIdVar },
+          ],
+        });
+      }
+
+      // Execute all transactions in a single call
+      const tx = buildTx(txCalls);
+      const result = await executeTransaction(tx);
+
+      // Extract the created product IDs from the result
+      const createdObjects = (result as TransactionResult).objectChanges?.filter(
+        (obj) => obj.type === "created"
+      );
+      const productObjects = createdObjects?.filter((obj) =>
+        obj.objectType.endsWith(`::${productType}`)
+      );
+
+      const productIds = productObjects?.map((obj) => obj.objectId) || [];
+
+      setToastState({ type: "success", message: "Products added successfully" });
+
+      return { success: true, productIds };
+    } catch (error) {
+      setToastState({
+        type: "error",
+        message: "Failed to add products. Please try again.",
+      });
+      return { success: false, error };
+    }
+  };
+
   return {
     newCollection,
     mintItem,
@@ -524,5 +747,7 @@ export const useSendTransactions = () => {
     addSupplier,
     addTicketType,
     mintBase,
+    addSelection,
+    addProduct,
   };
 };
