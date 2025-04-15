@@ -611,24 +611,14 @@ export const useSendTransactions = () => {
     try {
       setToastState({ type: "loading", message: "Adding new condition..." });
 
-      console.log(id, supplierId, ticketType, requirements);
-
       const tx = buildTx([
         {
-          funcName: "borrow_mut_selection",
+          funcName: "add_condition_to_selection",
           args: [
             { type: "object" as const, value: id },
             { type: "object" as const, value: supplierId },
             { type: "object" as const, value: supplierCapId },
             { type: "u64" as const, value: selectionNumber },
-          ],
-          assign: "selection",
-        },
-        {
-          funcName: "add_condition_to_selection",
-          args: [
-            { type: "object" as const, value: id },
-            { type: "variable" as const, value: "selection" },
             { type: "string" as const, value: ticketType },
             { type: "u64" as const, value: requirements },
           ],

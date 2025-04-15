@@ -32,8 +32,6 @@ export const useGetCollection = (collectionId: string, capId: string) => {
           },
         });
 
-        console.log(res);
-
         const content = res[0].data?.content;
 
         // Safely cast the content to our typed interface

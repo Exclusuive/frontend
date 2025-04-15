@@ -80,13 +80,18 @@ export interface Selection {
     number: number;
     price: number;
     conditions?: Condition[];
+    type: string;
     product?: Product;
+    products?: Product[];
   };
 }
 
 export interface Product {
   id: string;
-
+  img_url?: string;
+  value?: string;
+  type?: string;
+  amount?: number;
   fields?: {
     name: string;
     conditions?: Condition[];

@@ -51,8 +51,6 @@ export default function AddProductDialog({
   const [optionName, setOptionName] = useState<string>("");
   const [propertyValue, setPropertyValue] = useState<string>("");
 
-  console.log(optionName);
-
   // Group items by layer
   const itemsByLayer =
     collection?.items?.reduce(

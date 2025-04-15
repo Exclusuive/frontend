@@ -48,6 +48,8 @@ export default function ManageSupplierContract() {
   } = useGetManageSuppliers(account?.address || "", collectionId || "");
   const { collection } = useGetCollection(collectionId || "", capId || "");
 
+  console.log(suppliers);
+
   const [newSupplierName, setNewSupplierName] = useState("");
   const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(null);
   const [newSelectionPrice, setNewSelectionPrice] = useState<number>(0);
@@ -282,18 +284,80 @@ export default function ManageSupplierContract() {
                   <CardHeader>
                     <CardTitle>Selection {selection.fields.number}</CardTitle>
                     <CardDescription>Price: {selection.fields.price} SUI</CardDescription>
+                    <CardDescription>
+                      <p>Requirement</p>
+                      {selection.fields.conditions?.map((condition: any, idx: number) => (
+                        <li key={idx}>
+                          <span className="font-medium">
+                            {condition.fields.ticket_type.fields.type}{" "}
+                            {condition.fields.requirement} ticket
+                          </span>
+                        </li>
+                      ))}
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <p>SelectionType : {selection.fields.product?.fields?.name?.split("::")[2]}</p>
+                    <p>SelectionType : {selection.fields.type}</p>
+
+                    <div className="grid grid-cols-1 gap-4">
+                      {selection.fields.products?.map((product: any, idx: number) => (
+                        <Card key={idx} className="my-4 flex flex-col rounded-lg border p-4">
+                          <CardHeader>
+                            <div className="flex items-center gap-4">
+                              {product.type === "Item" && (
+                                <>
+                                  <div className="h-16 w-16 overflow-hidden rounded-md">
+                                    <img
+                                      src={product.img_url}
+                                      alt={product.item_type}
+                                      className="h-full w-full object-cover"
+                                    />
+                                  </div>
+                                  <div className="flex flex-col">
+                                    <h3 className="font-medium">{product.item_type}</h3>
+                                    <p className="text-sm text-gray-500">
+                                      Remaining: {product.amount}
+                                    </p>
+                                  </div>
+                                </>
+                              )}
+
+                              {product.type === "Property" && (
+                                <div className="flex flex-col">
+                                  <p className="font-medium">
+                                    <strong>Property Type:</strong> {product.property_type}
+                                  </p>
+                                  <p className="text-sm text-gray-500">
+                                    <strong>Value:</strong> {product.value}
+                                  </p>
+                                  <p className="text-sm text-gray-500">
+                                    Remaining: {product.amount}
+                                  </p>
+                                </div>
+                              )}
+
+                              {product.type === "Ticket" && (
+                                <div className="flex flex-col">
+                                  <p className="font-medium">
+                                    <strong>Ticket Type:</strong> {product.ticket_type}
+                                  </p>
+                                  <p className="text-sm text-gray-500">
+                                    Remaining: {product.amount}
+                                  </p>
+                                </div>
+                              )}
+                            </div>
+                          </CardHeader>
+                        </Card>
+                      ))}
+                    </div>
                   </CardContent>
                   <CardFooter className="flex flex-col gap-2">
                     <div className="flex w-full justify-between">
                       <AddProductDialog
                         selectionNumber={selection.fields.number}
                         supplierId={selectedSupplier.supplier_id}
-                        selectionType={
-                          selection.fields.product?.fields?.name?.split("::")[2] || "Item"
-                        }
+                        selectionType={selection.fields.type}
                       />
                     </div>
                     <div className="flex w-full justify-between">
