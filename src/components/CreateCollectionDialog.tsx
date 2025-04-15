@@ -7,7 +7,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -17,13 +16,11 @@ import { CollectionFormData, Layer } from "@/types/contract";
 import { useSendTransactions } from "@/hooks/useSendTransactions";
 
 interface CreateCollectionDialogProps {
-  trigger?: React.ReactNode;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
 }
 
 export const CreateCollectionDialog = ({
-  trigger,
   open: controlledOpen,
   onOpenChange,
 }: CreateCollectionDialogProps) => {

@@ -185,8 +185,6 @@ export const useSendTransactions = () => {
         imageUrl = uploadedUrl.fileUrl;
       }
 
-      console.log(id, capId, layer, itemName, itemImg, itemImageUrl, toAddress);
-
       if (!imageUrl) {
         throw new Error("No image URL provided for minting");
       }
@@ -595,6 +593,63 @@ export const useSendTransactions = () => {
     }
   };
 
+  const addCondition = async ({
+    id,
+    supplierId,
+    supplierCapId,
+    ticketType,
+    requirements,
+    selectionNumber,
+  }: {
+    id: string;
+    supplierId: string;
+    supplierCapId: string;
+    ticketType: string;
+    requirements: number;
+    selectionNumber: number;
+  }) => {
+    try {
+      setToastState({ type: "loading", message: "Adding new condition..." });
+
+      console.log(id, supplierId, ticketType, requirements);
+
+      const tx = buildTx([
+        {
+          funcName: "borrow_mut_selection",
+          args: [
+            { type: "object" as const, value: id },
+            { type: "object" as const, value: supplierId },
+            { type: "object" as const, value: supplierCapId },
+            { type: "u64" as const, value: selectionNumber },
+          ],
+          assign: "selection",
+        },
+        {
+          funcName: "add_condition_to_selection",
+          args: [
+            { type: "object" as const, value: id },
+            { type: "variable" as const, value: "selection" },
+            { type: "string" as const, value: ticketType },
+            { type: "u64" as const, value: requirements },
+          ],
+        },
+      ]);
+
+      await executeTransaction(tx);
+
+      setToastState({ type: "success", message: "Condition added successfully" });
+
+      return { success: true };
+    } catch (error) {
+      console.log(error);
+      setToastState({
+        type: "error",
+        message: "Failed to add condition. Please try again.",
+      });
+      return { success: false, error };
+    }
+  };
+
   const addProduct = async ({
     id,
     capId,
@@ -650,8 +705,6 @@ export const useSendTransactions = () => {
           throw new Error("ticketName is required for Ticket type");
         }
       }
-
-      console.log(selectionNumber);
 
       // Create products and add them to the supplier
       for (let i = 0; i < quantity; i++) {
@@ -748,6 +801,7 @@ export const useSendTransactions = () => {
     addTicketType,
     mintBase,
     addSelection,
+    addCondition,
     addProduct,
   };
 };

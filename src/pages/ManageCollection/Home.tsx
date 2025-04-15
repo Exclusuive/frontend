@@ -19,6 +19,8 @@ export default function Home() {
   const [recipient, setRecipient] = useState<string>("");
   const { mintItem } = useSendTransactions();
 
+  console.log(collection);
+
   // Sample data for the chart - replace with actual data
   const chartData = [
     { name: "Layer 1", value: 400 },
@@ -93,9 +95,9 @@ export default function Home() {
                   </p>
                 </div>
                 <div>
-                  <h3 className="font-medium">Supplier Type</h3>
+                  <h3 className="font-medium">Ticket Types</h3>
                   <p className="text-muted-foreground text-sm">
-                    {collection?.supplier_type || "No supplier type defined"}
+                    {collection?.ticket_types?.join(", ") || "No ticket types defined"}
                   </p>
                 </div>
               </div>

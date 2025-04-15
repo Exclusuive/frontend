@@ -127,9 +127,6 @@ export const useGetCollection = (collectionId: string, capId: string) => {
           (entry) => entry.fields.type
         );
 
-        // Extract supplier type
-        const supplierType = typedContent.fields.supplier_type;
-
         // Extract items with their details
         const items = typedContent.fields.item_types.fields.contents.map((entry) => {
           return {
@@ -145,7 +142,6 @@ export const useGetCollection = (collectionId: string, capId: string) => {
           ...baseCollection,
           layer_types: layerTypes,
           property_types: propertyTypes,
-          supplier_type: supplierType,
           items: items,
           ticket_types: ticketTypes,
         };

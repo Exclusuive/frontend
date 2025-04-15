@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,7 +26,6 @@ import { useSendTransactions } from "@/hooks/useSendTransactions";
 
 interface AddProductDialogProps {
   selectionNumber: number;
-  selectionId: string;
   supplierId: string;
   selectionType: string;
   trigger?: React.ReactNode;
@@ -34,7 +33,6 @@ interface AddProductDialogProps {
 
 export default function AddProductDialog({
   selectionNumber,
-  selectionId,
   supplierId,
   selectionType,
   trigger,
@@ -43,15 +41,17 @@ export default function AddProductDialog({
   const collectionId = searchParams.get("collection_id");
   const capId = searchParams.get("cap_id");
   const supplierCapId = searchParams.get("supplier_cap_id");
-  const { collection, loading } = useGetCollection(collectionId || "", capId || "");
+  const { collection } = useGetCollection(collectionId || "", capId || "");
   const { addProduct } = useSendTransactions();
 
   const [selectedId, setSelectedId] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(1);
   const [open, setOpen] = useState(false);
-  const [selectedLayer, setSelectedLayer] = useState<string>("");
   const [selectedItem, setSelectedItem] = useState<CollectionItem | null>(null);
+  const [optionName, setOptionName] = useState<string>("");
   const [propertyValue, setPropertyValue] = useState<string>("");
+
+  console.log(optionName);
 
   // Group items by layer
   const itemsByLayer =
@@ -105,7 +105,7 @@ export default function AddProductDialog({
           selectionNumber: selectionNumber,
           productType: "Property",
           quantity: quantity,
-          propertyName: selectedId,
+          propertyName: optionName,
           propertyValue: propertyValue,
         });
       } else if (productSelectionType === "Ticket") {
@@ -118,7 +118,7 @@ export default function AddProductDialog({
           selectionNumber: selectionNumber,
           productType: "Ticket",
           quantity: quantity,
-          ticketName: selectedId,
+          ticketName: optionName,
         });
       }
 
@@ -126,7 +126,6 @@ export default function AddProductDialog({
         setOpen(false);
         setSelectedId("");
         setQuantity(1);
-        setSelectedLayer("");
         setSelectedItem(null);
         setPropertyValue("");
       }
@@ -177,7 +176,14 @@ export default function AddProductDialog({
   const handleItemSelect = (item: CollectionItem) => {
     setSelectedItem(item);
     setSelectedId(item.name);
-    setSelectedLayer(item.layer);
+    setOptionName(item.name);
+  };
+
+  const handleOptionSelect = (
+    option: CollectionItem | { id: string; name: string; description: string }
+  ) => {
+    setSelectedId(getOptionValue(option));
+    setOptionName(option.name);
   };
 
   return (
@@ -231,7 +237,15 @@ export default function AddProductDialog({
                 ))}
               </div>
             ) : (
-              <Select value={selectedId} onValueChange={setSelectedId}>
+              <Select
+                value={selectedId}
+                onValueChange={(value) => {
+                  const option = getTypeOptions().find((opt) => getOptionValue(opt) === value);
+                  if (option) {
+                    handleOptionSelect(option);
+                  }
+                }}
+              >
                 <SelectTrigger className="col-span-3">
                   <SelectValue placeholder={`Select ${selectionType.toLowerCase()}`} />
                 </SelectTrigger>

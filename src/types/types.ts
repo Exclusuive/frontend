@@ -21,7 +21,6 @@ export interface CollectionWithDetails extends Omit<Collection, "items"> {
   layer_types: string[];
   property_types: string[];
   ticket_types: string[];
-  supplier_type?: string;
   items: CollectionItem[];
 }
 
