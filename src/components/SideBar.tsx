@@ -5,7 +5,6 @@ import {
   Boxes,
   Handshake,
   BadgeCheck,
-  Wrench,
   PackageOpen,
   HelpCircle,
 } from "lucide-react";
@@ -73,17 +72,13 @@ const manage_collection_menus = [
 const manage_nft_menus = [
   {
     title: "View My NFT",
-    url: "#",
+    url: "/viewnft",
     icon: BadgeCheck,
   },
-  {
-    title: "Equip Item to my NFT",
-    url: "#",
-    icon: Wrench,
-  },
+
   {
     title: "Get Item through supplier",
-    url: "#",
+    url: "/viewnft",
     icon: PackageOpen,
   },
 ];
@@ -152,7 +147,7 @@ export default function AppSidebar() {
               {manage_nft_menus.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <Link to={item.url}>
+                    <Link to={generateUrl(item.url, location)}>
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>

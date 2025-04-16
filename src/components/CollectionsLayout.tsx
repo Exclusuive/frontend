@@ -5,6 +5,7 @@ import { useCurrentAccount } from "@mysten/dapp-kit";
 import { useEffect, useState } from "react";
 import { CreateCollectionDialog } from "./CreateCollectionDialog";
 import { updateCollectionIdParam } from "@/lib/utils";
+import { useGetUserOwnedCollections } from "@/hooks/useGetUserOwnedCollections";
 
 export default function CollectionsLayout({ create }: { create: boolean }) {
   const [searchParams] = useSearchParams();
@@ -12,7 +13,10 @@ export default function CollectionsLayout({ create }: { create: boolean }) {
   const navigate = useNavigate();
   const location = useLocation();
   const account = useCurrentAccount();
-  const { data } = useGetManageCollections(account?.address || "");
+  const { data } = create
+    ? useGetManageCollections(account?.address || "")
+    : useGetUserOwnedCollections(account?.address || "");
+
   const [open, setOpen] = useState(!selectedId);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
 
@@ -22,6 +26,7 @@ export default function CollectionsLayout({ create }: { create: boolean }) {
       setOpen(true);
     }
   }, [location.pathname, selectedId]);
+
   const handleSelect = (collection_id: string, cap_id: string) => {
     updateCollectionIdParam(collection_id, cap_id, searchParams, location, navigate);
     setOpen(false);

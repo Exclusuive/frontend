@@ -1,6 +1,6 @@
 import { useSignAndExecuteTransaction, useSuiClient } from "@mysten/dapp-kit";
 import { CollectionFormData, MintItemProps, TransactionResult, TxCall } from "@/types/contract";
-import { uploadToS3 } from "@/lib/uploadToS3";
+import { syncImg, uploadToS3 } from "@/lib/uploadToS3";
 import { buildTx } from "@/lib/buildTx";
 import { useToast } from "@/hooks/useToast";
 import { updateCollectionIdParam } from "@/lib/utils";
@@ -780,6 +780,46 @@ export const useSendTransactions = () => {
     }
   };
 
+  const equipItem = async ({
+    id,
+    baseId,
+    itemId,
+  }: {
+    id: string;
+    baseId: string;
+    itemId: string;
+  }) => {
+    try {
+      setToastState({ type: "loading", message: "Equipping item..." });
+
+      const tx = buildTx([
+        {
+          funcName: "equip_item_to_base",
+          args: [
+            { type: "object", value: id },
+            { type: "object", value: baseId },
+            { type: "object", value: itemId },
+          ],
+        },
+      ]);
+
+      await executeTransaction(tx);
+
+      syncImg(baseId);
+
+      setToastState({ type: "success", message: "Item equipped successfully" });
+
+      return { success: true };
+    } catch (error) {
+      console.log(error);
+      setToastState({
+        type: "error",
+        message: "Failed to equip item. Please try again.",
+      });
+      return { success: false, error };
+    }
+  };
+
   return {
     newCollection,
     mintItem,
@@ -793,5 +833,6 @@ export const useSendTransactions = () => {
     addSelection,
     addCondition,
     addProduct,
+    equipItem,
   };
 };
