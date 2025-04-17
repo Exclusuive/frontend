@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useCurrentAccount } from "@mysten/dapp-kit";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,7 +19,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useGetManageSuppliers } from "@/hooks/useGetManageSuppliers";
 import { Supplier } from "@/types/types";
 import { useSendTransactions } from "@/hooks/useSendTransactions";
 import { useSearchParams } from "react-router-dom";
@@ -37,7 +35,6 @@ import { useGetCollection } from "@/hooks/useGetCollection";
 import { useGetSuppliers } from "@/hooks/useGetSuppliers";
 
 export default function ViewSupplier() {
-  const account = useCurrentAccount();
   const [searchParams, setSearchParams] = useSearchParams();
   const collectionId = searchParams.get("collection_id");
   const capId = searchParams.get("cap_id");

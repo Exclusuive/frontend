@@ -3,9 +3,9 @@ import { useSuiClient, useSuiClientQuery } from "@mysten/dapp-kit";
 import { extractSupplierIds, getDynamicObjectIds, getMultiObjectFields } from "@/lib/sui"; // 유틸 함수들 import
 import { Supplier } from "@/types/types";
 
-const PACKAGE_ID = import.meta.env.VITE_PACKAGE_ID;
-const MODULE_ID = import.meta.env.VITE_MODULE;
-const COL_CAP_TYPE = `${PACKAGE_ID}::${MODULE_ID}::SupplierCap`;
+// const PACKAGE_ID = import.meta.env.VITE_PACKAGE_ID;
+// const MODULE_ID = import.meta.env.VITE_MODULE;
+// const COL_CAP_TYPE = `${PACKAGE_ID}::${MODULE_ID}::SupplierCap`;
 
 export const useGetSuppliers = (
   collectionId: string
