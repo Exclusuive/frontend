@@ -38,7 +38,7 @@ export default function CollectionsLayout({ create }: { create: boolean }) {
   };
 
   return (
-    <div className="w-screen space-y-10 px-4 py-6">
+    <div className="space-y-10 px-4 py-6">
       <SelectCollectionCard
         items={data}
         onClick={handleSelect}
@@ -48,7 +48,9 @@ export default function CollectionsLayout({ create }: { create: boolean }) {
         onOpenChange={setOpen}
       />
       <CreateCollectionDialog open={showCreateDialog} onOpenChange={setShowCreateDialog} />
-      <Outlet />
+      <div className="flex-grow overflow-hidden">
+        <Outlet />
+      </div>
     </div>
   );
 }

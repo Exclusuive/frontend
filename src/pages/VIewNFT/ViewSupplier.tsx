@@ -34,18 +34,17 @@ import {
 import SelectSupplierModal from "@/components/SelectSupplierCard";
 import AddProductDialog from "@/components/AddProductDialog";
 import { useGetCollection } from "@/hooks/useGetCollection";
+import { useGetSuppliers } from "@/hooks/useGetSuppliers";
 
-export default function ManageSupplierContract() {
+export default function ViewSupplier() {
   const account = useCurrentAccount();
   const [searchParams, setSearchParams] = useSearchParams();
   const collectionId = searchParams.get("collection_id");
   const capId = searchParams.get("cap_id");
   const supplierId = searchParams.get("supplier_id");
-  const {
-    data: suppliers,
-    loading,
-    error,
-  } = useGetManageSuppliers(account?.address || "", collectionId || "");
+
+  const { data: suppliers, loading, error } = useGetSuppliers(collectionId || "");
+
   const { collection } = useGetCollection(collectionId || "", capId || "");
 
   console.log(suppliers);
@@ -166,7 +165,7 @@ export default function ManageSupplierContract() {
   }
 
   return (
-    <div className="container mx-auto w-full py-6">
+    <div className="container mx-auto py-6">
       <h1 className="mb-6 text-3xl font-bold">Manage Supplier Contracts</h1>
 
       {/* Supplier Selection Dialog */}

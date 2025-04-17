@@ -78,7 +78,7 @@ const manage_nft_menus = [
 
   {
     title: "Get Item through supplier",
-    url: "/viewnft",
+    url: "/viewnft/suppliers",
     icon: PackageOpen,
   },
 ];

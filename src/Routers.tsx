@@ -8,6 +8,7 @@ import ManageBaseNFT from "./pages/ManageCollection/ManageBaseNFT";
 import EditCollectionInfo from "./pages/ManageCollection/EditCollectionInfo";
 import ManageSupplierContract from "./pages/ManageCollection/ManageSupplierContract";
 import ViewMyNFT from "./pages/VIewNFT/ViewMyNFT";
+import ViewSupplier from "./pages/VIewNFT/ViewSupplier";
 export default function Routers() {
   return (
     <Router>
@@ -23,10 +24,7 @@ export default function Routers() {
           </Route>
           <Route path="viewnft" element={<CollectionsLayout create={false} />}>
             <Route path="" element={<ViewMyNFT />} />
-            <Route path="editinfo" element={<EditCollectionInfo />} />
-            <Route path="bases" element={<ManageBaseNFT />} />
-            <Route path="items" element={<ManageItemNFT />} />
-            <Route path="suppliers" element={<ManageSupplierContract />} />
+            <Route path="suppliers" element={<ViewSupplier />} />
           </Route>
         </Route>
       </Routes>

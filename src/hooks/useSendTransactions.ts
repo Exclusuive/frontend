@@ -820,6 +820,51 @@ export const useSendTransactions = () => {
     }
   };
 
+  const popItem = async ({
+    baseId,
+    layer,
+    toAddress,
+  }: {
+    baseId: string;
+    layer: string;
+    toAddress: string;
+  }) => {
+    try {
+      setToastState({ type: "loading", message: "Popping item..." });
+
+      const tx = buildTx([
+        {
+          funcName: "pop_item_from_bag",
+          args: [
+            { type: "object", value: baseId },
+            { type: "string", value: layer },
+          ],
+          assign: "itemId",
+        },
+        {
+          funcName: "transfer",
+          args: [
+            { type: "variable", value: "itemId" },
+            { type: "object", value: toAddress },
+          ],
+        },
+      ]);
+
+      await executeTransaction(tx);
+
+      setToastState({ type: "success", message: "Item popped successfully" });
+
+      return { success: true };
+    } catch (error) {
+      console.log(error);
+      setToastState({
+        type: "error",
+        message: "Failed to pop item. Please try again.",
+      });
+      return { success: false, error };
+    }
+  };
+
   return {
     newCollection,
     mintItem,
@@ -834,5 +879,6 @@ export const useSendTransactions = () => {
     addCondition,
     addProduct,
     equipItem,
+    popItem,
   };
 };

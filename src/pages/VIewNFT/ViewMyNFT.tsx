@@ -25,7 +25,7 @@ export default function ViewMyNFT() {
   const account = useCurrentAccount();
   const { data: nfts } = useCheckUserBases(account?.address || "", collection_id);
   const { data: items } = useGetUserItems(account?.address || "", collection_id);
-  const { equipItem } = useSendTransactions();
+  const { equipItem, popItem } = useSendTransactions();
   const [activeTab, setActiveTab] = useState<string>("");
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [refreshKey, setRefreshKey] = useState(Date.now());
@@ -47,13 +47,24 @@ export default function ViewMyNFT() {
     setRefreshKey(Date.now());
   };
 
-  return (
-    <div className="container mx-auto overflow-hidden py-6">
-      <h1 className="mb-6 text-3xl font-bold">View My NFTs</h1>
+  const handlePopItem = async () => {
+    await popItem({
+      baseId: selectedNFT?.id,
+      layer: activeTab,
+      toAddress: account?.address || "",
+    });
+  };
 
+  // Combine itemSockets and items into a single set of unique types
+  const combinedTypes = new Set<string>();
+  selectedNFT?.itemSockets?.forEach((socket: any) => combinedTypes.add(socket.type));
+  Object.keys(items).forEach((key) => combinedTypes.add(key)); // Add each key to the set
+
+  return (
+    <div className="container mx-auto w-full py-6">
+      <h1 className="mb-6 text-3xl font-bold">View My NFTs</h1>
       {/* Collections Layout */}
       <CollectionsLayout create={false} />
-
       {/* Select for NFT ID */}
       <Select value={selectedNFTId} onValueChange={setSelectedNFTId}>
         <SelectTrigger>
@@ -67,19 +78,18 @@ export default function ViewMyNFT() {
           ))}
         </SelectContent>
       </Select>
-
       {/* Display Selected NFT in Full Screen */}
       {selectedNFT && (
         <div className="mt-6 grid h-full grid-cols-1 gap-6 md:grid-cols-2">
           {/* Left Column: Card for Selected NFT Image */}
           <Card className="col-span-1 h-full">
             <CardContent className="flex h-full flex-col">
-              <div className="w-full overflow-hidden rounded-md">
+              <div className="w-full flex-grow overflow-hidden rounded-md">
                 <img
                   key={refreshKey}
                   src={`${selectedNFT.img_url}?refresh=${refreshKey}`}
                   alt={selectedNFT.name}
-                  className="h-auto w-full object-contain"
+                  className="h-full w-full object-contain"
                 />
               </div>
 
@@ -100,7 +110,7 @@ export default function ViewMyNFT() {
                         <img
                           src={item.items[0].img_url}
                           alt={item.items[0].item_type}
-                          className="mx-auto my-2 h-32 w-32 rounded-md border border-black object-cover"
+                          className="mx-auto my-2 h-24 w-24 rounded-md border border-black object-cover"
                         />
                       ) : (
                         <p>No image available</p>
@@ -117,21 +127,21 @@ export default function ViewMyNFT() {
           </Card>
 
           {/* Right Column: Tabs for Layer Information and Items */}
-          <Card className="col-span-1 flex h-full flex-col">
+          <Card className="col-span-1 h-full">
             <CardHeader>
               <CardTitle>Items you have</CardTitle>
             </CardHeader>
 
             <CardContent className="flex-grow">
               <Tabs
-                defaultValue={nfts[0]?.itemSockets[0].types || ""}
+                defaultValue={Array.from(combinedTypes)[0] || ""}
                 className="w-full"
                 onValueChange={setActiveTab}
               >
                 <TabsList className="w-full">
-                  {nfts[0]?.itemSockets.map((socket: any) => (
-                    <TabsTrigger key={socket.type} value={socket.type}>
-                      {socket.type}
+                  {Array.from(combinedTypes).map((type) => (
+                    <TabsTrigger key={type} value={type}>
+                      {type}
                     </TabsTrigger>
                   ))}
                 </TabsList>
@@ -158,6 +168,11 @@ export default function ViewMyNFT() {
                         </div>
                       )) || <p>No items found for this layer.</p>}
                     </div>
+                    {selectedItem && (
+                      <Button onClick={handleEquipItem} className="mt-4 w-full">
+                        Equip
+                      </Button>
+                    )}
                   </TabsContent>
                 ))}
 
@@ -185,14 +200,13 @@ export default function ViewMyNFT() {
                             </div>
                           ))) || <p>No items found for this layer.</p>}
                       </div>
+
+                      <Button onClick={handlePopItem} className="mt-4 w-full">
+                        Pop Item to Address
+                      </Button>
                     </TabsContent>
                   ))}
               </Tabs>
-              {selectedItem && (
-                <Button onClick={handleEquipItem} className="mt-4 w-full">
-                  Equip
-                </Button>
-              )}
             </CardContent>
           </Card>
         </div>
