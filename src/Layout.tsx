@@ -1,13 +1,14 @@
+import { SidebarProvider } from "@/components/ui/sidebar";
+import AppSidebar from "./components/SideBar";
 import { Outlet } from "react-router-dom";
-import Sidebar from "./components/SideBar";
 
 export default function Layout() {
   return (
-    <div className="h-screen w-screen">
-      <Sidebar></Sidebar>
-      <div className="pl-64">
+    <SidebarProvider>
+      <AppSidebar />
+      <div className="w-full flex-grow overflow-hidden">
         <Outlet />
       </div>
-    </div>
+    </SidebarProvider>
   );
 }
