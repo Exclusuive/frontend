@@ -27,6 +27,7 @@ export default function SelectSupplierModal({
   onCreate,
   onOpenChange,
 }: Props) {
+  console.log(items);
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[75vh] w-2/3 min-w-2/3 overflow-y-auto [&>button]:hidden">
@@ -39,12 +40,12 @@ export default function SelectSupplierModal({
         <div className="grid grid-cols-1 gap-4 overflow-y-auto pt-2 md:grid-cols-2 lg:grid-cols-3">
           {items.map((item) => (
             <Card
-              key={item.supplier_id}
+              key={`${item.supplier_id}_${item.name?.fields?.selection_number}`}
               onClick={() => onClick(item)}
               className={clsx("cursor-pointer border-2 transition-all hover:shadow-lg")}
             >
               <CardHeader>
-                <CardTitle className="text-lg">{item.name}</CardTitle>
+                <CardTitle className="text-lg">TEST</CardTitle>
                 <p className="text-muted-foreground text-sm">
                   ID: {item.supplier_id.slice(0, 8)}...
                 </p>

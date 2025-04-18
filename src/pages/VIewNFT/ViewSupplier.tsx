@@ -145,7 +145,7 @@ export default function ViewSupplier() {
       {/* Supplier Selection Dialog */}
       <SelectSupplierModal
         open={showSupplierDialog}
-        items={displaySuppliers}
+        items={displaySuppliers.slice(1)}
         onClick={handleSupplierSelect}
         create={true}
         onCreate={handleCreateNewSupplier}
