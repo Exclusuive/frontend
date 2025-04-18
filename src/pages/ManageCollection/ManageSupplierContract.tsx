@@ -158,16 +158,18 @@ export default function ManageSupplierContract() {
   };
 
   if (loading) {
-    return <div>Loading suppliers...</div>;
+    return <div className="flex h-screen items-center justify-center">Loading...</div>;
   }
 
   if (error) {
-    return <div>Error loading suppliers: {error.message}</div>;
+    return (
+      <div className="flex h-screen items-center justify-center">Error loading collection</div>
+    );
   }
 
   return (
     <div className="container mx-auto w-full py-6">
-      <h1 className="mb-6 text-3xl font-bold">Manage Supplier Contracts</h1>
+      <h1 className="mb-6 text-3xl font-bold">Manage Market</h1>
 
       {/* Supplier Selection Dialog */}
       <SelectSupplierModal

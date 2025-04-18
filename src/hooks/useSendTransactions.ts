@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/useToast";
 import { updateCollectionIdParam } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
+import { Transaction, TransactionArgument } from "@mysten/sui/transactions";
 
 export const useSendTransactions = () => {
   const client = useSuiClient();
@@ -865,6 +866,71 @@ export const useSendTransactions = () => {
     }
   };
 
+  const butProduct = async ({
+    id,
+    supplierId,
+    selectionNumber,
+    selectionType,
+    ticketType,
+    toAddress,
+  }: {
+    id: string;
+    supplierId: string;
+    selectionNumber: number;
+    selectionType: string;
+    ticketType?: string;
+    toAddress: string;
+  }) => {
+    try {
+      setToastState({ type: "loading", message: "Buying product..." });
+
+      console.log(id, supplierId, selectionNumber, selectionType, ticketType, toAddress);
+      let tx;
+
+      tx = buildTx([
+        {
+          funcName: "new_request",
+          args: [
+            { type: "object", value: id },
+            { type: "object", value: supplierId },
+            { type: "u64", value: selectionNumber },
+          ],
+          assign: "requestId",
+        },
+        {
+          funcName: "confirm_request",
+          typeArguments: [`${PACKAGE_ID}::${MODULE_ID}::${selectionType}`],
+          args: [
+            { type: "object", value: id },
+            { type: "object", value: supplierId },
+            { type: "variable", value: "requestId" },
+          ],
+          assign: "productId",
+        },
+        {
+          funcName: "transfer",
+          args: [
+            { type: "variable", value: "productId" },
+            { type: "object", value: toAddress },
+          ],
+        },
+      ]);
+
+      await executeTransaction(tx);
+
+      setToastState({ type: "success", message: "Product bought successfully" });
+
+      return { success: true };
+    } catch (error) {
+      console.log(error);
+      setToastState({
+        type: "error",
+        message: "Failed to buy product. Please try again.",
+      });
+      return { success: false, error };
+    }
+  };
+
   return {
     newCollection,
     mintItem,
@@ -880,5 +946,6 @@ export const useSendTransactions = () => {
     addProduct,
     equipItem,
     popItem,
+    butProduct,
   };
 };

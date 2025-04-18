@@ -6,7 +6,9 @@ export default function Layout() {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <Outlet />
+      <div className="w-full flex-grow overflow-hidden">
+        <Outlet />
+      </div>
     </SidebarProvider>
   );
 }

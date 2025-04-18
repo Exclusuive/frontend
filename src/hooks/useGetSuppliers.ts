@@ -3,9 +3,9 @@ import { useSuiClient, useSuiClientQuery } from "@mysten/dapp-kit";
 import { extractSupplierIds, getDynamicObjectIds, getMultiObjectFields } from "@/lib/sui"; // 유틸 함수들 import
 import { Supplier } from "@/types/types";
 
-// const PACKAGE_ID = import.meta.env.VITE_PACKAGE_ID;
-// const MODULE_ID = import.meta.env.VITE_MODULE;
-// const COL_CAP_TYPE = `${PACKAGE_ID}::${MODULE_ID}::SupplierCap`;
+const PACKAGE_ID = import.meta.env.VITE_MOVE_CALL_PACKAGE_ID;
+const MODULE_ID = import.meta.env.VITE_MODULE;
+const COL_CAP_TYPE = `${PACKAGE_ID}::${MODULE_ID}::SupplierCreated`;
 
 export const useGetSuppliers = (
   collectionId: string
@@ -19,31 +19,27 @@ export const useGetSuppliers = (
     data,
     isPending,
     error: queryError,
-  } = useSuiClientQuery("getDynamicFields", {
-    parentId: collectionId,
+  } = useSuiClientQuery("queryEvents", {
+    query: {
+      MoveEventType: COL_CAP_TYPE,
+    },
   });
-
-  console.log(data);
 
   useEffect(() => {
     if (!data || isPending || queryError) return;
 
-    console.log(data);
+    const objectIds = data.data.map((item: any) => item.parsedJson.id);
 
     const fetchSupplierInfos = async () => {
       setLoading(true);
       setInternalError(null);
 
       try {
-        const caps = data.data;
-        const supplierIdPairs = extractSupplierIds(caps); // ✅ 유틸 적용
         const allSupplierInfo = await Promise.all(
-          supplierIdPairs.map(async ({ supplier_id, cap_id }) => {
+          objectIds.map(async (supplier_id) => {
             const dynamicIds = await getDynamicObjectIds(suiClient, supplier_id);
             const allIds = [supplier_id, ...dynamicIds];
-            const allFieldsResponse = await getMultiObjectFields(suiClient, allIds);
-
-            const supplier = allFieldsResponse[0];
+            const suppliers = await getMultiObjectFields(suiClient, allIds);
 
             const parseProductValue = (productValue: any) => {
               if (!productValue?.type) return null;
@@ -70,10 +66,10 @@ export const useGetSuppliers = (
               return null;
             };
 
-            const products = allFieldsResponse.slice(1).flatMap((product: any) => {
+            const products = suppliers.flatMap((supplier: any) => {
               const grouped = new Map<string, any>();
 
-              product.value.forEach((productValue: any) => {
+              supplier.value?.forEach((productValue: any) => {
                 const parsed = parseProductValue(productValue);
                 if (!parsed) return;
 
@@ -84,7 +80,7 @@ export const useGetSuppliers = (
                   existing.amount += 1;
                 } else {
                   grouped.set(key, {
-                    selectionNumber: product.name.fields.selection_number,
+                    selectionNumber: supplier.name.fields.selection_number,
                     ...parsed,
                     amount: 1,
                   });
@@ -94,46 +90,36 @@ export const useGetSuppliers = (
               return Array.from(grouped.values());
             });
 
-            const customSelections = (supplier.selections || []).map((selection: any) => {
-              const number = selection.fields.number;
-              const relatedProducts = products.filter(
-                (product: any) => product.selectionNumber === number
-              );
+            // Map over each supplier to return their details
+            return suppliers.map((supplier: any) => {
+              const customSelections = (supplier.selections || []).map((selection: any) => {
+                const number = selection.fields.number;
+                const relatedProducts = products.filter(
+                  (product: any) => product.selectionNumber === number
+                );
 
-              console.log(selection);
-              return {
-                ...selection,
-                fields: {
-                  ...selection.fields,
-                  type: selection.fields.product.fields.name.split("::")[2],
-                  products: relatedProducts,
-                },
-              };
-            });
+                return {
+                  ...selection,
+                  fields: {
+                    ...selection.fields,
+                    type: selection.fields.product.fields.name.split("::")[2],
+                    products: relatedProducts,
+                  },
+                };
+              });
 
-            if (supplier.collection_id === collectionId) {
               return {
                 supplier_id,
-                supplier_cap_id: cap_id,
                 collection_id: supplier.collection_id,
                 name: supplier.name || "",
                 balance: supplier.balance || 0,
                 selections: customSelections,
               } as Supplier;
-            }
-
-            return {
-              supplier_id,
-              supplier_cap_id: cap_id,
-              collection_id: supplier.collection_id,
-              name: supplier.name || "",
-              balance: supplier.balance || 0,
-              selections: customSelections || [],
-            } as Supplier;
+            });
           })
         );
 
-        setResult(allSupplierInfo.filter(Boolean) as Supplier[]);
+        setResult(allSupplierInfo.flat().filter(Boolean) as Supplier[]);
       } catch (e) {
         console.error("Unexpected error during fetch:", e);
         setInternalError(e as Error);

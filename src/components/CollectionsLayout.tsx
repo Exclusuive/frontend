@@ -48,7 +48,7 @@ export default function CollectionsLayout({ create }: { create: boolean }) {
         onOpenChange={setOpen}
       />
       <CreateCollectionDialog open={showCreateDialog} onOpenChange={setShowCreateDialog} />
-      <div className="flex-grow overflow-hidden">
+      <div className="w-full flex-grow overflow-hidden">
         <Outlet />
       </div>
     </div>

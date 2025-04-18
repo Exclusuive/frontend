@@ -16,6 +16,7 @@ export function buildTx(calls: TxCall[]) {
     // 🟢 assign-only
     if (!("funcName" in call)) {
       const { assign, value } = call as { assign: string; value: TxArg };
+
       if (value.type === "string") {
         assigned[assign] = tx.pure.string(String(value.value));
       } else if (value.type === "u64") {

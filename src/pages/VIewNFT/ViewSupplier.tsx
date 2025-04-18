@@ -33,8 +33,10 @@ import SelectSupplierModal from "@/components/SelectSupplierCard";
 import AddProductDialog from "@/components/AddProductDialog";
 import { useGetCollection } from "@/hooks/useGetCollection";
 import { useGetSuppliers } from "@/hooks/useGetSuppliers";
+import { useCurrentAccount } from "@mysten/dapp-kit";
 
 export default function ViewSupplier() {
+  const account = useCurrentAccount();
   const [searchParams, setSearchParams] = useSearchParams();
   const collectionId = searchParams.get("collection_id");
   const capId = searchParams.get("cap_id");
@@ -43,8 +45,6 @@ export default function ViewSupplier() {
   const { data: suppliers, loading, error } = useGetSuppliers(collectionId || "");
 
   const { collection } = useGetCollection(collectionId || "", capId || "");
-
-  console.log(suppliers);
 
   const [newSupplierName, setNewSupplierName] = useState("");
   const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(null);
@@ -58,7 +58,7 @@ export default function ViewSupplier() {
   const [showProducts, setShowProducts] = useState(false);
   const [showConditions, setShowConditions] = useState(false);
 
-  const { addSupplier, addSelection, addCondition } = useSendTransactions();
+  const { addSupplier, butProduct } = useSendTransactions();
 
   // Use mock data for now, replace with actual data when available
   const displaySuppliers = suppliers && suppliers.length > 0 ? suppliers : [];
@@ -102,37 +102,14 @@ export default function ViewSupplier() {
     setShowCreateSupplierDialog(false);
   };
 
-  const handleAddSelection = async (supplierId: string) => {
-    await addSelection({
+  const handleBuyProduct = async (selectionNumber: number, selectionType: string) => {
+    await butProduct({
       id: collectionId || "",
-      supplierId: supplierId,
-      supplierCapId: selectedSupplier?.supplier_cap_id || "",
-      price: newSelectionPrice,
+      supplierId: selectedSupplier?.supplier_id || "",
+      selectionNumber: selectionNumber,
       selectionType: selectionType,
+      toAddress: account?.address || "",
     });
-    setNewSelectionPrice(0);
-  };
-
-  const handleAddConditionToSelection = async (selectionId: number) => {
-    if (!newTicketType || !newRequirements) {
-      return;
-    }
-
-    try {
-      await addCondition({
-        id: collectionId || "",
-        supplierId: selectedSupplier?.supplier_id || "",
-        supplierCapId: selectedSupplier?.supplier_cap_id || "",
-        ticketType: newTicketType,
-        requirements: Number(newRequirements),
-        selectionNumber: selectionId,
-      });
-
-      setNewTicketType("");
-      setNewRequirements("");
-    } catch (error) {
-      console.error("Failed to add condition:", error);
-    }
   };
 
   const handleSupplierSelect = (supplier: Supplier) => {
@@ -222,55 +199,6 @@ export default function ViewSupplier() {
               </div>
               <div className="flex gap-2">
                 <Button onClick={() => setShowSupplierDialog(true)}>Change Supplier</Button>
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button>Add New Selection</Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>Add New Selection</DialogTitle>
-                      <DialogDescription>Enter the price for the new selection.</DialogDescription>
-                    </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="type" className="text-right">
-                          Type
-                        </Label>
-                        <Select value={selectionType} onValueChange={setSelectionType}>
-                          <SelectTrigger className="col-span-3">
-                            <SelectValue placeholder="Select type" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="Item">Item</SelectItem>
-                            <SelectItem value="Property">Property</SelectItem>
-                            <SelectItem value="Ticket">Ticket</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="price" className="text-right">
-                          Price (SUI)
-                        </Label>
-                        <Input
-                          id="price"
-                          type="number"
-                          value={newSelectionPrice}
-                          onChange={(e) => setNewSelectionPrice(Number(e.target.value))}
-                          className="col-span-3"
-                        />
-                      </div>
-                    </div>
-                    <DialogFooter>
-                      <Button
-                        onClick={() =>
-                          selectedSupplier && handleAddSelection(selectedSupplier.supplier_id)
-                        }
-                      >
-                        Add Selection
-                      </Button>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
               </div>
             </div>
 
@@ -350,67 +278,14 @@ export default function ViewSupplier() {
                   </CardContent>
                   <CardFooter className="flex flex-col gap-2">
                     <div className="flex w-full justify-between">
-                      <AddProductDialog
-                        selectionNumber={selection.fields.number}
-                        supplierId={selectedSupplier.supplier_id}
-                        selectionType={selection.fields.type}
-                      />
-                    </div>
-                    <div className="flex w-full justify-between">
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button variant="outline" className="w-full">
-                            Add Condition
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                          <DialogHeader>
-                            <DialogTitle>
-                              Add Condition to Selection {selection.fields.number}
-                            </DialogTitle>
-                            <DialogDescription>
-                              Enter the details for the new condition.
-                            </DialogDescription>
-                          </DialogHeader>
-                          <div className="grid gap-4 py-4">
-                            <div className="grid grid-cols-4 items-center gap-4">
-                              <Label htmlFor="ticketType" className="text-right">
-                                Ticket Type
-                              </Label>
-                              <Select value={newTicketType} onValueChange={setNewTicketType}>
-                                <SelectTrigger className="col-span-3">
-                                  <SelectValue placeholder="Select ticket type" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {collection?.ticket_types?.map((ticketType) => (
-                                    <SelectItem key={ticketType} value={ticketType}>
-                                      {ticketType}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                              <Label htmlFor="requirements" className="text-right">
-                                Requirements
-                              </Label>
-                              <Input
-                                id="requirements"
-                                value={newRequirements}
-                                onChange={(e) => setNewRequirements(e.target.value)}
-                                className="col-span-3"
-                              />
-                            </div>
-                          </div>
-                          <DialogFooter>
-                            <Button
-                              onClick={() => handleAddConditionToSelection(selection.fields.number)}
-                            >
-                              Add Condition
-                            </Button>
-                          </DialogFooter>
-                        </DialogContent>
-                      </Dialog>
+                      <Button
+                        className="w-full"
+                        onClick={() =>
+                          handleBuyProduct(selection.fields.number, selection.fields.type)
+                        }
+                      >
+                        Buy
+                      </Button>
                     </div>
                   </CardFooter>
                 </Card>

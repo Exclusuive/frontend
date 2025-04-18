@@ -190,7 +190,7 @@ export default function EditCollectionInfo() {
   }
 
   return (
-    <div className="container mx-auto space-y-6 p-4">
+    <div className="container mx-auto w-full space-y-6 p-4">
       <h1 className="text-2xl font-bold">Edit Collection Information</h1>
 
       <Tabs defaultValue="info" className="w-full">
