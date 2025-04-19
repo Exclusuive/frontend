@@ -32,22 +32,23 @@ export const useGetCollection = (collectionId: string, capId: string) => {
           },
         });
 
-        const content = res[0].data?.content;
+        const basicCollectionInfo = res[0].data?.content;
 
+        console.log(basicCollectionInfo);
         // Safely cast the content to our typed interface
-        if (!content || typeof content !== "object") {
+        if (!basicCollectionInfo || typeof basicCollectionInfo !== "object") {
           throw new Error("Invalid collection data format");
         }
 
         // Use a two-step casting to avoid TypeScript errors
-        const typedContent = content as unknown as CollectionFields;
+        const typedContent = basicCollectionInfo as unknown as CollectionFields;
 
         const result = {
           description: null as string | null,
           img_url: null as string | null,
         };
 
-        for (const item of res) {
+        for (const item of res.slice(1)) {
           if (!item.data?.content) continue;
 
           const content = item.data.content;

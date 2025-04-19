@@ -4,31 +4,31 @@ import { useGetManageCollections } from "@/hooks/useGetManageCollections";
 import { useCurrentAccount } from "@mysten/dapp-kit";
 import { useEffect, useState } from "react";
 import { CreateCollectionDialog } from "./CreateCollectionDialog";
-import { updateCollectionIdParam } from "@/lib/utils";
 import { useGetUserOwnedCollections } from "@/hooks/useGetUserOwnedCollections";
-
-export default function CollectionsLayout({ create }: { create: boolean }) {
+import { updateUrlQuery } from "@/lib/manageUrl";
+export default function CollectionsLayout({ manage }: { manage: boolean }) {
   const [searchParams] = useSearchParams();
   const selectedId = searchParams.get("collection_id");
-  const navigate = useNavigate();
-  const location = useLocation();
+  const [open, setOpen] = useState(!selectedId);
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
   const account = useCurrentAccount();
-  const { data } = create
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { data } = manage
     ? useGetManageCollections(account?.address || "")
     : useGetUserOwnedCollections(account?.address || "");
 
-  const [open, setOpen] = useState(!selectedId);
-  const [showCreateDialog, setShowCreateDialog] = useState(false);
-
-  // Add useEffect to handle location changes
-  useEffect(() => {
-    if (!selectedId) {
-      setOpen(true);
+  const handleSelect = (collection_id: string, cap_id?: string) => {
+    let paths = [];
+    if (collection_id) {
+      paths.push({ name: "collection_id", value: collection_id });
     }
-  }, [location.pathname, selectedId]);
+    // Only add cap_id if it is provided
+    if (cap_id) {
+      paths.push({ name: "cap_id", value: cap_id });
+    }
 
-  const handleSelect = (collection_id: string, cap_id: string) => {
-    updateCollectionIdParam(collection_id, cap_id, searchParams, location, navigate);
+    updateUrlQuery(paths, searchParams, location, navigate);
     setOpen(false);
   };
 
@@ -43,14 +43,16 @@ export default function CollectionsLayout({ create }: { create: boolean }) {
         items={data}
         onClick={handleSelect}
         open={open}
-        create={create}
+        create={manage}
         onCreate={handleCreateNew}
         onOpenChange={setOpen}
       />
-      <CreateCollectionDialog open={showCreateDialog} onOpenChange={setShowCreateDialog} />
-      <div className="w-full flex-grow overflow-hidden">
-        <Outlet />
-      </div>
+      <CreateCollectionDialog
+        open={showCreateDialog}
+        onOpenChange={setShowCreateDialog}
+        onSuccess={handleSelect}
+      />
+      <Outlet />
     </div>
   );
 }

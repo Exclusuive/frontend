@@ -27,18 +27,7 @@ import {
   useCurrentAccount,
   useConnectWallet,
 } from "@mysten/dapp-kit";
-import { Link, useLocation } from "react-router-dom";
-
-// Define the location type
-interface LocationType {
-  search: string;
-}
-
-// URL generation functions
-const generateUrl = (basePath: string, location: LocationType) => {
-  const searchParams = new URLSearchParams(location.search);
-  return `${basePath}${searchParams.toString() ? "?" + searchParams.toString() : ""}`;
-};
+import { Link } from "react-router-dom";
 
 // Menu items.
 const manage_collection_menus = [
@@ -86,7 +75,6 @@ const manage_nft_menus = [
 export default function AppSidebar() {
   const account = useCurrentAccount();
   const wallets = useWallets();
-  const location = useLocation();
 
   const { mutate: disconnect } = useDisconnectWallet();
   const { mutate: connect } = useConnectWallet();
@@ -129,7 +117,7 @@ export default function AppSidebar() {
               {manage_collection_menus.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <Link to={generateUrl(item.url, location)}>
+                    <Link to={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
@@ -147,7 +135,7 @@ export default function AppSidebar() {
               {manage_nft_menus.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <Link to={generateUrl(item.url, location)}>
+                    <Link to={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>

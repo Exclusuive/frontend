@@ -3,7 +3,7 @@ import { CollectionFormData, MintItemProps, TransactionResult, TxCall } from "@/
 import { syncImg, uploadToS3 } from "@/lib/uploadToS3";
 import { buildTx } from "@/lib/buildTx";
 import { useToast } from "@/hooks/useToast";
-import { updateCollectionIdParam } from "@/lib/utils";
+import { updateUrlQuery } from "@/lib/manageUrl";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { Transaction, TransactionArgument } from "@mysten/sui/transactions";
@@ -137,21 +137,14 @@ export const useSendTransactions = () => {
         ...layerTxCalls,
       ]);
 
-      await executeTransaction(configTx);
+      const newResult = (await executeTransaction(configTx)) as TransactionResult;
 
       setToastState({
         type: "success",
         message: "Done! Please return to the dashboard.",
       });
-      updateCollectionIdParam(
-        collectionObject.objectId,
-        collectionCapObject.objectId,
-        new URLSearchParams(window.location.search),
-        window.location,
-        navigate
-      );
 
-      return { success: true };
+      return { success: true, result: newResult };
     } catch (error) {
       setToastState({
         type: "error",

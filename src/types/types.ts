@@ -4,26 +4,22 @@ export interface Collection {
   name: string;
   description: string;
   img_url: string;
-
-  items?: string[];
 }
-
-// Collection item type for detailed item information
-export interface CollectionItem {
-  name: string;
-  layer: string;
-  img_url: string;
-  type: string;
-}
-
 // Extended collection type with additional details
-export interface CollectionWithDetails extends Omit<Collection, "items"> {
+export interface CollectionWithDetails extends Collection {
   layer_types: string[];
   property_types: string[];
   ticket_types: string[];
-  items: CollectionItem[];
+  item_types: ItemType[];
 }
 
+export interface ItemType {
+  fields: {
+    item_type: string;
+    type: string;
+    img_url: string;
+  };
+}
 // Sui blockchain data types
 export interface TypeField {
   fields: {

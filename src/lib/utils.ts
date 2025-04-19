@@ -18,16 +18,3 @@ export type ToastState = {
   type: ToastType;
   message: string;
 };
-
-export function updateCollectionIdParam(
-  collection_id: string,
-  cap_id: string,
-  searchParams: URLSearchParams,
-  location: any,
-  navigate: NavigateFunction
-) {
-  const newParams = new URLSearchParams(searchParams);
-  newParams.set("collection_id", collection_id);
-  newParams.set("cap_id", cap_id);
-  navigate(`${location.pathname}?${newParams.toString()}`, { replace: true });
-}

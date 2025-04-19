@@ -14,15 +14,18 @@ import { PlusCircle, Trash2, Upload } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { CollectionFormData, Layer } from "@/types/contract";
 import { useSendTransactions } from "@/hooks/useSendTransactions";
+import { getCreateCollectionFromCreatedObject } from "@/lib/parseSuiQuery";
 
 interface CreateCollectionDialogProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  onSuccess: (collection: string, collectionCap: string) => void;
 }
 
 export const CreateCollectionDialog = ({
   open: controlledOpen,
   onOpenChange,
+  onSuccess,
 }: CreateCollectionDialogProps) => {
   // State management
   const [internalOpen, setInternalOpen] = useState(false);
@@ -98,11 +101,13 @@ export const CreateCollectionDialog = ({
   const handleCreateCollection = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const result = await newCollection(formData);
-      if (!result.success) {
-        throw result.error;
+      const { success, result, error } = await newCollection(formData);
+      if (!success) {
+        throw error;
       }
       setOpen(false);
+      const { collection, collectionCap } = getCreateCollectionFromCreatedObject(result);
+      onSuccess(collection, collectionCap);
       resetForm();
     } catch (error) {
       console.error("Failed to create collection:", error);
@@ -111,14 +116,6 @@ export const CreateCollectionDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      {/* <DialogTrigger asChild>
-        {trigger || (
-          <Button variant="outline" size="sm">
-            <PlusCircle className="mr-2 h-4 w-4" />
-            New Collection
-          </Button>
-        )}
-      </DialogTrigger> */}
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Create Collection</DialogTitle>
