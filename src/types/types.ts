@@ -4,13 +4,10 @@ export interface Collection {
   name: string;
   description: string;
   img_url: string;
-}
-// Extended collection type with additional details
-export interface CollectionWithDetails extends Collection {
-  layer_types: string[];
-  property_types: string[];
-  ticket_types: string[];
-  item_types: ItemType[];
+  layer_types?: string[];
+  property_types?: string[];
+  ticket_types?: string[];
+  item_types?: ItemType[];
 }
 
 export interface ItemType {

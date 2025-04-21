@@ -30,6 +30,7 @@ export default function CollectionsLayout({ manage }: { manage: boolean }) {
 
     updateUrlQuery(paths, searchParams, location, navigate);
     setOpen(false);
+    setShowCreateDialog(false);
   };
 
   const handleCreateNew = () => {

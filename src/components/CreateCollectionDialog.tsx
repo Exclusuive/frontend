@@ -14,7 +14,7 @@ import { PlusCircle, Trash2, Upload } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { CollectionFormData, Layer } from "@/types/contract";
 import { useSendTransactions } from "@/hooks/useSendTransactions";
-import { getCreateCollectionFromCreatedObject } from "@/lib/parseSuiQuery";
+import { parseCreateCollectionFromCreatedObject } from "@/lib/parseSuiQuery";
 
 interface CreateCollectionDialogProps {
   open?: boolean;
@@ -106,7 +106,7 @@ export const CreateCollectionDialog = ({
         throw error;
       }
       setOpen(false);
-      const { collection, collectionCap } = getCreateCollectionFromCreatedObject(result);
+      const { collection, collectionCap } = parseCreateCollectionFromCreatedObject(result);
       onSuccess(collection, collectionCap);
       resetForm();
     } catch (error) {
