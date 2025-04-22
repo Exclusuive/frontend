@@ -19,41 +19,41 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useGetCollection } from "@/hooks/useGetCollection";
-import { CollectionItem } from "@/types/types";
+import { ItemType, Collection } from "@/types/types";
 import { Separator } from "@/components/ui/separator";
 import { useSendTransactions } from "@/hooks/useSendTransactions";
 
 interface AddProductDialogProps {
   selectionNumber: number;
-  supplierId: string;
+  storeId: string;
   selectionType: string;
   trigger?: React.ReactNode;
+  collection: Collection | null;
 }
 
 export default function AddProductDialog({
   selectionNumber,
-  supplierId,
+  storeId,
   selectionType,
   trigger,
+  collection,
 }: AddProductDialogProps) {
   const [searchParams] = useSearchParams();
   const collectionId = searchParams.get("collection_id");
   const capId = searchParams.get("cap_id");
-  const supplierCapId = searchParams.get("supplier_cap_id");
-  const { collection } = useGetCollection(collectionId || "", capId || "");
+  const storeCapId = searchParams.get("store_cap_id");
   const { addProduct } = useSendTransactions();
 
   const [selectedId, setSelectedId] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(1);
   const [open, setOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<CollectionItem | null>(null);
+  const [selectedItem, setSelectedItem] = useState<ItemType | null>(null);
   const [optionName, setOptionName] = useState<string>("");
   const [propertyValue, setPropertyValue] = useState<string>("");
 
   // Group items by layer
   const itemsByLayer =
-    collection?.items?.reduce(
+    collection?.item_types?.reduce(
       (acc, item) => {
         if (!acc[item.layer]) {
           acc[item.layer] = [];
@@ -61,11 +61,12 @@ export default function AddProductDialog({
         acc[item.layer].push(item);
         return acc;
       },
-      {} as Record<string, CollectionItem[]>
+      {} as Record<string, ItemType[]>
     ) || {};
 
   const handleAddProduct = async () => {
-    if (!selectedId || !collectionId || !capId || !supplierCapId) {
+    console.log(selectedId, collectionId, capId, storeCapId);
+    if (!selectedId || !collectionId || !capId || !storeCapId) {
       return;
     }
 
@@ -75,13 +76,15 @@ export default function AddProductDialog({
       // Use the provided selectionType
       const productSelectionType = selectionType;
 
+      console.log(productSelectionType);
+
       if (productSelectionType === "Item" && selectedItem) {
         // For Item type, we need the layer and item details
         result = await addProduct({
           id: collectionId,
           capId: capId,
-          supplierId: supplierId,
-          supplierCapId: supplierCapId,
+          storeId: storeId,
+          storeCapId: storeCapId,
           selectionNumber: selectionNumber,
           productType: "Item",
           quantity: quantity,
@@ -98,8 +101,8 @@ export default function AddProductDialog({
         result = await addProduct({
           id: collectionId,
           capId: capId,
-          supplierId: supplierId,
-          supplierCapId: supplierCapId,
+          storeId: storeId,
+          storeCapId: storeCapId,
           selectionNumber: selectionNumber,
           productType: "Property",
           quantity: quantity,
@@ -111,8 +114,8 @@ export default function AddProductDialog({
         result = await addProduct({
           id: collectionId,
           capId: capId,
-          supplierId: supplierId,
-          supplierCapId: supplierCapId,
+          storeId: storeId,
+          storeCapId: storeCapId,
           selectionNumber: selectionNumber,
           productType: "Ticket",
           quantity: quantity,
@@ -135,7 +138,7 @@ export default function AddProductDialog({
   const getTypeOptions = () => {
     switch (selectionType) {
       case "Item":
-        return collection?.items || [];
+        return collection?.item_types || [];
       case "Property":
         return (collection?.property_types || []).map((type, index) => ({
           id: `prop${index}`,
@@ -153,32 +156,28 @@ export default function AddProductDialog({
     }
   };
 
-  const getOptionKey = (
-    option: CollectionItem | { id: string; name: string; description: string }
-  ) => {
+  const getOptionKey = (option: ItemType | { id: string; name: string; description: string }) => {
     if ("id" in option) {
       return option.id;
     }
     return option.name;
   };
 
-  const getOptionValue = (
-    option: CollectionItem | { id: string; name: string; description: string }
-  ) => {
+  const getOptionValue = (option: ItemType | { id: string; name: string; description: string }) => {
     if ("id" in option) {
       return option.id;
     }
     return option.name;
   };
 
-  const handleItemSelect = (item: CollectionItem) => {
+  const handleItemSelect = (item: ItemType) => {
     setSelectedItem(item);
     setSelectedId(item.name);
     setOptionName(item.name);
   };
 
   const handleOptionSelect = (
-    option: CollectionItem | { id: string; name: string; description: string }
+    option: ItemType | { id: string; name: string; description: string }
   ) => {
     setSelectedId(getOptionValue(option));
     setOptionName(option.name);
@@ -245,7 +244,7 @@ export default function AddProductDialog({
                 }}
               >
                 <SelectTrigger className="col-span-3">
-                  <SelectValue placeholder={`Select ${selectionType.toLowerCase()}`} />
+                  <SelectValue placeholder={`Select ${selectionType?.toLowerCase()}`} />
                 </SelectTrigger>
                 <SelectContent>
                   {getTypeOptions().map((option) => (

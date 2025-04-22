@@ -3,17 +3,13 @@ import { CollectionFormData, MintItemProps, TransactionResult, TxCall } from "@/
 import { syncImg, uploadToS3 } from "@/lib/uploadToS3";
 import { buildTx } from "@/lib/buildTx";
 import { useToast } from "@/hooks/useToast";
-import { updateUrlQuery } from "@/lib/manageUrl";
-import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
-import { Transaction, TransactionArgument } from "@mysten/sui/transactions";
 
 export const useSendTransactions = () => {
   const client = useSuiClient();
   const PACKAGE_ID = import.meta.env.VITE_PACKAGE_ID;
   const MODULE_ID = import.meta.env.VITE_MODULE;
   const { setToastState } = useToast();
-  const navigate = useNavigate();
 
   const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction({
     execute: async ({ bytes, signature }) =>
@@ -342,22 +338,25 @@ export const useSendTransactions = () => {
   const reorderLayers = async ({
     id,
     capId,
-    layers,
+    layer1,
+    layer2,
   }: {
     id: string;
     capId: string;
-    layers: string[];
+    layer1: number;
+    layer2: number;
   }) => {
     try {
       setToastState({ type: "loading", message: "Reordering layers..." });
 
       const tx = buildTx([
         {
-          funcName: "reorder_layers",
+          funcName: "update_layer_order",
           args: [
             { type: "object" as const, value: id },
             { type: "object" as const, value: capId },
-            { type: "variable" as const, value: JSON.stringify(layers) },
+            { type: "u64" as const, value: layer1 },
+            { type: "u64" as const, value: layer2 },
           ],
         },
       ]);
@@ -415,38 +414,36 @@ export const useSendTransactions = () => {
   };
 
   // Add a new supplier to the collection
-  const addSupplier = async ({
+  const newStoreContract = async ({
     id,
     capId,
-    supplier,
+    storeName,
   }: {
     id: string;
     capId: string;
-    supplier: string;
+    storeName: string;
   }) => {
     try {
-      setToastState({ type: "loading", message: "Adding new supplier..." });
-
       const tx = buildTx([
         {
-          funcName: "create_supplier",
+          funcName: "create_store",
           args: [
             { type: "object" as const, value: id },
             { type: "object" as const, value: capId },
-            { type: "string" as const, value: supplier },
+            { type: "string" as const, value: storeName },
           ],
         },
       ]);
 
       await executeTransaction(tx);
 
-      setToastState({ type: "success", message: "Supplier added successfully" });
+      setToastState({ type: "success", message: "Store Contract added successfully" });
 
       return { success: true };
     } catch (error) {
       setToastState({
         type: "error",
-        message: "Failed to add supplier. Please try again.",
+        message: "Failed to add store contract. Please try again.",
       });
       return { success: false, error };
     }
@@ -514,8 +511,6 @@ export const useSendTransactions = () => {
         file: whitefile,
       });
 
-      console.log(uploadedUrl);
-
       const tx = buildTx([
         {
           funcName: "mint_and_tranfer_base",
@@ -542,32 +537,30 @@ export const useSendTransactions = () => {
     }
   };
 
-  const addSelection = async ({
+  const addSlot = async ({
     id,
-    supplierCapId,
-    supplierId,
+    storeId,
     price,
+    storeCapId,
     selectionType,
   }: {
     id: string;
-    supplierCapId: string;
-    supplierId: string;
+    storeId: string;
     price: number;
+    storeCapId: string;
     selectionType: string;
   }) => {
     try {
-      setToastState({ type: "loading", message: "Adding new selection..." });
-
-      console.log(id, supplierId, supplierCapId, price, selectionType);
+      setToastState({ type: "loading", message: `Adding new ${selectionType} slot...` });
 
       const tx = buildTx([
         {
-          funcName: "add_selection_to_supplier",
+          funcName: "add_slot_to_store",
           typeArguments: [`${PACKAGE_ID}::${MODULE_ID}::${selectionType}`],
           args: [
             { type: "object" as const, value: id },
-            { type: "object" as const, value: supplierId },
-            { type: "object" as const, value: supplierCapId },
+            { type: "object" as const, value: storeId },
+            { type: "object" as const, value: storeCapId },
             { type: "u64" as const, value: price },
           ],
         },
@@ -575,7 +568,7 @@ export const useSendTransactions = () => {
 
       await executeTransaction(tx);
 
-      setToastState({ type: "success", message: "Selection added successfully" });
+      setToastState({ type: "success", message: `${selectionType} slot added successfully` });
 
       return { success: true };
     } catch (error) {
@@ -589,15 +582,15 @@ export const useSendTransactions = () => {
 
   const addCondition = async ({
     id,
-    supplierId,
-    supplierCapId,
+    storeId,
+    storeCapId,
     ticketType,
     requirements,
     selectionNumber,
   }: {
     id: string;
-    supplierId: string;
-    supplierCapId: string;
+    storeId: string;
+    storeCapId: string;
     ticketType: string;
     requirements: number;
     selectionNumber: number;
@@ -607,11 +600,11 @@ export const useSendTransactions = () => {
 
       const tx = buildTx([
         {
-          funcName: "add_condition_to_selection",
+          funcName: "add_condition_to_slot",
           args: [
             { type: "object" as const, value: id },
-            { type: "object" as const, value: supplierId },
-            { type: "object" as const, value: supplierCapId },
+            { type: "object" as const, value: storeId },
+            { type: "object" as const, value: storeCapId },
             { type: "u64" as const, value: selectionNumber },
             { type: "string" as const, value: ticketType },
             { type: "u64" as const, value: requirements },
@@ -637,8 +630,8 @@ export const useSendTransactions = () => {
   const addProduct = async ({
     id,
     capId,
-    supplierId,
-    supplierCapId,
+    storeId,
+    storeCapId,
     selectionNumber,
     productType,
     quantity,
@@ -654,8 +647,8 @@ export const useSendTransactions = () => {
   }: {
     id: string;
     capId: string;
-    supplierId: string;
-    supplierCapId: string;
+    storeId: string;
+    storeCapId: string;
     selectionNumber: number;
     productType: "Item" | "Property" | "Ticket";
     quantity: number;
@@ -736,12 +729,12 @@ export const useSendTransactions = () => {
 
         // Add the product to the supplier
         txCalls.push({
-          funcName: "add_product_to_supplier",
+          funcName: "add_product_to_store",
           typeArguments: [`${PACKAGE_ID}::${MODULE_ID}::${productType}`],
           args: [
             { type: "object" as const, value: id },
-            { type: "object" as const, value: supplierId },
-            { type: "object" as const, value: supplierCapId },
+            { type: "object" as const, value: storeId },
+            { type: "object" as const, value: storeCapId },
             { type: "u64" as const, value: selectionNumber },
             { type: "variable" as const, value: productIdVar },
           ],
@@ -859,43 +852,65 @@ export const useSendTransactions = () => {
     }
   };
 
-  const butProduct = async ({
+  const buyProduct = async ({
     id,
-    supplierId,
+    storeId,
     selectionNumber,
     selectionType,
-    ticketType,
     toAddress,
+    conditions,
+    tickets,
   }: {
     id: string;
-    supplierId: string;
+    storeId: string;
     selectionNumber: number;
     selectionType: string;
-    ticketType?: string;
     toAddress: string;
+    conditions?: any;
+    tickets?: Record<string, string[]>;
   }) => {
     try {
       setToastState({ type: "loading", message: "Buying product..." });
 
-      console.log(id, supplierId, selectionNumber, selectionType, ticketType, toAddress);
-      let tx;
+      const transformed = conditions.map((item: any) => ({
+        type: item.fields.ticket_type.fields.type,
+        requirement: parseInt(item.fields.requirement),
+      }));
+      const txCalls: TxCall[] = [];
+      txCalls.push({
+        funcName: "new_request",
+        args: [
+          { type: "object", value: id },
+          { type: "object", value: storeId },
+          { type: "u64", value: selectionNumber },
+        ],
+        assign: "requestId",
+      });
 
-      tx = buildTx([
-        {
-          funcName: "new_request",
-          args: [
-            { type: "object", value: id },
-            { type: "object", value: supplierId },
-            { type: "u64", value: selectionNumber },
-          ],
-          assign: "requestId",
-        },
+      if (transformed.length > 0) {
+        transformed.forEach((item: any) => {
+          if (tickets && tickets[item.type] && tickets[item.type].length >= item.requirement) {
+            tickets[item.type].slice(0, item.requirement).forEach((ticketId: string) => {
+              txCalls.push({
+                funcName: "burn_ticket",
+                args: [
+                  { type: "object", value: id },
+                  { type: "object", value: storeId },
+                  { type: "variable", value: "requestId" },
+                  { type: "object", value: ticketId },
+                ],
+              });
+            });
+          }
+        });
+      }
+      txCalls.push(
         {
           funcName: "confirm_request",
           typeArguments: [`${PACKAGE_ID}::${MODULE_ID}::${selectionType}`],
           args: [
             { type: "object", value: id },
-            { type: "object", value: supplierId },
+            { type: "object", value: storeId },
             { type: "variable", value: "requestId" },
           ],
           assign: "productId",
@@ -906,10 +921,10 @@ export const useSendTransactions = () => {
             { type: "variable", value: "productId" },
             { type: "object", value: toAddress },
           ],
-        },
-      ]);
+        }
+      );
 
-      await executeTransaction(tx);
+      await executeTransaction(buildTx(txCalls));
 
       setToastState({ type: "success", message: "Product bought successfully" });
 
@@ -931,14 +946,14 @@ export const useSendTransactions = () => {
     addLayer,
     reorderLayers,
     addPropertyType,
-    addSupplier,
+    newStoreContract,
     addTicketType,
     mintBase,
-    addSelection,
+    addSlot,
     addCondition,
     addProduct,
     equipItem,
     popItem,
-    butProduct,
+    buyProduct,
   };
 };

@@ -17,7 +17,7 @@ export default function ManageItemNFT() {
   const [searchParams] = useSearchParams();
   const collectionId = searchParams.get("collection_id");
   const capId = searchParams.get("cap_id");
-  const { collection, loading, error } = useGetCollection(collectionId || "", capId || "");
+  const { collection, loading, error } = useGetCollection(collectionId || "");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogMode, setDialogMode] = useState<"new" | "existing">("new");
   const { mintItem } = useSendTransactions();
@@ -108,7 +108,7 @@ export default function ManageItemNFT() {
         mode={dialogMode}
         layerTypes={collection.layer_types || []}
         propertyTypes={collection.property_types || []}
-        existingItems={collection.items || []}
+        existingItems={collection.item_types || []}
         onMint={handleMint}
       />
     </div>

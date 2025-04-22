@@ -8,7 +8,8 @@ interface Path {
 
 // Define a type for the location parameter
 interface Location {
-  pathname: string;
+  pathname?: string;
+  search?: string;
 }
 
 // Update the function to accept an array of Path objects
@@ -30,3 +31,9 @@ export function updateUrlQuery(
 
   navigate(`${location.pathname}?${newParams.toString()}`, { replace: true });
 }
+
+// URL generation functions
+export const navigateWithQuery = (basePath: string, location: Location) => {
+  const searchParams = new URLSearchParams(location.search);
+  return `${basePath}${searchParams.toString() ? "?" + searchParams.toString() : ""}`;
+};

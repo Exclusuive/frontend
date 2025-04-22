@@ -64,7 +64,7 @@ export default function ViewMyNFT() {
     <div className="container mx-auto w-full py-6">
       <h1 className="mb-6 text-3xl font-bold">View My NFTs</h1>
       {/* Collections Layout */}
-      <CollectionsLayout create={false} />
+      <CollectionsLayout manage={false} />
       {/* Select for NFT ID */}
       <Select value={selectedNFTId} onValueChange={setSelectedNFTId}>
         <SelectTrigger>

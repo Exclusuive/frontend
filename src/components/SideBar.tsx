@@ -27,8 +27,8 @@ import {
   useCurrentAccount,
   useConnectWallet,
 } from "@mysten/dapp-kit";
-import { Link } from "react-router-dom";
-
+import { Link, useLocation } from "react-router-dom";
+import { navigateWithQuery } from "@/lib/manageUrl";
 // Menu items.
 const manage_collection_menus = [
   {
@@ -52,8 +52,8 @@ const manage_collection_menus = [
     icon: Boxes,
   },
   {
-    title: "Manage supplier contract",
-    url: "/collections/suppliers",
+    title: "Manage store contract",
+    url: "/collections/stores",
     icon: Handshake,
   },
 ];
@@ -67,7 +67,7 @@ const manage_nft_menus = [
 
   {
     title: "Get Item through supplier",
-    url: "/viewnft/suppliers",
+    url: "/viewnft/stores",
     icon: PackageOpen,
   },
 ];
@@ -75,6 +75,7 @@ const manage_nft_menus = [
 export default function AppSidebar() {
   const account = useCurrentAccount();
   const wallets = useWallets();
+  const location = useLocation();
 
   const { mutate: disconnect } = useDisconnectWallet();
   const { mutate: connect } = useConnectWallet();
@@ -117,7 +118,7 @@ export default function AppSidebar() {
               {manage_collection_menus.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <Link to={item.url}>
+                    <Link to={navigateWithQuery(item.url, location)}>
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
@@ -135,7 +136,7 @@ export default function AppSidebar() {
               {manage_nft_menus.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <Link to={item.url}>
+                    <Link to={navigateWithQuery(item.url, location)}>
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>

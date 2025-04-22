@@ -16,16 +16,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CollectionItem } from "@/types/types";
+import { ItemType } from "@/types/types";
 import { MintItemData } from "@/types/contract";
 import { ImagePlus } from "lucide-react";
+
 type MintItemDialogProps = {
   isOpen: boolean;
   onClose: () => void;
   mode: "new" | "existing";
   layerTypes: string[];
   propertyTypes?: string[];
-  existingItems?: CollectionItem[];
+  existingItems?: ItemType[];
   onMint: (data: MintItemData) => void;
 };
 
@@ -38,40 +39,51 @@ export function MintItemDialog({
   existingItems = [],
   onMint,
 }: MintItemDialogProps) {
-  const [layer, setLayer] = useState<string>("");
-  const [itemName, setItemName] = useState<string>("");
-  const [itemImage, setItemImage] = useState<File | null>(null);
-  const [selectedItemId, setSelectedItemId] = useState<string>("");
-  const [recipient, setRecipient] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [selectedItemImageUrl, setSelectedItemImageUrl] = useState<string>("");
+  const initialState = {
+    layer: "",
+    itemName: "",
+    itemImage: null as File | null,
+    selectedItemId: "",
+    recipient: "",
+    isLoading: false,
+    selectedItemImageUrl: "",
+    selectedPropertyType: "",
+    propertyValue: "",
+    properties: [] as Array<{ type: string; value: string }>,
+  };
 
-  // Property type and value state
-  const [selectedPropertyType, setSelectedPropertyType] = useState<string>("");
-  const [propertyValue, setPropertyValue] = useState<string>("");
-  const [properties, setProperties] = useState<Array<{ type: string; value: string }>>([]);
+  const [state, setState] = useState(initialState);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setItemImage(e.target.files[0]);
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      setState((prev) => ({ ...prev, itemImage: files[0] }));
     }
   };
 
   const handleAddProperty = () => {
+    const { selectedPropertyType, propertyValue, properties } = state;
     if (selectedPropertyType && propertyValue) {
-      setProperties([...properties, { type: selectedPropertyType, value: propertyValue }]);
-      setSelectedPropertyType("");
-      setPropertyValue("");
+      setState((prev) => ({
+        ...prev,
+        properties: [...properties, { type: selectedPropertyType, value: propertyValue }],
+        selectedPropertyType: "",
+        propertyValue: "",
+      }));
     }
   };
 
   const handleRemoveProperty = (index: number) => {
-    const newProperties = [...properties];
-    newProperties.splice(index, 1);
-    setProperties(newProperties);
+    setState((prev) => {
+      const newProperties = [...prev.properties];
+      newProperties.splice(index, 1);
+      return { ...prev, properties: newProperties };
+    });
   };
 
   const handleMint = async () => {
+    const { layer, recipient, itemName, itemImage, selectedItemId, properties } = state;
+
     if (!layer || !recipient) {
       return;
     }
@@ -84,7 +96,7 @@ export function MintItemDialog({
       return;
     }
 
-    setIsLoading(true);
+    setState((prev) => ({ ...prev, isLoading: true }));
 
     try {
       const mintData: MintItemData = {
@@ -105,18 +117,22 @@ export function MintItemDialog({
       } else {
         mintData.itemName = itemName;
         mintData.itemId = selectedItemId;
-        mintData.itemImageUrl = selectedItemImageUrl;
+        mintData.itemImageUrl = state.selectedItemImageUrl;
       }
+
+      console.log(mintData);
 
       await onMint(mintData);
       onClose();
+      setState(initialState); // Reset state after minting
     } catch (error) {
       console.error("Error minting item:", error);
     } finally {
-      setIsLoading(false);
+      setState((prev) => ({ ...prev, isLoading: false }));
     }
   };
-  const filteredItems = existingItems.filter((item) => item.layer === layer);
+
+  const filteredItems = existingItems.filter((item) => item.layer === state.layer);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -131,7 +147,10 @@ export function MintItemDialog({
             <Label htmlFor="layer" className="text-right">
               Layer
             </Label>
-            <Select value={layer} onValueChange={setLayer}>
+            <Select
+              value={state.layer}
+              onValueChange={(value) => setState((prev) => ({ ...prev, layer: value }))}
+            >
               <SelectTrigger className="col-span-3">
                 <SelectValue placeholder="Select a layer" />
               </SelectTrigger>
@@ -153,8 +172,8 @@ export function MintItemDialog({
                 </Label>
                 <Input
                   id="itemName"
-                  value={itemName}
-                  onChange={(e) => setItemName(e.target.value)}
+                  value={state.itemName}
+                  onChange={(e) => setState((prev) => ({ ...prev, itemName: e.target.value }))}
                   className="col-span-3"
                   placeholder="Enter item name"
                 />
@@ -168,10 +187,10 @@ export function MintItemDialog({
                     className="flex h-32 w-full cursor-pointer items-center justify-center rounded-md border-2 border-dashed border-gray-300 hover:border-gray-400"
                     onClick={() => document.getElementById("itemImage")?.click()}
                   >
-                    {itemImage ? (
+                    {state.itemImage ? (
                       <div className="relative h-full w-full">
                         <img
-                          src={URL.createObjectURL(itemImage)}
+                          src={URL.createObjectURL(state.itemImage)}
                           alt="Selected item"
                           className="h-full w-full object-contain"
                         />
@@ -199,14 +218,17 @@ export function MintItemDialog({
                 Item
               </Label>
               <Select
-                value={selectedItemId}
+                value={state.selectedItemId}
                 onValueChange={(value) => {
-                  setSelectedItemId(value);
+                  setState((prev) => ({ ...prev, selectedItemId: value }));
                   const selectedItem = filteredItems.find((item) => item.name === value);
                   if (selectedItem) {
-                    setLayer(selectedItem.layer);
-                    setItemName(selectedItem.name);
-                    setSelectedItemImageUrl(selectedItem.img_url);
+                    setState((prev) => ({
+                      ...prev,
+                      layer: selectedItem.layer,
+                      itemName: selectedItem.name,
+                      selectedItemImageUrl: selectedItem.img_url,
+                    }));
                   }
                 }}
               >
@@ -231,7 +253,12 @@ export function MintItemDialog({
                 <Label htmlFor="propertyType" className="text-right">
                   Property Type
                 </Label>
-                <Select value={selectedPropertyType} onValueChange={setSelectedPropertyType}>
+                <Select
+                  value={state.selectedPropertyType}
+                  onValueChange={(value) =>
+                    setState((prev) => ({ ...prev, selectedPropertyType: value }))
+                  }
+                >
                   <SelectTrigger className="col-span-3">
                     <SelectValue placeholder="Select a property type" />
                   </SelectTrigger>
@@ -252,15 +279,17 @@ export function MintItemDialog({
                 <div className="col-span-3 flex gap-2">
                   <Input
                     id="propertyValue"
-                    value={propertyValue}
-                    onChange={(e) => setPropertyValue(e.target.value)}
+                    value={state.propertyValue}
+                    onChange={(e) =>
+                      setState((prev) => ({ ...prev, propertyValue: e.target.value }))
+                    }
                     className="flex-1"
                     placeholder="Enter property value"
                   />
                   <Button
                     type="button"
                     onClick={handleAddProperty}
-                    disabled={!selectedPropertyType || !propertyValue}
+                    disabled={!state.selectedPropertyType || !state.propertyValue}
                   >
                     Add
                   </Button>
@@ -268,11 +297,11 @@ export function MintItemDialog({
               </div>
 
               {/* Display added properties */}
-              {properties.length > 0 && (
+              {state.properties.length > 0 && (
                 <div className="col-span-4 space-y-2">
                   <Label className="block text-right">Added Properties</Label>
                   <div className="space-y-2">
-                    {properties.map((property, index) => (
+                    {state.properties.map((property, index) => (
                       <div
                         key={index}
                         className="flex items-center justify-between rounded-md border p-2"
@@ -301,19 +330,25 @@ export function MintItemDialog({
             </Label>
             <Input
               id="recipient"
-              value={recipient}
-              onChange={(e) => setRecipient(e.target.value)}
+              value={state.recipient}
+              onChange={(e) => setState((prev) => ({ ...prev, recipient: e.target.value }))}
               className="col-span-3"
               placeholder="Enter recipient address"
             />
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
+          <Button
+            variant="outline"
+            onClick={() => {
+              onClose();
+              setState(initialState);
+            }}
+          >
             Cancel
           </Button>
-          <Button onClick={handleMint} disabled={isLoading}>
-            {isLoading ? "Minting..." : "Mint"}
+          <Button onClick={handleMint} disabled={state.isLoading}>
+            {state.isLoading ? "Minting..." : "Mint"}
           </Button>
         </DialogFooter>
       </DialogContent>

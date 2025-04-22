@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useSuiClient, useSuiClientQuery } from "@mysten/dapp-kit";
 import { SuiObjectResponse } from "@mysten/sui/client";
-import { Collection } from "@/types/types";
-import { parseBasicCollectionInfo } from "@/lib/parseSuiQuery";
+import { Store } from "@/types/types";
+import { parseStoreInfo } from "@/lib/parseSuiQuery";
 
-export const useGetCollection = (collectionId: string) => {
-  const [collection, setCollection] = useState<Collection | null>(null);
+export const useGetStore = (storeId: string) => {
+  const [store, setStore] = useState<Store | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const suiClient = useSuiClient();
@@ -15,15 +15,15 @@ export const useGetCollection = (collectionId: string) => {
     isPending,
     error: queryError,
   } = useSuiClientQuery("getDynamicFields", {
-    parentId: collectionId,
+    parentId: storeId,
   });
 
   useEffect(() => {
-    const fetchCollectionInfo = async () => {
+    const fetchStoreInfo = async () => {
       if (!data || isPending || queryError) return;
 
       const objectIds = data.data.map((item) => item.objectId);
-      const objects = [collectionId, ...objectIds];
+      const objects = [storeId, ...objectIds];
 
       try {
         const res: SuiObjectResponse[] = await suiClient.multiGetObjects({
@@ -33,21 +33,21 @@ export const useGetCollection = (collectionId: string) => {
           },
         });
 
-        setCollection(parseBasicCollectionInfo(res));
+        setStore(parseStoreInfo(res));
         setError(null);
       } catch (e) {
-        console.error("Error fetching collection detail:", e);
+        console.error("Error fetching store detail:", e);
         setError(e instanceof Error ? e : new Error("Unknown error occurred"));
       } finally {
         setLoading(false);
       }
     };
 
-    fetchCollectionInfo();
-  }, [collectionId, data, isPending, queryError, suiClient]);
+    fetchStoreInfo();
+  }, [storeId, data, isPending, queryError, suiClient]);
 
   return {
-    collection,
+    store,
     loading,
     error,
     isPending: loading || isPending,

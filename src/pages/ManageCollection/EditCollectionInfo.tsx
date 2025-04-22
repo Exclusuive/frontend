@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useGetCollection } from "@/hooks/useGetCollection";
 import { useSendTransactions } from "@/hooks/useSendTransactions";
-import { CollectionWithDetails } from "@/types/types";
 
 // UI Components
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,17 +14,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 // Icons
 import { ArrowUp, ArrowDown, Plus, Upload } from "lucide-react";
+import { Collection } from "@/types/types";
 
 export default function EditCollectionInfo() {
   const [searchParams] = useSearchParams();
   const collectionId = searchParams.get("collection_id");
   const capId = searchParams.get("cap_id");
-  const { collection, loading } = useGetCollection(collectionId || "", capId || "");
+  const { collection, loading } = useGetCollection(collectionId || "");
   const { updateCollectionInfo, addLayer, reorderLayers, addPropertyType, addTicketType } =
     useSendTransactions();
 
   // State for collection information
-  const [collectionInfo, setCollectionInfo] = useState<CollectionWithDetails | null>(null);
+  const [collectionInfo, setCollectionInfo] = useState<Collection | null>(null);
   const [description, setDescription] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState("");
@@ -124,10 +124,9 @@ export default function EditCollectionInfo() {
       const res = await reorderLayers({
         id: collectionId,
         capId: capId,
-        layers: newLayers,
+        layer1: index,
+        layer2: newIndex,
       });
-
-      console.log(res);
 
       if (res.success) {
         setLayers(newLayers);

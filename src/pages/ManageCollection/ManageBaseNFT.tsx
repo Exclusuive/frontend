@@ -18,7 +18,7 @@ export default function ManageBaseNFT() {
   const [searchParams] = useSearchParams();
   const collectionId = searchParams.get("collection_id");
   const capId = searchParams.get("cap_id");
-  const { collection, loading, error } = useGetCollection(collectionId || "", capId || "");
+  const { collection, loading, error } = useGetCollection(collectionId || "");
   const { mintBase } = useSendTransactions();
 
   const [recipient, setRecipient] = useState<string>("");

@@ -2,7 +2,7 @@ import { Outlet, useLocation, useNavigate, useSearchParams } from "react-router-
 import SelectCollectionCard from "./SelectCollectionCard";
 import { useGetManageCollections } from "@/hooks/useGetManageCollections";
 import { useCurrentAccount } from "@mysten/dapp-kit";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CreateCollectionDialog } from "./CreateCollectionDialog";
 import { useGetUserOwnedCollections } from "@/hooks/useGetUserOwnedCollections";
 import { updateUrlQuery } from "@/lib/manageUrl";

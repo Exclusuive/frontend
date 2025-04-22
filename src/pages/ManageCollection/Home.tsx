@@ -7,19 +7,17 @@ import { useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useSendTransactions } from "@/hooks/useSendTransactions";
-import { CollectionItem } from "@/types/types";
+import { ItemType } from "@/types/types";
 
 export default function Home() {
   const [searchParams] = useSearchParams();
   const collectionId = searchParams.get("collection_id");
   const capId = searchParams.get("cap_id");
-  const { collection } = useGetCollection(collectionId || "", capId || "");
+  const { collection } = useGetCollection(collectionId || "");
   const [activeTab, setActiveTab] = useState(collection?.layer_types?.[0] || "");
-  const [selectedItem, setSelectedItem] = useState<CollectionItem | null>(null);
+  const [selectedItem, setSelectedItem] = useState<ItemType | null>(null);
   const [recipient, setRecipient] = useState<string>("");
   const { mintItem } = useSendTransactions();
-
-  console.log(collection);
 
   // Sample data for the chart - replace with actual data
   const chartData = [
@@ -30,7 +28,7 @@ export default function Home() {
     { name: "Layer 5", value: 189 },
   ];
 
-  const handleMintItem = async (item: CollectionItem) => {
+  const handleMintItem = async (item: ItemType) => {
     if (!recipient) return;
 
     try {
@@ -63,7 +61,7 @@ export default function Home() {
             <CardContent>
               <div className="aspect-video w-full overflow-hidden rounded-md">
                 <img
-                  src={collection?.img_url}
+                  src={`${collection?.img_url}?refresh=${new Date().getTime()}`}
                   alt={collection?.name}
                   className="h-full w-full object-cover"
                 />
@@ -128,7 +126,7 @@ export default function Home() {
                 </TabsList>
                 <TabsContent value={activeTab}>
                   <div className="space-y-4">
-                    {collection?.items
+                    {collection?.item_types
                       ?.filter((item) => item.layer === activeTab)
                       .map((item, index: number) => (
                         <div key={index}>

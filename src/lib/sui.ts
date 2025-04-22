@@ -28,23 +28,23 @@ export function extractCollectionIds(data: any[]) {
     .filter(Boolean) as { collection_id: string; cap_id: string }[];
 }
 
-export function extractSupplierIds(data: any[]) {
+export function extractStoreIds(data: any[]) {
   return data
     .map((obj) => {
       const content = obj.data?.content;
       if (
         content?.dataType === "moveObject" &&
         "fields" in content &&
-        "supplier_id" in content.fields
+        "store_id" in content.fields
       ) {
         return {
-          supplier_id: content.fields.supplier_id as string,
+          store_id: content.fields.store_id as string,
           cap_id: obj.data?.objectId as string,
         };
       }
       return null;
     })
-    .filter(Boolean) as { supplier_id: string; cap_id: string }[];
+    .filter(Boolean) as { store_id: string; cap_id: string }[];
 }
 
 export async function getDynamicObjectIds(suiClient: any, parentId: string): Promise<string[]> {

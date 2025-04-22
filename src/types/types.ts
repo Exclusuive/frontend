@@ -1,6 +1,6 @@
 export interface Collection {
   collection_id: string;
-  cap_id: string;
+  cap_id?: string;
   name: string;
   description: string;
   img_url: string;
@@ -11,11 +11,10 @@ export interface Collection {
 }
 
 export interface ItemType {
-  fields: {
-    item_type: string;
-    type: string;
-    img_url: string;
-  };
+  name: string;
+  layer: string;
+  img_url: string;
+  property_types?: { type: string; value: number }[];
 }
 // Sui blockchain data types
 export interface TypeField {
@@ -46,7 +45,10 @@ export interface ItemTypeContent {
 
 export interface CollectionFields {
   fields: {
-    cap_id: string;
+    id: {
+      id: string;
+    };
+    cap_id?: string;
     base_type: TypeField;
     description: string;
     img_url: string;
@@ -59,16 +61,27 @@ export interface CollectionFields {
 }
 
 // Define Supplier type
-export interface Supplier {
-  supplier_id: string;
-  supplier_cap_id: string;
+export interface Store {
+  store_id: string;
+  store_cap_id: string;
   collection_id: string;
   name: string;
   balance: number;
-  selections?: Selection[];
+  slots?: Slot[];
 }
 
-export interface Selection {
+export interface StoreFields {
+  fields: {
+    slots: never[];
+    id: {
+      id: string;
+    };
+    collection_id: string;
+    name: string;
+    balance: number;
+  };
+}
+export interface Slot {
   fields: {
     number: number;
     price: number;

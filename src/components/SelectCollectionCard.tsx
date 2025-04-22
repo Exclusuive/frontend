@@ -40,7 +40,7 @@ export default function SelectCollectionModal({
           {items.map((item) => (
             <Card
               key={item.collection_id}
-              onClick={() => onClick(item.collection_id, item.cap_id)}
+              onClick={() => onClick(item.collection_id, item.cap_id || "")}
               className={clsx("cursor-pointer border-2 transition-all hover:shadow-lg")}
             >
               <CardHeader>
