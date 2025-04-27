@@ -138,18 +138,17 @@ export const parseStoreInfo = (raw: SuiObjectResponse[]) => {
 
   const parseProductValue = (productValue: any) => {
     if (!productValue?.type) return null;
-
     if (productValue.type.endsWith("::Item")) {
       return {
         type: "Item",
         item_type: productValue.fields.item_type,
         img_url: productValue.fields.img_url,
       };
-    } else if (productValue.type.endsWith("::Property")) {
+    } else if (productValue.type.endsWith("::PropertyScroll")) {
       return {
         type: "Property",
-        property_type: productValue.fields.type.fields.type,
-        value: productValue.fields.value,
+        property_type: productValue.fields.property.fields.type.fields.type,
+        value: productValue.fields.property.fields.value,
       };
     } else if (productValue.type.endsWith("::Ticket")) {
       return {

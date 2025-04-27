@@ -49,7 +49,7 @@ export function MintItemDialog({
     selectedItemImageUrl: "",
     selectedPropertyType: "",
     propertyValue: "",
-    properties: [] as Array<{ type: string; value: string }>,
+    properties: [] as Array<{ type: string; value: number }>,
   };
 
   const [state, setState] = useState(initialState);
@@ -66,7 +66,10 @@ export function MintItemDialog({
     if (selectedPropertyType && propertyValue) {
       setState((prev) => ({
         ...prev,
-        properties: [...properties, { type: selectedPropertyType, value: propertyValue }],
+        properties: [
+          ...properties,
+          { type: selectedPropertyType, value: parseInt(propertyValue, 10) },
+        ],
         selectedPropertyType: "",
         propertyValue: "",
       }));
@@ -95,20 +98,14 @@ export function MintItemDialog({
     if (mode === "existing" && !selectedItemId) {
       return;
     }
-
+    console.log(properties);
     setState((prev) => ({ ...prev, isLoading: true }));
 
     try {
       const mintData: MintItemData = {
         layer,
         recipient,
-        properties:
-          properties.length > 0
-            ? properties.map((property) => ({
-                type: property.type,
-                value: parseInt(property.value, 10),
-              }))
-            : undefined,
+        properties: properties,
       };
 
       if (mode === "new") {
@@ -119,8 +116,6 @@ export function MintItemDialog({
         mintData.itemId = selectedItemId;
         mintData.itemImageUrl = state.selectedItemImageUrl;
       }
-
-      console.log(mintData);
 
       await onMint(mintData);
       onClose();

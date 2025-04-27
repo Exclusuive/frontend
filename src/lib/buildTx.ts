@@ -52,6 +52,22 @@ export function buildTx(calls: TxCall[]) {
       continue;
     }
 
+    if (funcName === "splitCoins") {
+      if (args.length !== 1) throw new Error("transfer expects exactly 1 arguments");
+
+      const price = args[0];
+
+      if (price.type !== "u64") {
+        throw new Error("First argument of transfer must be a variable");
+      }
+      const movePrice = tx.pure.u64(price.value);
+
+      const [coinObject] = tx.splitCoins(tx.gas, [movePrice]);
+      assigned["coinObject"] = coinObject;
+
+      continue;
+    }
+
     // 🔵 move-call (기존 로직 그대로)
     const resolvedArgs = args.map((arg: any) => {
       switch (arg.type) {

@@ -76,8 +76,6 @@ export default function AddProductDialog({
       // Use the provided selectionType
       const productSelectionType = selectionType;
 
-      console.log(productSelectionType);
-
       if (productSelectionType === "Item" && selectedItem) {
         // For Item type, we need the layer and item details
         result = await addProduct({
@@ -92,7 +90,8 @@ export default function AddProductDialog({
           itemName: selectedItem.name,
           img_url: selectedItem.img_url, // We don't have the image file here, it would need to be passed from the parent
         });
-      } else if (productSelectionType === "Property") {
+      } else if (productSelectionType === "PropertyScroll") {
+        console.log(propertyValue);
         // For Property type, we need the property name and value
         if (!propertyValue) {
           return;
@@ -104,7 +103,7 @@ export default function AddProductDialog({
           storeId: storeId,
           storeCapId: storeCapId,
           selectionNumber: selectionNumber,
-          productType: "Property",
+          productType: "PropertyScroll",
           quantity: quantity,
           propertyName: optionName,
           propertyValue: propertyValue,
@@ -139,7 +138,7 @@ export default function AddProductDialog({
     switch (selectionType) {
       case "Item":
         return collection?.item_types || [];
-      case "Property":
+      case "PropertyScroll":
         return (collection?.property_types || []).map((type, index) => ({
           id: `prop${index}`,
           name: type,
@@ -257,7 +256,7 @@ export default function AddProductDialog({
             )}
           </div>
 
-          {selectionType === "Property" && (
+          {selectionType === "PropertyScroll" && (
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="propertyValue" className="text-right">
                 Value
@@ -289,7 +288,7 @@ export default function AddProductDialog({
         <DialogFooter>
           <Button
             onClick={handleAddProduct}
-            disabled={!selectedId || (selectionType === "Property" && !propertyValue)}
+            disabled={!selectedId || (selectionType === "PropertyScroll" && !propertyValue)}
           >
             Add Product
           </Button>

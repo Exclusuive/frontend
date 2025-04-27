@@ -45,7 +45,7 @@ export type MintItemData = {
   itemImage?: File;
   itemId?: string;
   itemImageUrl?: string;
-  properties?: Array<{ type: string; value: number }>;
+  properties?: { type: string; value: number }[];
 };
 
 export interface MintItemProps {
@@ -55,6 +55,6 @@ export interface MintItemProps {
   itemName: string;
   itemImg: File | null;
   itemImageUrl?: string;
-  properties?: Array<{ type: string; value: number }>;
+  properties?: { type: string; value: number }[];
   toAddress: string;
 }

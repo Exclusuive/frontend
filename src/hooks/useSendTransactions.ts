@@ -162,6 +162,7 @@ export const useSendTransactions = () => {
   }: MintItemProps) => {
     try {
       setToastState({ type: "loading", message: "Minting Item Object..." });
+      console.log(properties);
 
       let imageUrl = itemImageUrl;
 
@@ -184,7 +185,7 @@ export const useSendTransactions = () => {
         propertiesTxCalls = properties
           .map((property, index) => [
             {
-              funcName: "new_property",
+              funcName: "new_property_scroll",
               args: [
                 { type: "object" as const, value: id },
                 { type: "object" as const, value: capId },
@@ -650,7 +651,7 @@ export const useSendTransactions = () => {
     storeId: string;
     storeCapId: string;
     selectionNumber: number;
-    productType: "Item" | "Property" | "Ticket";
+    productType: "Item" | "PropertyScroll" | "Ticket";
     quantity: number;
     // Item specific parameters
     layer?: string;
@@ -673,7 +674,7 @@ export const useSendTransactions = () => {
         if (!layer || !itemName) {
           throw new Error("Layer and itemName are required for Item type");
         }
-      } else if (productType === "Property") {
+      } else if (productType === "PropertyScroll") {
         if (!propertyName || !propertyValue) {
           throw new Error("propertyName and propertyValue are required for Property type");
         }
@@ -702,10 +703,10 @@ export const useSendTransactions = () => {
               { type: "string" as const, value: img_url || "" },
             ],
           });
-        } else if (productType === "Property" && propertyName && propertyValue) {
+        } else if (productType === "PropertyScroll" && propertyName && propertyValue) {
           // Create new property and assign the result to a variable
           txCalls.push({
-            funcName: "new_property",
+            funcName: "new_property_scroll",
             assign: productIdVar,
             args: [
               { type: "object" as const, value: id },
@@ -759,6 +760,7 @@ export const useSendTransactions = () => {
 
       return { success: true, productIds };
     } catch (error) {
+      console.log(error);
       setToastState({
         type: "error",
         message: "Failed to add products. Please try again.",
@@ -860,6 +862,7 @@ export const useSendTransactions = () => {
     toAddress,
     conditions,
     tickets,
+    suiAmount,
   }: {
     id: string;
     storeId: string;
@@ -868,6 +871,7 @@ export const useSendTransactions = () => {
     toAddress: string;
     conditions?: any;
     tickets?: Record<string, string[]>;
+    suiAmount?: number;
   }) => {
     try {
       setToastState({ type: "loading", message: "Buying product..." });
@@ -891,6 +895,7 @@ export const useSendTransactions = () => {
         transformed.forEach((item: any) => {
           if (tickets && tickets[item.type] && tickets[item.type].length >= item.requirement) {
             tickets[item.type].slice(0, item.requirement).forEach((ticketId: string) => {
+              console.log;
               txCalls.push({
                 funcName: "burn_ticket",
                 args: [
@@ -904,6 +909,27 @@ export const useSendTransactions = () => {
           }
         });
       }
+
+      if (suiAmount && suiAmount !== 0) {
+        console.log(suiAmount);
+
+        txCalls.push(
+          {
+            funcName: "splitCoins",
+            args: [{ type: "u64", value: suiAmount }],
+          },
+          {
+            funcName: "add_balance_to_store",
+            args: [
+              { type: "object", value: id },
+              { type: "object", value: storeId },
+              { type: "variable", value: "requestId" },
+              { type: "variable", value: "coinObject" },
+            ],
+          }
+        );
+      }
+
       txCalls.push(
         {
           funcName: "confirm_request",

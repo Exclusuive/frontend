@@ -58,6 +58,7 @@ export const useCheckUserBases = (address: string, collectionId: string | undefi
             const dynamicIds = await getDynamicObjectIds(suiClient, baseId.id);
             const allIds = [baseId.id, ...dynamicIds];
             const allFields = await getMultiObjectFields(suiClient, allIds);
+
             const parseItemBagValue = (itemBag: any) => {
               if (!itemBag?.name?.type?.includes("::ItemBagKey")) return null;
 
@@ -109,22 +110,42 @@ export const useCheckUserBases = (address: string, collectionId: string | undefi
               }));
             })();
 
-            const itemSockets = (() => {
+            const itemSockets = await (async () => {
               const grouped = new Map<string, any[]>();
 
-              allFields.forEach((field: any) => {
+              const promises = allFields.map(async (field: any) => {
                 const parsed = parseItemSocketValue(field);
-                if (!parsed) return;
+                if (!parsed) return null; // Return null if parsed is null
+
+                const dynamicIds = await getDynamicObjectIds(suiClient, parsed?.item?.id);
+                const allFieldsResponse = await getMultiObjectFields(suiClient, dynamicIds);
+                const properties = allFieldsResponse.map((field: any) => ({
+                  type: field.value.fields.type.fields.type,
+                  value: field.value.fields.value,
+                }));
+                return {
+                  id: parsed?.item?.id,
+                  layer: parsed?.item?.layer_type,
+                  name: parsed?.item?.item_type,
+                  img_url: parsed?.item?.img_url,
+                  properties: properties,
+                };
+              });
+
+              const items = await Promise.all(promises);
+              items.forEach((item) => {
+                if (!item) return;
 
                 // Map에 없으면 빈 배열로 초기화
-                if (!grouped.has(parsed.item.layer_type)) {
-                  grouped.set(parsed.item.layer_type, []);
+                if (!grouped.has(item.layer)) {
+                  grouped.set(item.layer, []);
                 }
 
                 // 기존 배열에 items 추가
-                grouped.get(parsed.item.layer_type)!.push(parsed.item);
+                grouped.get(item.layer)!.push(item);
               });
 
+              // Return the structured object similar to itemBags
               return Array.from(grouped.entries()).map(([type, items]) => ({
                 type,
                 items,

@@ -97,7 +97,7 @@ export default function SlotCard({
       storeCapId: selectedStore?.store_cap_id || "",
       selectionType: selectionData.selectionType,
     });
-    setSelectionData((prev) => ({ ...prev, newSelectionPrice: 0 }));
+    setSelectionData((prev) => ({ ...prev, selectionType: "", newSelectionPrice: 0 }));
   };
 
   const handleAddConditionToSelection = async (selectionId: number) => {
@@ -125,7 +125,8 @@ export default function SlotCard({
     selectionNumber: number,
     selectionType: string,
     conditions: any,
-    tickets: Record<string, string[]>
+    tickets: Record<string, string[]>,
+    suiAmount: number
   ) => {
     if (!conditions) {
       await buyProduct({
@@ -149,6 +150,7 @@ export default function SlotCard({
           toAddress: account?.address || "",
           conditions: conditions,
           tickets: tickets,
+          suiAmount: suiAmount,
         });
       }
     }
@@ -202,7 +204,7 @@ export default function SlotCard({
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="Item">Item</SelectItem>
-                          <SelectItem value="Property">Property</SelectItem>
+                          <SelectItem value="PropertyScroll">PropertyScroll</SelectItem>
                           <SelectItem value="Ticket">Ticket</SelectItem>
                         </SelectContent>
                       </Select>
@@ -383,7 +385,8 @@ export default function SlotCard({
                             slot.fields.number,
                             slot.fields.type,
                             slot.fields.conditions,
-                            tickets || {}
+                            tickets || {},
+                            slot.fields.price
                           )
                         }
                       >

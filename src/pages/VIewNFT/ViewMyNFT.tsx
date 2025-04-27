@@ -96,9 +96,7 @@ export default function ViewMyNFT() {
               <Button onClick={handleRefreshMetadata} className="mt-2 w-full">
                 Refresh Image
               </Button>
-              <CardDescription>
-                <p>Properties: {selectedNFT.properties?.join(", ") || "None"}</p>
-              </CardDescription>
+              <CardDescription></CardDescription>
             </CardContent>
             <Carousel>
               <CarouselContent>
@@ -116,9 +114,12 @@ export default function ViewMyNFT() {
                         <p>No image available</p>
                       )}
                       <div className="mt-2 text-center">
-                        <h4 className="font-medium">
-                          {item.items[0]?.item_type || "Unknown Item"}
-                        </h4>
+                        <h4 className="font-medium">{item.items[0]?.name || "Unknown Item"}</h4>
+                        {item.items[0]?.properties?.map((property: any) => (
+                          <p key={property.type}>
+                            {property.type}: {property.value}
+                          </p>
+                        ))}
                       </div>
                     </CarouselItem>
                   ))}
@@ -164,7 +165,14 @@ export default function ViewMyNFT() {
                               className="h-full w-full object-cover"
                             />
                           </div>
-                          <h3 className="font-medium">{item.type}</h3>
+                          <h3 className="font-bold">
+                            {item.type}
+                            {item?.properties?.map((property: any) => (
+                              <p className="font-medium" key={property.type}>
+                                {property.type}: {property.value}
+                              </p>
+                            ))}
+                          </h3>
                         </div>
                       )) || <p>No items found for this layer.</p>}
                     </div>

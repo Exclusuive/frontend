@@ -44,6 +44,7 @@ export default function ManageItemNFT() {
         itemImg: data.itemImage || null,
         itemImageUrl: data.itemImageUrl,
         toAddress: data.recipient,
+        properties: data.properties,
       });
       // Simulate a successful mint
     } catch (error) {
