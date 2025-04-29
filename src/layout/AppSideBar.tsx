@@ -2,8 +2,6 @@ import {
   LayoutDashboard,
   FileEdit,
   Image,
-  Boxes,
-  Handshake,
   BadgeCheck,
   PackageOpen,
   HelpCircle,
@@ -33,54 +31,83 @@ import { navigateWithQuery } from "@/lib/utils";
 
 // import { navigateWithQuery } from "@/lib/manageUrl";
 // Menu items.
-const manage_collection_menus = [
-  {
-    title: "Home",
-    url: "/manage",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "Edit collection info",
-    url: "/manage/editinfo",
-    icon: FileEdit,
-  },
-  {
-    title: "Mint base NFT",
-    url: "/manage/bases",
-    icon: Image,
-  },
-  {
-    title: "Manage item NFT",
-    url: "/manage/items",
-    icon: Boxes,
-  },
-  {
-    title: "Manage store contract",
-    url: "/manage/stores",
-    icon: Handshake,
-  },
-];
+const DEAFULT_MENUS = {
+  Default: [
+    {
+      title: "Home",
+      url: "/",
+      icon: LayoutDashboard,
+    },
+  ],
+};
+const ADMIN_MENUS = {
+  Collection: [
+    {
+      title: "Home",
+      url: "/admin/collection",
+      icon: LayoutDashboard,
+    },
+    {
+      title: "Manage Collection",
+      url: "/admin/collection/...",
+      icon: FileEdit,
+    },
+    {
+      title: "Manage Collection Store",
+      url: "/admin/collection/...",
+      icon: Image,
+    },
+    {
+      title: "Mint Items",
+      url: "/admin/collection/...",
+      icon: PackageOpen,
+    },
+  ],
+  MembershipPolicy: [
+    {
+      title: "Home",
+      url: "/admin/membershippolicy",
+      icon: LayoutDashboard,
+    },
+    {
+      title: "Mange MembershipPolicy",
+      url: "/admin/membershippolicy/...",
+      icon: FileEdit,
+    },
+    {
+      title: "Manage MembershipPolicy VendingMachine",
+      url: "/admin/membershippolicy/...",
+      icon: Image,
+    },
+    {
+      title: "Mint Items",
+      url: "/admin/membershippolicy/...",
+      icon: PackageOpen,
+    },
+  ],
+};
 
-const manage_nft_menus = [
-  {
-    title: "Home",
-    url: "/user",
-    icon: LayoutDashboard,
-  },
+const MEMBER_MENUS = {
+  MyNFT: [
+    {
+      title: "Home",
+      url: "/member",
+      icon: LayoutDashboard,
+    },
 
-  {
-    title: "My Page",
-    url: "/user/viewnft",
-    icon: BadgeCheck,
-  },
+    {
+      title: "My Membership",
+      url: "/member/mymembership",
+      icon: BadgeCheck,
+    },
 
-  {
-    title: "Shopping",
-    url: "/user/stores",
-    icon: PackageOpen,
-  },
-];
-
+    {
+      title: "Explore Membership Store",
+      url: "/member/membershipstore",
+      icon: PackageOpen,
+    },
+  ],
+};
 export default function AppSidebar() {
   const account = useCurrentAccount();
   const wallets = useWallets();
@@ -95,12 +122,14 @@ export default function AppSidebar() {
         <div className="text-center text-lg font-extrabold"> Exclusuive Dashboard</div>
       </SidebarHeader>
       <SidebarContent>
-        <img className="-my-10" src="/DOKPAMI.png" alt="character loading..." />
+        <div className="">
+          <div className="flex h-48 w-full flex-col-reverse overflow-y-hidden">
+            <img className="w-full" src="/DOKPAMI.png" alt="character loading..." />
+          </div>
 
-        <div>
           {account ? (
             <div className="mx-auto w-5/6">
-              <p className="my-5 text-center text-lg font-bold">{account.label}</p>
+              <p className="text-center text-lg font-bold">{account.label}</p>
               <Button
                 className="w-full bg-black text-white hover:bg-white hover:text-black"
                 onClick={() => disconnect()}
@@ -109,7 +138,7 @@ export default function AppSidebar() {
               </Button>
             </div>
           ) : (
-            <div className="mx-auto my-10 w-5/6">
+            <div className="mx-auto w-5/6">
               <Button
                 className="w-full bg-white text-black hover:text-white"
                 onClick={() => connect({ wallet: wallets[0] })}
@@ -120,41 +149,73 @@ export default function AppSidebar() {
           )}
         </div>
 
-        <SidebarGroup>
-          <SidebarGroupLabel>Manage NFT Collections</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {manage_collection_menus.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <Link to={navigateWithQuery(item.url, location.search)}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        <div className="overflow-y-auto whitespace-nowrap">
+          {Object.entries(DEAFULT_MENUS).map(([headding, menus]) => {
+            return (
+              <SidebarGroup>
+                <SidebarGroupLabel>{headding}</SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    {menus.map((item) => (
+                      <SidebarMenuItem key={item.title}>
+                        <SidebarMenuButton asChild>
+                          <Link to={navigateWithQuery(item.url, location.search)}>
+                            <item.icon />
+                            <span>{item.title}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            );
+          })}
 
-        <SidebarGroup>
-          <SidebarGroupLabel>Manage My NFTs</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {manage_nft_menus.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <Link to={navigateWithQuery(item.url, location.search)}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+          {Object.entries(ADMIN_MENUS).map(([headding, menus]) => {
+            return (
+              <SidebarGroup>
+                <SidebarGroupLabel>{headding}</SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    {menus.map((item) => (
+                      <SidebarMenuItem key={item.title}>
+                        <SidebarMenuButton asChild>
+                          <Link to={navigateWithQuery(item.url, location.search)}>
+                            <item.icon />
+                            <span>{item.title}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            );
+          })}
+
+          {Object.entries(MEMBER_MENUS).map(([headding, menus]) => {
+            return (
+              <SidebarGroup>
+                <SidebarGroupLabel>{headding}</SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    {menus.map((item) => (
+                      <SidebarMenuItem key={item.title}>
+                        <SidebarMenuButton asChild>
+                          <Link to={navigateWithQuery(item.url, location.search)}>
+                            <item.icon />
+                            <span>{item.title}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            );
+          })}
+        </div>
       </SidebarContent>
       <SidebarFooter>
         <div className="rounded-lg bg-white p-4">

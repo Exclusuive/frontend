@@ -18,10 +18,25 @@ export default function Routers() {
             <Route path="collection" element={<Collection />} />
             <Route path="membershippolicy" element={<MembershipPolicy />} />
           </Route>
-          <Route path="members">
+          <Route path="member">
             <Route path="mymembership" element={<MyMembership />} />
             <Route path="membershipstore" element={<MembershipStore />} />
           </Route>
+
+          {/* 임시 404 */}
+          <Route
+            path="*"
+            element={
+              <div>
+                <button
+                  onClick={() => window.history.back()}
+                  className="rounded bg-gray-200 px-4 py-2 hover:bg-gray-300"
+                >
+                  Opps! ← 뒤로 가기
+                </button>
+              </div>
+            }
+          />
         </Route>
       </Routes>
     </Router>
