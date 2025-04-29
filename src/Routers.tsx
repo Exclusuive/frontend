@@ -2,11 +2,11 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./Layout";
 import LandingPage from "./pages/LandingPage";
 
-import Collection from "./pages/admin/Collection/Page";
-import MembershipPolicy from "./pages/admin/MembershipPolicy/Page";
+import Collection from "./pages/admin/Collection/Collection";
+import MembershipPolicy from "./pages/admin/MembershipPolicy/MembershipPolicy";
 
-import MyMembership from "./pages/members/MyMembership/Page";
-import MembershipStore from "./pages/members/MembershipStore/Page";
+import MyMembership from "./pages/members/MyMembership/MyMembership";
+import MembershipStore from "./pages/members/MembershipStore/MembershipStore";
 import NotFound from "./NotFound";
 
 export default function Routers() {
