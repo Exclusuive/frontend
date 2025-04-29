@@ -20,7 +20,6 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "../components/ui/button";
 import {
-  ConnectModal,
   useWallets,
   useDisconnectWallet,
   useCurrentAccount,

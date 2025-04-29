@@ -7,6 +7,7 @@ import MembershipPolicy from "./pages/admin/MembershipPolicy/Page";
 
 import MyMembership from "./pages/members/MyMembership/Page";
 import MembershipStore from "./pages/members/MembershipStore/Page";
+import NotFound from "./NotFound";
 
 export default function Routers() {
   return (
@@ -24,19 +25,7 @@ export default function Routers() {
           </Route>
 
           {/* 임시 404 */}
-          <Route
-            path="*"
-            element={
-              <div>
-                <button
-                  onClick={() => window.history.back()}
-                  className="rounded bg-gray-200 px-4 py-2 hover:bg-gray-300"
-                >
-                  Opps! ← 뒤로 가기
-                </button>
-              </div>
-            }
-          />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </Router>
