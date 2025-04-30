@@ -48,7 +48,13 @@ export default function Collection() {
         <div className="scrollbar-hide overflow-x-auto">
           <div className="grid auto-cols-[minmax(150px,1fr)] grid-flow-col gap-4">
             {collections.map((col, i) => (
-              <Card key={i} className={"cursor-pointer border-2 transition-all hover:shadow-lg"}>
+              <Card
+                key={i}
+                className={"cursor-pointer border-2 transition-all hover:shadow-lg"}
+                onClick={() => {
+                  setCurrentCollection(collections[i]);
+                }}
+              >
                 <CardHeader>
                   <img
                     src={"/DOKPAMI.png"}
