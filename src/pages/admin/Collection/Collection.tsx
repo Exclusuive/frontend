@@ -1,8 +1,9 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 import { useGetMyCollections } from "@/hooks/collection";
 import { CollectionData } from "@/types/collection";
 import CollectionInfoCard from "./CollectionInfoCard";
+import CollectionButton from "./CollectionButton";
 
 export default function Collection() {
   const [currentCollection, setCurrentCollection] = useState<CollectionData>();
@@ -36,33 +37,17 @@ export default function Collection() {
         <div className="scrollbar-hide overflow-x-auto">
           <div className="grid auto-cols-[minmax(150px,1fr)] grid-flow-col gap-4">
             {collections.map((col, i) => (
-              <Card
-                key={i}
-                className={"cursor-pointer border-2 transition-all hover:shadow-lg"}
+              <CollectionButton
+                collection={col}
                 onClick={() => {
                   setCurrentCollection(collections[i]);
                 }}
-              >
-                <CardHeader>
-                  <img
-                    src={"/DOKPAMI.png"}
-                    alt={col.id}
-                    className="aspect-video w-full rounded-md object-cover"
-                  />
-                </CardHeader>
-                <CardContent>
-                  <CardTitle className="text-lg">
-                    {col.id.slice(0, 5)}...{col.id.slice(-5)}
-                  </CardTitle>
-                  <p className="text-muted-foreground line-clamp-2 text-sm">
-                    {col.id.slice(0, 5)}...{col.id.slice(-5)}
-                  </p>
-                </CardContent>
-              </Card>
+              />
             ))}
           </div>
         </div>
       </section>
+
       {currentCollection && <CollectionInfoCard collection={currentCollection} />}
     </div>
   );

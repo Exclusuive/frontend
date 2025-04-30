@@ -3,11 +3,21 @@ import { Tabs, TabsList } from "@/components/ui/tabs";
 import { TabsTrigger } from "@radix-ui/react-tabs";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { CollectionData } from "@/types/collection";
+import { useEffect, useState } from "react";
 
 interface Props {
   collection: CollectionData;
 }
 export default function CollectionInfoCard({ collection }: Props) {
+  const [imgURL, setImgURL] = useState("");
+
+  useEffect(() => {
+    collection.dynamicFieldData.forEach((d) => {
+      if (d.content.fields.value.fields.name === "img_url") {
+        setImgURL(d.content.fields.value.fields.content);
+      }
+    });
+  }, []);
   // Sample data for the chart - replace with actual data
   const chartData = [
     { name: "Layer 1", value: 400 },
@@ -29,7 +39,7 @@ export default function CollectionInfoCard({ collection }: Props) {
           </CardHeader>
           <CardContent>
             <div className="aspect-video w-full overflow-hidden rounded-md">
-              <img className="h-full w-full object-cover" src="/DOKPAMI.png" />
+              <img className="h-full w-full object-cover" src={imgURL} />
             </div>
             <div className="mt-4 space-y-2 overflow-auto">
               <h1 className="text-xl font-bold">

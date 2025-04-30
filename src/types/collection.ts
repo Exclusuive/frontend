@@ -17,7 +17,10 @@ export interface CollectionType {
   balance: string;
   base_type: {
     type: string;
-    fields: CollectionElementType;
+    fields: {
+      collection_id: string;
+      type: string;
+    };
   };
   id: {
     id: string;
