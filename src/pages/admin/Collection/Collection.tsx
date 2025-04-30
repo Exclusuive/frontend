@@ -1,9 +1,19 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList } from "@/components/ui/tabs";
+import { Tabs, TabsList } from "@/components/ui/tabs";
 import { TabsTrigger } from "@radix-ui/react-tabs";
+import { useEffect } from "react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { useGetMyCollections } from "@/hooks/CollectionHooks";
 
 export default function Collection() {
+  const { collections, isPending } = useGetMyCollections({
+    owner: "0x23c11df86fad8d628fe9b7fb6bf0b27be231f995b476ae1cff2a227575e96fad",
+  });
+
+  useEffect(() => {
+    console.log(collections, isPending);
+  }, [collections, isPending]);
+
   // Sample data for the chart - replace with actual data
   const chartData = [
     { name: "Layer 1", value: 400 },
@@ -15,32 +25,24 @@ export default function Collection() {
 
   return (
     <div className="flex flex-col gap-4 p-4">
+      <div className="overflow-auto">
+        {/* {JSON.stringify(data.data[0].data?.content?.fields.collection_id)} */}
+      </div>
+      {/* <div>{JSON.stringify(data2)}</div> */}
       <div className="flex gap-4">
         <Card
-          // key={item.collection_id}
-          // onClick={() => onClick(item.collection_id, item.cap_id || "")}
-          className={"h-auto min-w-[150px] cursor-pointer border-2 transition-all hover:shadow-lg"}
+          className={
+            "flex h-auto min-w-[150px] cursor-pointer items-center justify-center border-2 transition-all hover:shadow-lg"
+          }
         >
-          <CardHeader>
-            <img
-              // src={item.img_url}
-              alt={"sdfsd"}
-              className="aspect-video w-full rounded-md object-cover"
-            />
-          </CardHeader>
           <CardContent>
-            <CardTitle className="text-lg">{"create"}</CardTitle>
-            <p className="text-muted-foreground line-clamp-2 text-sm">{"create"}</p>
+            <CardTitle className="text-lg">Create Collection</CardTitle>
           </CardContent>
         </Card>
         <div className="scrollbar-hide overflow-x-auto">
           <div className="grid auto-cols-[minmax(150px,1fr)] grid-flow-col gap-4">
             {["holy", "moly", "1", "2", "3", "4", "5", "6", "7", "8", "9"].map((item) => (
-              <Card
-                // key={item.collection_id}
-                // onClick={() => onClick(item.collection_id, item.cap_id || "")}
-                className={"cursor-pointer border-2 transition-all hover:shadow-lg"}
-              >
+              <Card className={"cursor-pointer border-2 transition-all hover:shadow-lg"}>
                 <CardHeader>
                   <img
                     // src={item.img_url}
