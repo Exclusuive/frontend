@@ -15,7 +15,7 @@ export default function CollectionButton({ collection, onClick }: Props) {
         setImgURL(d.content.fields.value.fields.content);
       }
     });
-  }, []);
+  }, [collection]);
   return (
     <Card
       key={collection.id}

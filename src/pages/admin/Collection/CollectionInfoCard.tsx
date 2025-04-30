@@ -17,7 +17,8 @@ export default function CollectionInfoCard({ collection }: Props) {
         setImgURL(d.content.fields.value.fields.content);
       }
     });
-  }, []);
+  }, [collection]);
+
   // Sample data for the chart - replace with actual data
   const chartData = [
     { name: "Layer 1", value: 400 },
@@ -39,7 +40,12 @@ export default function CollectionInfoCard({ collection }: Props) {
           </CardHeader>
           <CardContent>
             <div className="aspect-video w-full overflow-hidden rounded-md">
-              <img className="h-full w-full object-cover" src={imgURL} />
+              {/* <img className="h-full w-full object-cover" src={imgURL} /> */}
+              <img
+                src={imgURL}
+                alt={collection.objectData.content.fields.base_type.fields.type}
+                className="aspect-video w-full rounded-md object-cover"
+              />
             </div>
             <div className="mt-4 space-y-2 overflow-auto">
               <h1 className="text-xl font-bold">
