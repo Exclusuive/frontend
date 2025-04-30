@@ -93,15 +93,17 @@ export default function Collection() {
                 </div>
                 <div className="mt-4 space-y-2 overflow-auto">
                   <h1 className="text-xl font-bold">
-                    {JSON.stringify(
-                      currentCollection.objectData.content.fields.base_type.fields.type
-                    )}
+                    {currentCollection.objectData.content.fields.base_type.fields.type}
                   </h1>
+                  <p className="font-semibold">Collection Configs</p>
                   {currentCollection.dynamicFieldData.map((data) => {
+                    if (!("name" in data.content.fields.value.fields)) return;
                     return (
                       <div>
-                        <p>{JSON.stringify(data.content.fields.name.fields)}</p>
-                        <p>{JSON.stringify(data.content.fields.value.fields)}</p>
+                        <p>
+                          {data.content.fields.value.fields.name}:{" "}
+                          {data.content.fields.value.fields.content}
+                        </p>
                       </div>
                     );
                   })}
