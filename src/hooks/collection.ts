@@ -1,11 +1,7 @@
-import { DynamicFieldPage, getFullnodeUrl, SuiClient, SuiObjectResponse } from "@mysten/sui/client";
+import { parseCollectionObjectData, parseDynamicBaseTypeField } from "@/lib/collection";
+import { CollectionData } from "@/types/collection";
+import { getFullnodeUrl, SuiClient } from "@mysten/sui/client";
 import { useEffect, useState } from "react";
-
-export interface CollectionData {
-  id: string;
-  objectData: SuiObjectResponse;
-  dynamicFieldData: DynamicFieldPage;
-}
 
 export const useGetMyCollections = ({ owner }: { owner: string }) => {
   const [collections, setCollecitons] = useState<CollectionData[]>([]);
@@ -39,7 +35,7 @@ export const useGetMyCollections = ({ owner }: { owner: string }) => {
           return [];
         });
 
-        const [objectDatas, dynamicFieldDatas] = await Promise.all([
+        const [objectDataArray, dynamicFieldDatasArray] = await Promise.all([
           Promise.all(
             ids.map((id) =>
               client.getObject({
@@ -51,19 +47,58 @@ export const useGetMyCollections = ({ owner }: { owner: string }) => {
               })
             )
           ),
-          Promise.all(ids.map((id) => client.getDynamicFields({ parentId: id }))),
+          Promise.all(
+            ids.map((id) =>
+              client
+                .getDynamicFields({ parentId: id }) // line break
+                .then((data) => {
+                  const dynamicFieldObjectIds = data.data.map((d) => {
+                    return d.objectId;
+                  });
+
+                  return client.multiGetObjects({
+                    ids: dynamicFieldObjectIds,
+                    options: { showContent: true, showType: true },
+                  });
+                })
+            )
+          ),
         ]);
 
         return ids.map((id, i) => {
+          if (!objectDataArray[i].data) return;
+
+          const collectionObjectData = parseCollectionObjectData(objectDataArray[i].data);
+
+          if (!collectionObjectData) return;
+
+          const parsedDynamicFieldDatas = dynamicFieldDatasArray[i].map((d) => {
+            if (!d.data) return null;
+            return parseDynamicBaseTypeField(d.data);
+          });
+
+          const filteredDynamicFieldDatas = parsedDynamicFieldDatas.filter(
+            (value) => value !== null
+          );
+
+          if (filteredDynamicFieldDatas.length !== parsedDynamicFieldDatas.length) {
+            return;
+          }
+
           return {
             id,
-            objectData: objectDatas[i],
-            dynamicFieldData: dynamicFieldDatas[i],
+            objectData: collectionObjectData,
+            dynamicFieldData: filteredDynamicFieldDatas,
           } as CollectionData;
         });
       })
       .then((collections) => {
-        setCollecitons(collections);
+        const collectionsWithoutNull = collections.flatMap((c) => {
+          if (!c) return [];
+          return c;
+        });
+
+        setCollecitons(collectionsWithoutNull);
         setIsPending(false);
       });
   }, [owner]);

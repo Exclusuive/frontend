@@ -1,31 +1,144 @@
-export interface Collection {
-  id: string;
-  // cap_id?: string;
-  // name: string;
-  // description: string;
-  // img_url: string;
-  base_type: CollectionPropertyType;
-  layer_types: CollectionPropertyType[];
-  property_types: CollectionPropertyType[];
-  ticket_types: CollectionPropertyType[];
-  item_types: ItemType[];
-  balance: BigInt;
-  version: BigInt;
-  configs: Config[];
-}
-
-interface CollectionPropertyType {
-  collection_id: string;
+interface CollectionElementType {
   type: string;
-}
-interface Config {
-  name: string;
-  content: string;
+  fields: {
+    collection_id: string;
+    type: string;
+  };
 }
 
 interface ItemType {
-  name: string;
-  layer: string;
+  collection_id: string;
   img_url: string;
-  property_types?: { type: string; value: number }[];
+  item_type: string;
+  type: CollectionElementType;
 }
+
+export interface CollectionType {
+  balance: string;
+  base_type: {
+    type: string;
+    fields: CollectionElementType;
+  };
+  id: {
+    id: string;
+  };
+  item_types: {
+    type: string;
+    fields: {
+      contents: ItemType[];
+    };
+  };
+  layer_types: {
+    type: string;
+    fields: {
+      contents: CollectionElementType[];
+    };
+  };
+  property_types: {
+    type: string;
+    fields: {
+      contents: CollectionElementType[];
+    };
+  };
+  ticket_types: {
+    type: string;
+    fields: {
+      contents: CollectionElementType[];
+    };
+  };
+  version: string;
+}
+
+export interface CollectionObjectData {
+  objectId: string;
+  version: string;
+  digest: string;
+  type: string;
+  content: {
+    dataType: string;
+    type: string;
+    hasPublicTransfer: boolean;
+    fields: CollectionType;
+  };
+}
+
+export interface CollectionData {
+  id: string;
+  objectData: CollectionObjectData;
+  dynamicFieldData: DynamicFieldObjectData[]; // 실제 데이터 타입에 맞게 수정
+}
+
+export interface DynamicFieldObjectData {
+  objectId: string;
+  version: string;
+  digest: string;
+  type: string;
+  content: {
+    dataType: string;
+    type: string;
+    hasPublicTransfer: boolean;
+    fields: {
+      id: {
+        id: string;
+      };
+      name: {
+        type: string;
+        fields: any;
+      };
+      value: {
+        type: string;
+        fields: any;
+      };
+    };
+  };
+}
+
+// export interface CollectionElementDFType extends DynamicFieldObjectData {
+//   content: {
+//     dataType: string;
+//     type: string;
+//     hasPublicTransfer: boolean;
+//     fields: {
+//       id: {
+//         id: string;
+//       };
+//       name: {
+//         type: string;
+//         fields: {
+//           type: string;
+//         };
+//       };
+//       value: {
+//         type: string;
+//         fields: CollectionElementType;
+//       };
+//     };
+//   };
+// }
+
+// export interface ConfigType extends DynamicFieldObjectData {
+//   content: {
+//     dataType: string;
+//     type: string;
+//     hasPublicTransfer: boolean;
+//     fields: {
+//       id: {
+//         id: string;
+//       };
+//       name: {
+//         type: string;
+//         fields: {
+//           name: string;
+//           type: string;
+//         };
+//       };
+//       value: {
+//         type: string;
+//         fields: {
+//           name: string;
+//           content: string;
+//         };
+//       };
+//     };
+//   };
+// }
