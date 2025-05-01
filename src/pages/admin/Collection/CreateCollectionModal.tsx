@@ -12,23 +12,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { PlusCircle, Trash2, Upload } from "lucide-react";
 import { Label } from "@/components/ui/label";
 
-interface CreateCollectionForm {
-  name: string;
-  description: string;
-  bannerImg: File | null;
-}
-
 interface Props {
   isOpen: boolean;
 }
 
 export const CreateCollectionModal = ({ isOpen }: Props) => {
-  const [formData, setFormData] = useState<CreateCollectionForm>({
-    name: "",
-    description: "",
-    bannerImg: null,
-  });
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [name, setName] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [imageFile, setImageFile] = useState<File>();
   const [layers, setLayers] = useState<string[]>([]);
 
   useEffect(() => {
@@ -36,27 +27,16 @@ export const CreateCollectionModal = ({ isOpen }: Props) => {
   }, [isOpen]);
 
   const resetForm = () => {
-    setFormData({
-      name: "",
-      description: "",
-      bannerImg: null,
-    });
-    setPreviewUrl(null);
+    setName("");
+    setDescription("");
+    setImageFile(undefined);
     setLayers([]);
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     if (file) {
-      setFormData((prev) => ({ ...prev, bannerImg: file }));
-
-      const url = URL.createObjectURL(file);
-      setPreviewUrl(url);
+      setImageFile(file);
     }
   };
 
@@ -84,15 +64,20 @@ export const CreateCollectionModal = ({ isOpen }: Props) => {
         <DialogDescription>Create a new collection with layers.</DialogDescription>
       </DialogHeader>
 
-      <form onSubmit={handleCreateCollection} className="space-y-4">
+      <form
+        onSubmit={handleCreateCollection}
+        className="scrollbar-hide max-h-[500px] space-y-4 overflow-auto"
+      >
         {/* Collection Name */}
         <div className="space-y-2">
           <Label htmlFor="name">Collection Name</Label>
           <Input
             id="name"
             name="name"
-            value={formData.name}
-            onChange={handleInputChange}
+            value={name}
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
             placeholder="My Collection"
             required
           />
@@ -120,9 +105,13 @@ export const CreateCollectionModal = ({ isOpen }: Props) => {
               className="hidden"
             />
           </div>
-          {previewUrl && (
+          {imageFile && (
             <div className="mt-2 aspect-video h-52 w-full overflow-hidden rounded-md border">
-              <img src={previewUrl} alt="Banner preview" className="h-full w-full object-cover" />
+              <img
+                src={URL.createObjectURL(imageFile)}
+                alt="Banner preview"
+                className="h-full w-full object-cover"
+              />
             </div>
           )}
         </div>
@@ -133,8 +122,10 @@ export const CreateCollectionModal = ({ isOpen }: Props) => {
           <Textarea
             id="description"
             name="description"
-            value={formData.description}
-            onChange={handleInputChange}
+            value={description}
+            onChange={(e) => {
+              setDescription(e.target.value);
+            }}
             placeholder="A collection of my awesome items"
             className="resize-none"
             rows={3}
@@ -155,7 +146,7 @@ export const CreateCollectionModal = ({ isOpen }: Props) => {
               Add Layer
             </Button>
           </div>
-          <div className="max-h-48 space-y-2 overflow-auto">
+          <div className="space-y-2">
             {layers.map((layer, i) => (
               <div key={i} className="flex items-center gap-2">
                 <Input
