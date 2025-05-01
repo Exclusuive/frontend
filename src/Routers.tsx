@@ -10,6 +10,8 @@ import MembershipStore from "./pages/members/membership-store/MembershipStore";
 import NotFound from "./NotFound";
 import EditCollection from "./pages/admin/collection/edit/EditCollection";
 import { CollectionProvider } from "./context/CollectionContext";
+import ManageStore from "./pages/admin/collection/store/ManageStore";
+import MintAndTransfer from "./pages/admin/collection/mint/MintAndTransfer";
 
 export default function Routers() {
   return (
@@ -20,18 +22,18 @@ export default function Routers() {
 
           {/* Admin Pages */}
           <Route path="admin">
-            <Route path="collections">
+            <Route
+              path="collections"
+              element={
+                <CollectionProvider>
+                  <Outlet />
+                </CollectionProvider>
+              }
+            >
               <Route path="" element={<Collection />} />
-              <Route
-                path=""
-                element={
-                  <CollectionProvider>
-                    <Outlet />
-                  </CollectionProvider>
-                }
-              >
-                <Route path="edit" element={<EditCollection />} />
-              </Route>
+              <Route path="edit" element={<EditCollection />} />
+              <Route path="store" element={<ManageStore />} />
+              <Route path="mint" element={<MintAndTransfer />} />
             </Route>
             <Route path="membershippolicy" element={<MembershipPolicy />} />
           </Route>
