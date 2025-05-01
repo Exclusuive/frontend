@@ -7,10 +7,13 @@ interface CollectionElementType {
 }
 
 interface ItemType {
-  collection_id: string;
-  img_url: string;
-  item_type: string;
-  type: CollectionElementType;
+  type: string;
+  fields: {
+    collection_id: string;
+    img_url: string;
+    item_type: string;
+    type: CollectionElementType;
+  };
 }
 
 export interface CollectionType {
