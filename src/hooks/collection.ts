@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 export const useGetMyCollections = ({ owner }: { owner: string }) => {
   const [collections, setCollecitons] = useState<CollectionData[]>([]);
   const [isPending, setIsPending] = useState<boolean>(true);
+  const [error, setError] = useState(null);
 
   const PACKAGE_ID = import.meta.env.VITE_PACKAGE_ID;
   const COL_CAP_TYPE = `${PACKAGE_ID}::collection::CollectionCap`;
@@ -100,11 +101,16 @@ export const useGetMyCollections = ({ owner }: { owner: string }) => {
 
         setCollecitons(collectionsWithoutNull);
         setIsPending(false);
+        setError(null);
+      })
+      .catch((e) => {
+        setError(e);
       });
   }, [owner]);
 
   return {
     collections,
     isPending,
+    error,
   };
 };

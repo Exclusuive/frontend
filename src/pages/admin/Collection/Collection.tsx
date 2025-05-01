@@ -4,13 +4,14 @@ import { useGetMyCollections } from "@/hooks/collection";
 import { CollectionData } from "@/types/collection";
 import CollectionInfoCard from "./CollectionInfoCard";
 import CollectionButton from "./CollectionButton";
+import { useCurrentAccount } from "@mysten/dapp-kit";
 
 export default function Collection() {
   const [currentCollection, setCurrentCollection] = useState<CollectionData>();
-  // const [activeTab, setActiveTab] = useState(currentCollection?.objectData.content.fields.layer_types.fields.contents[0] || "");
 
-  const { collections, isPending } = useGetMyCollections({
-    owner: "0x23c11df86fad8d628fe9b7fb6bf0b27be231f995b476ae1cff2a227575e96fad",
+  const account = useCurrentAccount();
+  const { collections, isPending, error } = useGetMyCollections({
+    owner: account ? account.address : "",
   });
 
   useEffect(() => {
@@ -18,6 +19,16 @@ export default function Collection() {
       setCurrentCollection(collections[0]);
     }
   }, [collections, isPending]);
+
+  if (isPending) {
+    return <div className="flex items-center justify-center p-8">Loading...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center p-8">Error: {JSON.stringify(error)}</div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-4 p-4">
