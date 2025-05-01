@@ -11,7 +11,7 @@ interface Props {
 
 export default function PropertyInfo({ collection }: Props) {
   const [newPropertyType, setNewPropertyType] = useState("");
-  const [properties, setProperties] = useState(
+  const [propertyTypes, setProeprtyTypes] = useState(
     collection.objectData.content.fields.property_types.fields.contents.map((l) => l.fields.type)
   );
 
@@ -43,11 +43,11 @@ export default function PropertyInfo({ collection }: Props) {
       </CardHeader>
 
       <CardContent>
-        {properties.length === 0 ? (
+        {propertyTypes.length === 0 ? (
           <p className="text-muted-foreground text-sm">No property types added yet</p>
         ) : (
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3">
-            {properties.map((property, index) => (
+            {propertyTypes.map((property, index) => (
               <div key={index} className="flex items-center justify-between rounded-md border p-2">
                 <span>{property}</span>
               </div>
