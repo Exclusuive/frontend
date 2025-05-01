@@ -58,7 +58,7 @@ export default function LayerInfo({ collection }: Props) {
         />
         <Button onClick={handleAddLayer} disabled={!newLayerName.trim()}>
           <Plus className="mr-2 h-4 w-4" />
-          Add Layer
+          Add Layer Type
         </Button>
       </CardContent>
 

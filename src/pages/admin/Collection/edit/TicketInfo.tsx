@@ -35,7 +35,7 @@ export default function TicketInfo({ collection }: Props) {
         />
         <Button onClick={handleAddTicketType} disabled={!newTicketType.trim()}>
           <Plus className="mr-2 h-4 w-4" />
-          Add Ticket
+          Add Ticket Type
         </Button>
       </CardContent>
 

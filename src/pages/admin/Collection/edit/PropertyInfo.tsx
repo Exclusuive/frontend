@@ -34,7 +34,7 @@ export default function PropertyInfo({ collection }: Props) {
         />
         <Button onClick={handleAddPropertyType} disabled={!newPropertyType.trim()}>
           <Plus className="mr-2 h-4 w-4" />
-          Add Property
+          Add Property Type
         </Button>
       </CardContent>
 
