@@ -104,27 +104,41 @@ export default function CollectionInfoCard({ collection }: Props) {
             <div className="space-y-4">
               <div className="overflow-auto">
                 <h3 className="font-medium">Property Types</h3>
-                {collection.objectData.content.fields.property_types.fields.contents.map((data) => (
-                  <span key={data.type}>
-                    <p className="text-muted-foreground text-sm">{data.fields.type}</p>{" "}
-                  </span>
-                ))}
+                {collection.objectData.content.fields.property_types.fields.contents.length > 0 ? (
+                  collection.objectData.content.fields.property_types.fields.contents.map(
+                    (data) => (
+                      <span key={data.type}>
+                        <p className="text-muted-foreground text-sm">{data.fields.type}</p>{" "}
+                      </span>
+                    )
+                  )
+                ) : (
+                  <p className="text-muted-foreground text-sm">No property types defined</p>
+                )}
               </div>
               <div>
                 <h3 className="font-medium">Layer Types</h3>
-                {collection.objectData.content.fields.layer_types.fields.contents.map((data) => (
-                  <span key={data.type}>
-                    <p className="text-muted-foreground text-sm">{data.fields.type}</p>{" "}
-                  </span>
-                ))}
+                {collection.objectData.content.fields.layer_types.fields.contents.length > 0 ? (
+                  collection.objectData.content.fields.layer_types.fields.contents.map((data) => (
+                    <span key={data.type}>
+                      <p className="text-muted-foreground text-sm">{data.fields.type}</p>{" "}
+                    </span>
+                  ))
+                ) : (
+                  <p className="text-muted-foreground text-sm">No layer types defined</p>
+                )}
               </div>
               <div>
                 <h3 className="font-medium">Ticket Types</h3>
-                {collection.objectData.content.fields.ticket_types.fields.contents.map((data) => (
-                  <span key={data.type}>
-                    <p className="text-muted-foreground text-sm">{data.fields.type}</p>{" "}
-                  </span>
-                ))}
+                {collection.objectData.content.fields.ticket_types.fields.contents.length > 0 ? (
+                  collection.objectData.content.fields.ticket_types.fields.contents.map((data) => (
+                    <span key={data.type}>
+                      <p className="text-muted-foreground text-sm">{data.fields.type}</p>{" "}
+                    </span>
+                  ))
+                ) : (
+                  <p className="text-muted-foreground text-sm">No ticket types defined</p>
+                )}
               </div>
             </div>
           </CardContent>
