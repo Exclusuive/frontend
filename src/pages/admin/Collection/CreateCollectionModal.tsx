@@ -22,7 +22,7 @@ interface Props {
   isOpen: boolean;
 }
 
-export const CreateCollectionDialogCard = ({ isOpen }: Props) => {
+export const CreateCollectionModal = ({ isOpen }: Props) => {
   const [formData, setFormData] = useState<CreateCollectionForm>({
     name: "",
     description: "",

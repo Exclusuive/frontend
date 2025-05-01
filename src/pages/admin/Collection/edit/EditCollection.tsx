@@ -7,7 +7,7 @@ import { Upload } from "lucide-react";
 import SelectCollectionModal from "../SelectCollectionModal";
 import { useContext, useEffect, useState } from "react";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { CreateCollectionDialogCard } from "../CreateCollectionDialogCard";
+import { CreateCollectionModal } from "../CreateCollectionModal";
 import { CollectionContext } from "@/context/CollectionContext";
 
 interface Props {}
@@ -139,7 +139,7 @@ export default function EditCollection({}: Props) {
       </Tabs>
       <Dialog open={isCreateCollectionOpen} onOpenChange={setIsCreateCollectionOpen}>
         <DialogTrigger>Create</DialogTrigger>
-        <CreateCollectionDialogCard isOpen={isCreateCollectionOpen} />
+        <CreateCollectionModal isOpen={isCreateCollectionOpen} />
       </Dialog>
     </div>
   );

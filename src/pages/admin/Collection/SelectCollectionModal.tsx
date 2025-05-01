@@ -11,7 +11,7 @@ import clsx from "clsx";
 import { Button } from "@/components/ui/button";
 import { useContext, useState } from "react";
 import { CollectionContext } from "@/context/CollectionContext";
-import { CreateCollectionDialogCard } from "./CreateCollectionDialogCard";
+import { CreateCollectionModal } from "./CreateCollectionModal";
 
 export default function SelectCollectionModal() {
   const { collections, index, setIndex } = useContext(CollectionContext);
@@ -63,7 +63,7 @@ export default function SelectCollectionModal() {
           <DialogTrigger>
             <Button>Create New Collection</Button>
           </DialogTrigger>
-          <CreateCollectionDialogCard isOpen={isOpen} />
+          <CreateCollectionModal isOpen={isOpen} />
         </Dialog>
       </DialogFooter>
     </DialogContent>

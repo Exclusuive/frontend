@@ -4,7 +4,7 @@ import CollectionInfoCard from "./CollectionInfoCard";
 import { useCurrentAccount } from "@mysten/dapp-kit";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CollectionMiniCard from "./CollectionMiniCard";
-import { CreateCollectionDialogCard } from "./CreateCollectionDialogCard";
+import { CreateCollectionModal } from "./CreateCollectionModal";
 import { useEffect, useState } from "react";
 import { Dialog } from "@/components/ui/dialog";
 
@@ -74,7 +74,7 @@ export default function Collection() {
       </Tabs>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <CreateCollectionDialogCard isOpen={isOpen} />
+        <CreateCollectionModal isOpen={isOpen} />
       </Dialog>
     </div>
   );
