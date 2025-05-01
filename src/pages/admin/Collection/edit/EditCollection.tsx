@@ -5,13 +5,26 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Upload } from "lucide-react";
 import SelectCollectionModal from "../SelectCollectionModal";
+import { useContext, useEffect, useState } from "react";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { CreateCollectionDialogCard } from "../CreateCollectionDialogCard";
+import { CollectionContext } from "@/context/CollectionContext";
 
 interface Props {}
 
 export default function EditCollection({}: Props) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const collections = useContext(CollectionContext);
+
+  useEffect(() => {
+    console.log("finally", collections);
+  }, [collections]);
+
   return (
     <div className="container w-full space-y-6 p-4">
       <h1 className="text-2xl font-bold">Edit Collection Information</h1>
+      {/* {collections && <div>{JSON.stringify(collections)}12312312</div>} */}
 
       <Tabs defaultValue="info" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
@@ -125,6 +138,10 @@ export default function EditCollection({}: Props) {
         onCreate={() => {}}
         onOpenChange={() => {}}
       />
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogTrigger>Holsydfosjdfsdo</DialogTrigger>
+        <CreateCollectionDialogCard isOpen={isOpen} />
+      </Dialog>
     </div>
   );
 }

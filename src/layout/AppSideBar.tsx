@@ -53,12 +53,12 @@ const ADMIN_MENUS = {
     },
     {
       title: "Manage Collection Store",
-      url: "/admin/collections/...",
+      url: "/admin/collections/store",
       icon: Image,
     },
     {
       title: "Mint Items",
-      url: "/admin/collections/...",
+      url: "/admin/collections/mint",
       icon: PackageOpen,
     },
   ],
