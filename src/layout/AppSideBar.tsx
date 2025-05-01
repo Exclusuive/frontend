@@ -1,10 +1,11 @@
 import {
   LayoutDashboard,
   FileEdit,
-  Image,
   BadgeCheck,
   PackageOpen,
   HelpCircle,
+  Store,
+  ShoppingCart,
 } from "lucide-react";
 import {
   Sidebar,
@@ -27,6 +28,7 @@ import {
 } from "@mysten/dapp-kit";
 import { Link, useLocation } from "react-router-dom";
 import { navigateWithQuery } from "@/lib/utils";
+import { useState } from "react";
 
 // import { navigateWithQuery } from "@/lib/manageUrl";
 // Menu items.
@@ -42,72 +44,89 @@ const DEAFULT_MENUS = {
 const ADMIN_MENUS = {
   Collection: [
     {
-      title: "Home",
+      title: "Overview",
       url: "/admin/collections",
       icon: LayoutDashboard,
     },
     {
-      title: "Edit Collection",
+      title: "Manage Collection",
       url: "/admin/collections/edit",
       icon: FileEdit,
     },
     {
-      title: "Manage Collection Store",
+      title: "Manage Store",
       url: "/admin/collections/store",
-      icon: Image,
+      icon: Store,
     },
     {
-      title: "Mint Items",
+      title: "Mint & Transfer",
       url: "/admin/collections/mint",
       icon: PackageOpen,
     },
   ],
   MembershipPolicy: [
     {
-      title: "Home",
+      title: "Overview",
       url: "/admin/membershippolicy",
       icon: LayoutDashboard,
     },
     {
-      title: "Mange MembershipPolicy",
-      url: "/admin/membershippolicy/...",
+      title: "Manage Membership Policy",
+      url: "/admin/membershippolicy/edit",
       icon: FileEdit,
     },
     {
-      title: "Manage MembershipPolicy VendingMachine",
-      url: "/admin/membershippolicy/...",
-      icon: Image,
-    },
-    {
-      title: "Mint Items",
-      url: "/admin/membershippolicy/...",
-      icon: PackageOpen,
+      title: "Manage Vending Machine",
+      url: "/admin/membershippolicy/vendingmachine",
+      icon: Store,
     },
   ],
 };
 
 const MEMBER_MENUS = {
-  MyNFT: [
+  MyPage: [
     {
-      title: "Home",
+      title: "Overview",
       url: "/member",
       icon: LayoutDashboard,
     },
-
     {
-      title: "My Membership",
-      url: "/member/mymembership",
+      title: "My Collection Objects",
+      url: "/member/collection",
       icon: BadgeCheck,
     },
-
     {
-      title: "Explore Membership Store",
-      url: "/member/membershipstore",
-      icon: PackageOpen,
+      title: "Collection Store",
+      url: "/member/collection/store",
+      icon: Store,
+    },
+    {
+      title: "My Membership Objects",
+      url: "/member/membership",
+      icon: BadgeCheck,
+    },
+    {
+      title: "Member Vending Machine",
+      url: "/member/membership/vendingmachine",
+      icon: Store,
+    },
+  ],
+  Explore: [
+    {
+      title: "Explore Collection Store",
+      url: "/explore/collection/store",
+      icon: ShoppingCart,
+    },
+    {
+      title: "Explore Vending Machine",
+      url: "/explore/membership/vendingmachine",
+      icon: ShoppingCart,
     },
   ],
 };
 export default function AppSidebar() {
+  const [isAdmin, setIsAdmin] = useState(false);
+
   const account = useCurrentAccount();
   const wallets = useWallets();
   const location = useLocation();
@@ -120,8 +139,9 @@ export default function AppSidebar() {
       <SidebarHeader>
         <div className="text-center text-lg font-extrabold"> Exclusuive Dashboard</div>
       </SidebarHeader>
+
       <SidebarContent>
-        <div className="">
+        <SidebarGroup>
           <div className="flex h-48 w-full flex-col-reverse overflow-y-hidden">
             <img className="w-full" src="/DOKPAMI.png" alt="character loading..." />
           </div>
@@ -146,9 +166,11 @@ export default function AppSidebar() {
               </Button>
             </div>
           )}
-        </div>
+        </SidebarGroup>
+      </SidebarContent>
 
-        <div className="overflow-y-auto whitespace-nowrap">
+      <SidebarContent>
+        <div className="scrollbar-hide overflow-y-auto whitespace-nowrap">
           {Object.entries(DEAFULT_MENUS).map(([headding, menus]) => {
             return (
               <SidebarGroup key={headding}>
@@ -171,59 +193,81 @@ export default function AppSidebar() {
             );
           })}
 
-          {Object.entries(ADMIN_MENUS).map(([headding, menus]) => {
-            return (
-              <SidebarGroup key={headding}>
-                <SidebarGroupLabel>{headding}</SidebarGroupLabel>
-                <SidebarGroupContent>
-                  <SidebarMenu>
-                    {menus.map((item) => (
-                      <SidebarMenuItem key={item.title}>
-                        <SidebarMenuButton asChild>
-                          <Link to={navigateWithQuery(item.url, location.search)}>
-                            <item.icon />
-                            <span>{item.title}</span>
-                          </Link>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    ))}
-                  </SidebarMenu>
-                </SidebarGroupContent>
-              </SidebarGroup>
-            );
-          })}
+          {isAdmin &&
+            Object.entries(ADMIN_MENUS).map(([headding, menus]) => {
+              return (
+                <SidebarGroup key={headding}>
+                  <SidebarGroupLabel>{headding}</SidebarGroupLabel>
+                  <SidebarGroupContent>
+                    <SidebarMenu>
+                      {menus.map((item) => (
+                        <SidebarMenuItem key={item.title}>
+                          <SidebarMenuButton asChild>
+                            <Link to={navigateWithQuery(item.url, location.search)}>
+                              <item.icon />
+                              <span>{item.title}</span>
+                            </Link>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      ))}
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                </SidebarGroup>
+              );
+            })}
 
-          {Object.entries(MEMBER_MENUS).map(([headding, menus]) => {
-            return (
-              <SidebarGroup key={headding}>
-                <SidebarGroupLabel>{headding}</SidebarGroupLabel>
-                <SidebarGroupContent>
-                  <SidebarMenu>
-                    {menus.map((item) => (
-                      <SidebarMenuItem key={item.title}>
-                        <SidebarMenuButton asChild>
-                          <Link to={navigateWithQuery(item.url, location.search)}>
-                            <item.icon />
-                            <span>{item.title}</span>
-                          </Link>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    ))}
-                  </SidebarMenu>
-                </SidebarGroupContent>
-              </SidebarGroup>
-            );
-          })}
+          {!isAdmin &&
+            Object.entries(MEMBER_MENUS).map(([headding, menus]) => {
+              return (
+                <SidebarGroup key={headding}>
+                  <SidebarGroupLabel>{headding}</SidebarGroupLabel>
+                  <SidebarGroupContent>
+                    <SidebarMenu>
+                      {menus.map((item) => (
+                        <SidebarMenuItem key={item.title}>
+                          <SidebarMenuButton asChild>
+                            <Link to={navigateWithQuery(item.url, location.search)}>
+                              <item.icon />
+                              <span>{item.title}</span>
+                            </Link>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      ))}
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                </SidebarGroup>
+              );
+            })}
         </div>
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="relative">
+        <button
+          type="button"
+          onClick={() => setIsAdmin(!isAdmin)}
+          className="absolute top-4 right-4 z-10 flex w-12 cursor-pointer flex-col items-center justify-center"
+        >
+          <SidebarGroupLabel>{isAdmin ? "admin" : "member"}</SidebarGroupLabel>
+          <span
+            className={`relative inline-flex cursor-pointer items-center rounded-full transition-colors duration-200 ease-in-out ${
+              isAdmin ? "bg-pink-500" : "bg-gray-300"
+            } h-5 w-10`}
+          >
+            <span
+              className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-200 ease-in-out ${
+                isAdmin ? "translate-x-0.5" : "translate-x-5.5"
+              }`}
+            />
+          </span>
+        </button>
+
         <div className="rounded-lg bg-white p-4">
           <div className="flex items-center">
             <HelpCircle size={24} className="text-blue-500" />
             <p className="ml-3 text-sm text-gray-700">Need Help?</p>
           </div>
-          <p className="mt-1 text-xs text-gray-500">Please check our docs</p>
-          <Button className="mt-3 w-full text-white">DOCUMENTATION</Button>
+          <button className="mt-1 cursor-pointer text-xs text-gray-500">
+            Please check our docs
+          </button>
         </div>
       </SidebarFooter>
     </Sidebar>
