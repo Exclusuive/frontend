@@ -16,7 +16,7 @@ export default function Routers() {
         <Route element={<Layout />}>
           <Route path="/" element={<LandingPage />} />
           <Route path="admin">
-            <Route path="collection" element={<Collection />} />
+            <Route path="collections" element={<Collection />} />
             <Route path="membershippolicy" element={<MembershipPolicy />} />
           </Route>
           <Route path="member">

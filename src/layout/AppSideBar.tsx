@@ -43,22 +43,22 @@ const ADMIN_MENUS = {
   Collection: [
     {
       title: "Home",
-      url: "/admin/collection",
+      url: "/admin/collections",
       icon: LayoutDashboard,
     },
     {
       title: "Manage Collection",
-      url: "/admin/collection/...",
+      url: "/admin/collections/...",
       icon: FileEdit,
     },
     {
       title: "Manage Collection Store",
-      url: "/admin/collection/...",
+      url: "/admin/collections/...",
       icon: Image,
     },
     {
       title: "Mint Items",
-      url: "/admin/collection/...",
+      url: "/admin/collections/...",
       icon: PackageOpen,
     },
   ],
@@ -149,7 +149,7 @@ export default function AppSidebar() {
         </div>
 
         <div className="overflow-y-auto whitespace-nowrap">
-          {Object.entries(DEAFULT_MENUS).map(([headding, menus], i) => {
+          {Object.entries(DEAFULT_MENUS).map(([headding, menus]) => {
             return (
               <SidebarGroup key={headding}>
                 <SidebarGroupLabel>{headding}</SidebarGroupLabel>
