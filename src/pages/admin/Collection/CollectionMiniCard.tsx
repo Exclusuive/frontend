@@ -1,25 +1,16 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CollectionData } from "@/types/collection";
-import { useEffect, useState } from "react";
+import CollectionImg from "./CollectionImg";
 interface Props {
   collection: CollectionData;
 }
 
 export default function CollectionMiniCard({ collection }: Props) {
-  const [imgURL, setImgURL] = useState();
-
-  useEffect(() => {
-    collection.dynamicFieldData.forEach((d) => {
-      if (d.content.fields.value.fields.name === "img_url") {
-        setImgURL(d.content.fields.value.fields.content);
-      }
-    });
-  }, [collection]);
   return (
     <Card key={collection.id} className={"cursor-pointer border-2 transition-all hover:shadow-lg"}>
       <CardHeader>
-        <img
-          src={imgURL}
+        <CollectionImg
+          collection={collection}
           alt={collection.objectData.content.fields.base_type.fields.type}
           className="aspect-video w-full rounded-md object-cover"
         />

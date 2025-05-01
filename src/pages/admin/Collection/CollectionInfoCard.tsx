@@ -3,30 +3,22 @@ import { Tabs, TabsList } from "@/components/ui/tabs";
 import { TabsContent, TabsTrigger } from "@radix-ui/react-tabs";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { CollectionData, ItemType } from "@/types/collection";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import CollectionImg from "./CollectionImg";
 
 interface Props {
   collection: CollectionData;
 }
 export default function CollectionInfoCard({ collection }: Props) {
-  const [imgURL, setImgURL] = useState();
   const [selectedLayer, setSelectedLayer] = useState<string>("");
   const [selectedItem, setSelectedItem] = useState<ItemType>();
   const [recipient, setRecipient] = useState<string>("");
 
-  useEffect(() => {
-    console.log("active tab:", selectedLayer);
-  }, [selectedLayer]);
-
-  useEffect(() => {
-    collection.dynamicFieldData.forEach((d) => {
-      if (d.content.fields.value.fields.name === "img_url") {
-        setImgURL(d.content.fields.value.fields.content);
-      }
-    });
-  }, [collection]);
+  // useEffect(() => {
+  //   console.log("active tab:", selectedLayer);
+  // }, [selectedLayer]);
 
   // Sample data for the chart - replace with actual data
   const chartData = [
@@ -68,9 +60,8 @@ export default function CollectionInfoCard({ collection }: Props) {
           </CardHeader>
           <CardContent>
             <div className="aspect-video w-full overflow-hidden rounded-md">
-              {/* <img className="h-full w-full object-cover" src={imgURL} /> */}
-              <img
-                src={imgURL}
+              <CollectionImg
+                collection={collection}
                 alt={collection.objectData.content.fields.base_type.fields.type}
                 className="aspect-video w-full rounded-md object-cover"
               />

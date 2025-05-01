@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { useContext, useState } from "react";
 import { CollectionContext } from "@/context/CollectionContext";
 import { CreateCollectionModal } from "./CreateCollectionModal";
+import CollectionImg from "./CollectionImg";
 
 export default function SelectCollectionModal() {
   const { collections, index, setIndex } = useContext(CollectionContext);
@@ -36,12 +37,8 @@ export default function SelectCollectionModal() {
               )}
             >
               <CardHeader>
-                <img
-                  src={
-                    col.dynamicFieldData.filter(
-                      (d) => d.content.fields.value.fields.name === "img_url"
-                    )[0].content.fields.value.fields.content
-                  }
+                <CollectionImg
+                  collection={col}
                   alt={col.objectData.content.fields.base_type.fields.type}
                   className="aspect-video w-full rounded-md object-cover"
                 />
