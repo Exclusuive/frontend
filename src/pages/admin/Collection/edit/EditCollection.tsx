@@ -1,6 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SelectCollectionModal from "../SelectCollectionModal";
 import { useContext, useEffect, useState } from "react";
@@ -9,6 +7,8 @@ import { CollectionContext } from "@/context/CollectionContext";
 import { CollectionData } from "@/types/collection";
 import CollectionInfo from "./CollectionInfo";
 import LayerInfo from "./LayerInfo";
+import PropertyInfo from "./PropertyInfo";
+import TicketInfo from "./TicketInfo";
 
 interface Props {}
 
@@ -21,10 +21,8 @@ export default function EditCollection({}: Props) {
   useEffect(() => {
     console.log("finally", collections);
     console.log("finally index", index);
-    // console.log("finally currentCollection", currentCollection);
     if (collections) {
       setCurrentCollection(collections[index]);
-      // console.log("rerender!!");
     }
   }, [collections, index]);
 
@@ -59,26 +57,15 @@ export default function EditCollection({}: Props) {
         </TabsContent>
 
         <TabsContent value="properties" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Property</CardTitle>
-              <CardDescription>Property Description</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Label htmlFor="collection-image">Collection Image</Label>
-            </CardContent>
-          </Card>
+          {currentCollection && (
+            <PropertyInfo key={currentCollection.id} collection={currentCollection} />
+          )}
         </TabsContent>
+
         <TabsContent value="tickets" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Ticket</CardTitle>
-              <CardDescription>Ticket Description</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Label htmlFor="collection-image">Collection Image</Label>
-            </CardContent>
-          </Card>
+          {currentCollection && (
+            <TicketInfo key={currentCollection.id} collection={currentCollection} />
+          )}
         </TabsContent>
       </Tabs>
     </div>
