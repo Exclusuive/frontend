@@ -1,15 +1,24 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList } from "@/components/ui/tabs";
-import { TabsTrigger } from "@radix-ui/react-tabs";
+import { TabsContent, TabsTrigger } from "@radix-ui/react-tabs";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { CollectionData } from "@/types/collection";
+import { CollectionData, ItemType } from "@/types/collection";
 import { useEffect, useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   collection: CollectionData;
 }
 export default function CollectionInfoCard({ collection }: Props) {
   const [imgURL, setImgURL] = useState();
+  const [selectedLayer, setSelectedLayer] = useState<string>("");
+  const [selectedItem, setSelectedItem] = useState<ItemType>();
+  const [recipient, setRecipient] = useState<string>("");
+
+  useEffect(() => {
+    console.log("active tab:", selectedLayer);
+  }, [selectedLayer]);
 
   useEffect(() => {
     collection.dynamicFieldData.forEach((d) => {
@@ -27,16 +36,35 @@ export default function CollectionInfoCard({ collection }: Props) {
     { name: "Layer 4", value: 278 },
     { name: "Layer 5", value: 189 },
   ];
+
+  const handleMintItem = async (item: ItemType) => {
+    if (!recipient) return;
+
+    try {
+      // await mintItem({
+      //   id: collectionId || "",
+      //   capId: capId || "",
+      //   layer: item.layer,
+      //   itemName: item.name,
+      //   itemImageUrl: item.img_url,
+      //   itemImg: null,
+      //   toAddress: recipient,
+      // });
+      setRecipient("");
+      setSelectedItem(undefined);
+    } catch (error) {
+      console.error("Error minting item:", error);
+    }
+  };
+
   return (
     <section className="grid grid-cols-1 gap-4 md:grid-cols-2">
-      {/* Left Column - Collection Image and Information */}
-
-      {/* Collection Card */}
+      {/* Left Column */}
       <div className="flex flex-col gap-4">
-        {/* Collection Image */}
-        <Card>
+        {/* Top Left */}
+        <Card title="Collection Overview Card">
           <CardHeader>
-            <CardTitle>Collection Information</CardTitle>
+            <CardTitle>Collection Overview</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="aspect-video w-full overflow-hidden rounded-md">
@@ -67,35 +95,35 @@ export default function CollectionInfoCard({ collection }: Props) {
           </CardContent>
         </Card>
 
-        {/* Collection Information */}
-        <Card>
+        {/* Bottom Left */}
+        <Card title="Collection Types List">
           <CardHeader>
-            <CardTitle>Details</CardTitle>
+            <CardTitle>Collection Types</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div className="overflow-auto">
                 <h3 className="font-medium">Property Types</h3>
                 {collection.objectData.content.fields.property_types.fields.contents.map((data) => (
-                  <p key={data.type} className="text-muted-foreground text-sm">
-                    {JSON.stringify(data.fields.type)}
-                  </p>
+                  <span key={data.type}>
+                    <p className="text-muted-foreground text-sm">{data.fields.type}</p>{" "}
+                  </span>
                 ))}
               </div>
               <div>
                 <h3 className="font-medium">Layer Types</h3>
                 {collection.objectData.content.fields.layer_types.fields.contents.map((data) => (
-                  <p key={data.type} className="text-muted-foreground text-sm">
-                    {JSON.stringify(data.fields.type)}
-                  </p>
+                  <span key={data.type}>
+                    <p className="text-muted-foreground text-sm">{data.fields.type}</p>{" "}
+                  </span>
                 ))}
               </div>
               <div>
                 <h3 className="font-medium">Ticket Types</h3>
                 {collection.objectData.content.fields.ticket_types.fields.contents.map((data) => (
-                  <p key={data.type} className="text-muted-foreground text-sm">
-                    {JSON.stringify(data.fields.type)}
-                  </p>
+                  <span key={data.type}>
+                    <p className="text-muted-foreground text-sm">{data.fields.type}</p>{" "}
+                  </span>
                 ))}
               </div>
             </div>
@@ -105,17 +133,14 @@ export default function CollectionInfoCard({ collection }: Props) {
 
       {/* Right Column - Layer Items and Chart */}
       <div className="flex flex-col gap-4">
-        {/* Layer Items */}
-        <Card className="flex-1">
+        {/* Top Right */}
+        <Card title="Items by Layer" className="flex-1">
           <CardHeader>
-            <CardTitle>Layer Items</CardTitle>
-            <CardDescription>Items by layer</CardDescription>
+            <CardTitle>Items by layer</CardTitle>
           </CardHeader>
           <CardContent>
-            {/* <Tabs defaultValue={"layers"} className="w-full" onValueChange={setActiveTab}> */}
-            <Tabs defaultValue={"layers"} className="w-full">
+            <Tabs defaultValue={"layers"} className="w-full" onValueChange={setSelectedLayer}>
               <TabsList className="w-full">
-                {/* <TabsTrigger value="no-layers">No Layers</TabsTrigger> */}
                 {collection.objectData.content.fields.layer_types.fields.contents.length > 0 ? (
                   collection.objectData.content.fields.layer_types.fields.contents.map((l) => (
                     <TabsTrigger key={l.fields.type} value={l.fields.type}>
@@ -126,12 +151,61 @@ export default function CollectionInfoCard({ collection }: Props) {
                   <TabsTrigger value="no-layers">No Layers</TabsTrigger>
                 )}
               </TabsList>
+              <TabsContent value={selectedLayer}>
+                <div className="space-y-4 overflow-auto">
+                  {collection.objectData.content.fields.item_types.fields.contents
+                    .filter((d) => d.fields.type.fields.type === selectedLayer)
+                    .map((d, i) => {
+                      const item = d;
+                      return (
+                        <div key={i}>
+                          <div
+                            className={`flex cursor-pointer items-center gap-4 rounded-lg border p-2 hover:bg-gray-100 ${selectedItem?.fields.item_type === item.fields.item_type ? "border-2 border-blue-500" : "border-gray-200"}`}
+                            onClick={() => setSelectedItem(item)}
+                          >
+                            <div className="h-16 w-16 overflow-hidden rounded-md">
+                              <img
+                                src={item.fields.img_url}
+                                alt={item.fields.item_type}
+                                className="h-full w-full object-cover"
+                              />
+                            </div>
+                            <h3 className="font-medium">{item.fields.item_type}</h3>
+                          </div>
+
+                          {selectedItem?.fields.item_type === item.fields.item_type && (
+                            <div className="mt-4 space-y-4">
+                              <div className="flex gap-4">
+                                <Input
+                                  placeholder="Enter recipient address"
+                                  value={recipient}
+                                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                    setRecipient(e.target.value)
+                                  }
+                                  className="flex-1"
+                                />
+                                <Button onClick={() => handleMintItem(item)} disabled={!recipient}>
+                                  Mint
+                                </Button>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                </div>
+              </TabsContent>
+              <TabsContent value="combinations">
+                <div className="space-y-4">
+                  <p>Combination information will be displayed here.</p>
+                </div>
+              </TabsContent>
             </Tabs>
           </CardContent>
         </Card>
 
-        {/* Chart */}
-        <Card>
+        {/* Bottom Right */}
+        <Card title="Chart">
           <CardHeader>
             <CardTitle>Distribution Chart</CardTitle>
             <CardDescription>Item distribution across layers</CardDescription>
