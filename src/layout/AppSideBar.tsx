@@ -149,9 +149,9 @@ export default function AppSidebar() {
         </div>
 
         <div className="overflow-y-auto whitespace-nowrap">
-          {Object.entries(DEAFULT_MENUS).map(([headding, menus]) => {
+          {Object.entries(DEAFULT_MENUS).map(([headding, menus], i) => {
             return (
-              <SidebarGroup>
+              <SidebarGroup key={headding}>
                 <SidebarGroupLabel>{headding}</SidebarGroupLabel>
                 <SidebarGroupContent>
                   <SidebarMenu>
@@ -173,7 +173,7 @@ export default function AppSidebar() {
 
           {Object.entries(ADMIN_MENUS).map(([headding, menus]) => {
             return (
-              <SidebarGroup>
+              <SidebarGroup key={headding}>
                 <SidebarGroupLabel>{headding}</SidebarGroupLabel>
                 <SidebarGroupContent>
                   <SidebarMenu>
@@ -195,7 +195,7 @@ export default function AppSidebar() {
 
           {Object.entries(MEMBER_MENUS).map(([headding, menus]) => {
             return (
-              <SidebarGroup>
+              <SidebarGroup key={headding}>
                 <SidebarGroupLabel>{headding}</SidebarGroupLabel>
                 <SidebarGroupContent>
                   <SidebarMenu>

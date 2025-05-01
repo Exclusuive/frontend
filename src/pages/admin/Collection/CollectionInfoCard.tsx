@@ -9,7 +9,7 @@ interface Props {
   collection: CollectionData;
 }
 export default function CollectionInfoCard({ collection }: Props) {
-  const [imgURL, setImgURL] = useState("");
+  const [imgURL, setImgURL] = useState();
 
   useEffect(() => {
     collection.dynamicFieldData.forEach((d) => {
@@ -55,7 +55,7 @@ export default function CollectionInfoCard({ collection }: Props) {
               {collection.dynamicFieldData.map((data) => {
                 if (!("name" in data.content.fields.value.fields)) return;
                 return (
-                  <div>
+                  <div key={data.objectId}>
                     <p>
                       {data.content.fields.value.fields.name}:{" "}
                       {data.content.fields.value.fields.content}
@@ -77,7 +77,7 @@ export default function CollectionInfoCard({ collection }: Props) {
               <div className="overflow-auto">
                 <h3 className="font-medium">Property Types</h3>
                 {collection.objectData.content.fields.property_types.fields.contents.map((data) => (
-                  <p className="text-muted-foreground text-sm">
+                  <p key={data.type} className="text-muted-foreground text-sm">
                     {JSON.stringify(data.fields.type)}
                   </p>
                 ))}
@@ -85,7 +85,7 @@ export default function CollectionInfoCard({ collection }: Props) {
               <div>
                 <h3 className="font-medium">Layer Types</h3>
                 {collection.objectData.content.fields.layer_types.fields.contents.map((data) => (
-                  <p className="text-muted-foreground text-sm">
+                  <p key={data.type} className="text-muted-foreground text-sm">
                     {JSON.stringify(data.fields.type)}
                   </p>
                 ))}
@@ -93,7 +93,7 @@ export default function CollectionInfoCard({ collection }: Props) {
               <div>
                 <h3 className="font-medium">Ticket Types</h3>
                 {collection.objectData.content.fields.ticket_types.fields.contents.map((data) => (
-                  <p className="text-muted-foreground text-sm">
+                  <p key={data.type} className="text-muted-foreground text-sm">
                     {JSON.stringify(data.fields.type)}
                   </p>
                 ))}

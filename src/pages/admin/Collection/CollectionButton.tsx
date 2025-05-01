@@ -7,7 +7,7 @@ interface Props {
 }
 
 export default function CollectionButton({ collection, onClick }: Props) {
-  const [imgURL, setImgURL] = useState("");
+  const [imgURL, setImgURL] = useState();
 
   useEffect(() => {
     collection.dynamicFieldData.forEach((d) => {

@@ -48,12 +48,15 @@ export default function Collection() {
         <div className="scrollbar-hide overflow-x-auto">
           <div className="grid auto-cols-[minmax(150px,1fr)] grid-flow-col gap-4">
             {collections.map((col, i) => (
-              <CollectionButton
-                collection={col}
-                onClick={() => {
-                  setCurrentCollection(collections[i]);
-                }}
-              />
+              <span key={col.id}>
+                <CollectionButton
+                  // key={col.id}
+                  collection={col}
+                  onClick={() => {
+                    setCurrentCollection(collections[i]);
+                  }}
+                />
+              </span>
             ))}
           </div>
         </div>
