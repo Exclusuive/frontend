@@ -13,7 +13,7 @@ export default function SortableItem({ name }: { name: string }) {
       }}
       {...attributes}
       {...listeners}
-      className="flex w-full cursor-pointer items-center justify-between rounded-md border p-2 active:cursor-grab"
+      className="flex w-full cursor-pointer items-center justify-between rounded-md border p-2 active:cursor-grab active:bg-gray-200"
     >
       {name}
     </div>
