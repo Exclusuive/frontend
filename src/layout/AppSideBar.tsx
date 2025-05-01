@@ -30,17 +30,6 @@ import { Link, useLocation } from "react-router-dom";
 import { navigateWithQuery } from "@/lib/utils";
 import { useState } from "react";
 
-// import { navigateWithQuery } from "@/lib/manageUrl";
-// Menu items.
-const DEAFULT_MENUS = {
-  Default: [
-    {
-      title: "Home",
-      url: "/",
-      icon: LayoutDashboard,
-    },
-  ],
-};
 const ADMIN_MENUS = {
   Collection: [
     {
@@ -137,15 +126,16 @@ export default function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader>
-        <div className="text-center text-lg font-extrabold"> Exclusuive Dashboard</div>
+        <Link to={navigateWithQuery("/", location.search)}>
+          <div className="text-center text-lg font-extrabold"> Exclusuive Dashboard</div>
+          <div className="flex h-48 w-full flex-col-reverse overflow-y-hidden">
+            <img className="w-full" src="/DOKPAMI.png" alt="character loading..." />
+          </div>
+        </Link>
       </SidebarHeader>
 
       <SidebarContent>
         <SidebarGroup>
-          <div className="flex h-48 w-full flex-col-reverse overflow-y-hidden">
-            <img className="w-full" src="/DOKPAMI.png" alt="character loading..." />
-          </div>
-
           {account ? (
             <div className="mx-auto w-5/6">
               <p className="text-center text-lg font-bold">{account.label}</p>
@@ -167,11 +157,9 @@ export default function AppSidebar() {
             </div>
           )}
         </SidebarGroup>
-      </SidebarContent>
 
-      <SidebarContent>
         <div className="scrollbar-hide overflow-y-auto whitespace-nowrap">
-          {Object.entries(DEAFULT_MENUS).map(([headding, menus]) => {
+          {/* {Object.entries(DEAFULT_MENUS).map(([headding, menus]) => {
             return (
               <SidebarGroup key={headding}>
                 <SidebarGroupLabel>{headding}</SidebarGroupLabel>
@@ -191,7 +179,7 @@ export default function AppSidebar() {
                 </SidebarGroupContent>
               </SidebarGroup>
             );
-          })}
+          })} */}
 
           {isAdmin &&
             Object.entries(ADMIN_MENUS).map(([headding, menus]) => {
