@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DialogContent,
@@ -21,6 +21,8 @@ export const CreateCollectionModal = ({ isOpen }: Props) => {
   const [description, setDescription] = useState<string>("");
   const [imageFile, setImageFile] = useState<File>();
   const [layers, setLayers] = useState<string[]>([]);
+
+  const inputId = useId();
 
   useEffect(() => {
     resetForm();
@@ -85,19 +87,19 @@ export const CreateCollectionModal = ({ isOpen }: Props) => {
 
         {/* Banner Image */}
         <div className="space-y-2">
-          <Label htmlFor="bannerImg">Banner Image</Label>
+          <Label htmlFor={`bannerImg` + inputId}>Banner Image</Label>
           <div className="flex flex-col items-center gap-2">
             <Button
               type="button"
               variant="outline"
               className="w-full"
-              onClick={() => document.getElementById("bannerImg")?.click()}
+              onClick={() => document.getElementById("bannerImg" + inputId)?.click()}
             >
               <Upload className="mr-2 h-4 w-4" />
               Upload Image
             </Button>
             <Input
-              id="bannerImg"
+              id={`bannerImg` + inputId}
               name="bannerImg"
               type="file"
               accept="image/*"
