@@ -38,10 +38,18 @@ export default function EditCollection({}: Props) {
 
       <Tabs defaultValue="info" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="info">Collection Info</TabsTrigger>
-          <TabsTrigger value="layers">Layer Types</TabsTrigger>
-          <TabsTrigger value="properties">Property Types</TabsTrigger>
-          <TabsTrigger value="tickets">Ticket Types</TabsTrigger>
+          <TabsTrigger className="cursor-pointer" value="info">
+            Collection Info
+          </TabsTrigger>
+          <TabsTrigger className="cursor-pointer" value="layers">
+            Layer Types
+          </TabsTrigger>
+          <TabsTrigger className="cursor-pointer" value="properties">
+            Property Types
+          </TabsTrigger>
+          <TabsTrigger className="cursor-pointer" value="tickets">
+            Ticket Types
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="info">
