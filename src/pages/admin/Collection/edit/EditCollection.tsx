@@ -7,26 +7,39 @@ import { Upload } from "lucide-react";
 import SelectCollectionModal from "../SelectCollectionModal";
 import { useContext, useEffect, useState } from "react";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { CreateCollectionModal } from "../CreateCollectionModal";
 import { CollectionContext } from "@/context/CollectionContext";
+import { CollectionData } from "@/types/collection";
+import CollectionImg from "../CollectionImg";
+import { Input } from "@/components/ui/input";
 
 interface Props {}
 
 export default function EditCollection({}: Props) {
-  const [isCreateCollectionOpen, setIsCreateCollectionOpen] = useState(false);
-  const [isSelectCollectionOpen, setIsSelectCollectionOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [currentCollection, setCurrentCollection] = useState<CollectionData>();
+  const [imageFile, setImageFile] = useState<File>();
+  const [description, setDescription] = useState("");
 
   const { collections, index } = useContext(CollectionContext);
 
   useEffect(() => {
     console.log("finally", collections);
     console.log("finally index", index);
+    if (collections) {
+      setCurrentCollection(collections[index]);
+    }
   }, [collections, index]);
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    if (file) {
+      setImageFile(file);
+    }
+  };
   return (
     <div className="container w-full space-y-6 p-4">
       <h1 className="text-2xl font-bold">Edit Collection Information</h1>
-      <Dialog open={isSelectCollectionOpen} onOpenChange={setIsSelectCollectionOpen}>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger>
           <Button>Select Collection</Button>
         </DialogTrigger>
@@ -41,67 +54,69 @@ export default function EditCollection({}: Props) {
           <TabsTrigger value="tickets">Tickets</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="info" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Collection Information</CardTitle>
-              <CardDescription>Update your collection's basic information</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="collection-image">Collection Image</Label>
-                <div className="flex items-center gap-4">
-                  <div className="h-40 w-40 overflow-hidden rounded-md border">
-                    <img
-                      // src={imagePreview || collection.img_url}
-                      src={""}
-                      alt="Collection"
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <Button variant="outline" className="w-fit">
-                      <label
-                        htmlFor="image-upload"
-                        className="flex cursor-pointer items-center gap-2"
-                      >
-                        <Upload className="h-4 w-4" />
-                        <span>Upload Image</span>
-                        <input
-                          id="image-upload"
-                          type="file"
-                          accept="image/*"
-                          className="hidden"
-                          // onChange={handleImageChange}
+        {currentCollection && (
+          <TabsContent value="info" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Collection Information</CardTitle>
+                <CardDescription>Update your collection's basic information</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="collection-image">Collection Image</Label>
+                  <div className="flex items-center gap-4">
+                    <div className="h-40 w-40 overflow-hidden rounded-md border">
+                      {imageFile ? (
+                        <img
+                          src={URL.createObjectURL(imageFile)}
+                          alt="Banner preview"
+                          className="h-full w-full object-cover"
                         />
-                      </label>
-                    </Button>
-                    {/* {imageFile && (
-                      <p className="text-muted-foreground text-sm">Selected: {imageFile.name}</p>
-                    )} */}
+                      ) : (
+                        <CollectionImg collection={currentCollection} alt="Collection Image" />
+                      )}
+                    </div>
+                    <div className="flex flex-col items-center gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="w-full"
+                        onClick={() => document.getElementById("bannerImg")?.click()}
+                      >
+                        <Upload className="mr-2 h-4 w-4" />
+                        Upload Image
+                      </Button>
+                      <Input
+                        id="bannerImg"
+                        name="bannerImg"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        className="hidden"
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
-                <Textarea
-                  id="description"
-                  // value={description}
-                  value={""}
-                  // onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Enter collection description"
-                  className="min-h-[100px]"
-                />
-              </div>
+                <div className="space-y-2">
+                  <Label htmlFor="description">Description</Label>
+                  <Textarea
+                    id="description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="Enter collection description"
+                    className="min-h-[100px]"
+                  />
+                </div>
 
-              {/* <Button onClick={handleUpdateCollectionInfo} className="w-full"> */}
-              <Button onClick={() => {}} className="w-full">
-                Save Changes
-              </Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
+                {/* <Button onClick={handleUpdateCollectionInfo} className="w-full"> */}
+                <Button onClick={() => {}} className="w-full">
+                  Update Collection Info
+                </Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        )}
 
         <TabsContent value="layers" className="space-y-4">
           <Card>
@@ -137,10 +152,6 @@ export default function EditCollection({}: Props) {
           </Card>
         </TabsContent>
       </Tabs>
-      <Dialog open={isCreateCollectionOpen} onOpenChange={setIsCreateCollectionOpen}>
-        <DialogTrigger>Create</DialogTrigger>
-        <CreateCollectionModal isOpen={isCreateCollectionOpen} />
-      </Dialog>
     </div>
   );
 }
