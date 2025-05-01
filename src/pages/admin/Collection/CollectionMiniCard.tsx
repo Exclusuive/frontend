@@ -3,10 +3,9 @@ import { CollectionData } from "@/types/collection";
 import { useEffect, useState } from "react";
 interface Props {
   collection: CollectionData;
-  onClick: React.MouseEventHandler<HTMLDivElement> | undefined;
 }
 
-export default function CollectionButton({ collection, onClick }: Props) {
+export default function CollectionMiniCard({ collection }: Props) {
   const [imgURL, setImgURL] = useState();
 
   useEffect(() => {
@@ -17,11 +16,7 @@ export default function CollectionButton({ collection, onClick }: Props) {
     });
   }, [collection]);
   return (
-    <Card
-      key={collection.id}
-      className={"cursor-pointer border-2 transition-all hover:shadow-lg"}
-      onClick={onClick}
-    >
+    <Card key={collection.id} className={"cursor-pointer border-2 transition-all hover:shadow-lg"}>
       <CardHeader>
         <img
           src={imgURL}
