@@ -1,7 +1,7 @@
 import { useGetMyCollections } from "@/hooks/collection";
 import { CollectionData } from "@/types/collection";
 import { useCurrentAccount } from "@mysten/dapp-kit";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState } from "react";
 
 interface Value {
   collections: CollectionData[] | null;
@@ -16,7 +16,6 @@ export const CollectionContext = createContext<Value>({
 });
 
 export const CollectionProvider = ({ children }: { children: React.ReactNode }) => {
-  const [collectionsData, setCollectionsData] = useState<CollectionData[] | null>(null);
   const [index, setIndex] = useState<number>(0);
 
   const account = useCurrentAccount();
@@ -24,12 +23,8 @@ export const CollectionProvider = ({ children }: { children: React.ReactNode }) 
     owner: account ? account.address : "",
   });
 
-  useEffect(() => {
-    setCollectionsData(collections);
-  });
-
   return (
-    <CollectionContext.Provider value={{ collections: collectionsData, index, setIndex }}>
+    <CollectionContext.Provider value={{ collections, index, setIndex }}>
       {children}
     </CollectionContext.Provider>
   );
