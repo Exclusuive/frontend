@@ -25,7 +25,9 @@ export default function LayerInfo({ collection }: Props) {
     collection.objectData.content.fields.layer_types.fields.contents.map((l) => l.fields.type)
   );
 
-  const handleAddLayer = async () => {};
+  const handleAddLayer = async () => {
+    console.log("TX!");
+  };
 
   const sensors = useSensors(useSensor(PointerSensor));
 
