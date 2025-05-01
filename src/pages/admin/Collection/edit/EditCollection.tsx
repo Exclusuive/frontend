@@ -21,6 +21,7 @@ export default function EditCollection({}: Props) {
   useEffect(() => {
     console.log("finally", collections);
     console.log("finally index", index);
+    console.log("finally currentCollection", currentCollection);
     if (collections) {
       setCurrentCollection(collections[index]);
     }
@@ -44,9 +45,9 @@ export default function EditCollection({}: Props) {
           <TabsTrigger value="tickets">Tickets</TabsTrigger>
         </TabsList>
 
-        {currentCollection && <CollectionInfo collection={currentCollection} />}
+        {currentCollection && <CollectionInfo value="info" collection={currentCollection} />}
 
-        {currentCollection && <LayerInfo collection={currentCollection} />}
+        {currentCollection && <LayerInfo value="layers" collection={currentCollection} />}
 
         <TabsContent value="properties" className="space-y-4">
           <Card>

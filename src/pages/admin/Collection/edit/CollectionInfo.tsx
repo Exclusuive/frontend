@@ -8,10 +8,13 @@ import { useState } from "react";
 import CollectionImg from "../CollectionImg";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-interface Props {
+import * as TabsPrimitive from "@radix-ui/react-tabs";
+
+type Props = {
   collection: CollectionData;
-}
-export default function CollectionInfo({ collection }: Props) {
+} & React.ComponentProps<typeof TabsPrimitive.Content>;
+
+export default function CollectionInfo({ collection, ...props }: Props) {
   const [imageFile, setImageFile] = useState<File>();
   const [description, setDescription] = useState("");
 
@@ -22,7 +25,7 @@ export default function CollectionInfo({ collection }: Props) {
     }
   };
   return (
-    <TabsContent value="info" className="space-y-4">
+    <TabsContent {...props} className="space-y-4">
       <Card>
         <CardHeader>
           <CardTitle>Collection Information</CardTitle>
