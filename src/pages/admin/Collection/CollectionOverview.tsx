@@ -11,7 +11,7 @@ import CollectionImg from "./CollectionImg";
 interface Props {
   collection: CollectionData;
 }
-export default function CollectionInfoCard({ collection }: Props) {
+export default function CollectionOverview({ collection }: Props) {
   const [selectedLayer, setSelectedLayer] = useState<string>("");
   const [selectedItem, setSelectedItem] = useState<ItemType>();
   const [recipient, setRecipient] = useState<string>("");

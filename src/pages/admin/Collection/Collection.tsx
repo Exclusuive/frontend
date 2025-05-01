@@ -1,6 +1,6 @@
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { useGetMyCollections } from "@/hooks/collection";
-import CollectionInfoCard from "./CollectionInfoCard";
+import CollectionOverview from "./CollectionOverview";
 import { useCurrentAccount } from "@mysten/dapp-kit";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CollectionMiniCard from "./CollectionMiniCard";
@@ -68,7 +68,7 @@ export default function Collection() {
         {/* Collection Overview Card */}
         {collections.map((col) => (
           <TabsContent value={col.id} key={col.id} className="space-y-4">
-            <CollectionInfoCard collection={col} />
+            <CollectionOverview collection={col} />
           </TabsContent>
         ))}
       </Tabs>
