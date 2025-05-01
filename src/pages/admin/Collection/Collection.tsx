@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CollectionMiniCard from "./CollectionMiniCard";
 import { CreateCollectionDialogCard } from "./CreateCollectionDialogCard";
 import { useEffect, useState } from "react";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog } from "@/components/ui/dialog";
 
 export default function Collection() {
   const [isOpen, setIsOpen] = useState(false);

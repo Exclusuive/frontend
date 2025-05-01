@@ -35,10 +35,6 @@ export const CreateCollectionDialogCard = ({ isOpen }: Props) => {
     resetForm();
   }, [isOpen]);
 
-  useEffect(() => {
-    console.log(formData);
-  }, [formData]);
-
   const resetForm = () => {
     setFormData({
       name: "",
@@ -159,7 +155,7 @@ export const CreateCollectionDialogCard = ({ isOpen }: Props) => {
               Add Layer
             </Button>
           </div>
-          <div className="space-y-2">
+          <div className="max-h-48 space-y-2 overflow-auto">
             {layers.map((layer, i) => (
               <div key={i} className="flex items-center gap-2">
                 <Input
