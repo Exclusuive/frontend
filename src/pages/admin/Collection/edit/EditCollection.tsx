@@ -13,18 +13,25 @@ import { CollectionContext } from "@/context/CollectionContext";
 interface Props {}
 
 export default function EditCollection({}: Props) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isCreateCollectionOpen, setIsCreateCollectionOpen] = useState(false);
+  const [isSelectCollectionOpen, setIsSelectCollectionOpen] = useState(false);
 
-  const collections = useContext(CollectionContext);
+  const { collections, index } = useContext(CollectionContext);
 
   useEffect(() => {
     console.log("finally", collections);
-  }, [collections]);
+    console.log("finally index", index);
+  }, [collections, index]);
 
   return (
     <div className="container w-full space-y-6 p-4">
       <h1 className="text-2xl font-bold">Edit Collection Information</h1>
-      {/* {collections && <div>{JSON.stringify(collections)}12312312</div>} */}
+      <Dialog open={isSelectCollectionOpen} onOpenChange={setIsSelectCollectionOpen}>
+        <DialogTrigger>
+          <Button>Select Collection</Button>
+        </DialogTrigger>
+        <SelectCollectionModal />
+      </Dialog>
 
       <Tabs defaultValue="info" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
@@ -130,17 +137,9 @@ export default function EditCollection({}: Props) {
           </Card>
         </TabsContent>
       </Tabs>
-      <SelectCollectionModal
-        open={false}
-        onClick={() => {}}
-        items={[]}
-        create={true}
-        onCreate={() => {}}
-        onOpenChange={() => {}}
-      />
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogTrigger>Holsydfosjdfsdo</DialogTrigger>
-        <CreateCollectionDialogCard isOpen={isOpen} />
+      <Dialog open={isCreateCollectionOpen} onOpenChange={setIsCreateCollectionOpen}>
+        <DialogTrigger>Create</DialogTrigger>
+        <CreateCollectionDialogCard isOpen={isCreateCollectionOpen} />
       </Dialog>
     </div>
   );
