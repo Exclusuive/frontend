@@ -8,6 +8,7 @@ import MembershipPolicy from "./pages/admin/membership-policy/MembershipPolicy";
 import MyMembership from "./pages/members/my-membership/MyMembership";
 import MembershipStore from "./pages/members/membership-store/MembershipStore";
 import NotFound from "./NotFound";
+import EditCollection from "./pages/admin/collection/edit/EditCollection";
 
 export default function Routers() {
   return (
@@ -16,7 +17,10 @@ export default function Routers() {
         <Route element={<Layout />}>
           <Route path="/" element={<LandingPage />} />
           <Route path="admin">
-            <Route path="collections" element={<Collection />} />
+            <Route path="collections">
+              <Route path="" element={<Collection />} />
+              <Route path="edit" element={<EditCollection />} />
+            </Route>
             <Route path="membershippolicy" element={<MembershipPolicy />} />
           </Route>
           <Route path="member">

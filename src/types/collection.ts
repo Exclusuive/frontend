@@ -6,7 +6,7 @@ interface CollectionElementType {
   };
 }
 
-interface ItemType {
+export interface ItemType {
   type: string;
   fields: {
     collection_id: string;
