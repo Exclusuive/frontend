@@ -63,7 +63,8 @@ export interface StoreObjectData {
     dataType: string;
     type: string;
     hasPublicTransfer: boolean;
-    fields: StoreType | MoveStruct;
+    // fields: StoreType | MoveStruct;
+    fields: StoreType;
   };
 }
 

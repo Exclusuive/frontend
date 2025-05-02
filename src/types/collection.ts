@@ -65,7 +65,8 @@ export interface CollectionObjectData {
     dataType: string;
     type: string;
     hasPublicTransfer: boolean;
-    fields: CollectionType | MoveStruct;
+    // fields: CollectionType | MoveStruct;
+    fields: CollectionType;
   };
 }
 
@@ -84,21 +85,20 @@ export interface DynamicFieldObjectData {
     dataType: string;
     type: string;
     hasPublicTransfer: boolean;
-    fields:
-      | {
-          id: {
-            id: string;
-          };
-          name: {
-            type: string;
-            fields: any;
-          };
-          value: {
-            type: string;
-            fields: any;
-          };
-        }
-      | MoveStruct;
+    fields: {
+      id: {
+        id: string;
+      };
+      name: {
+        type: string;
+        fields: any;
+      };
+      value: {
+        type: string;
+        fields: any;
+      };
+    };
+    // | MoveStruct;
   };
 }
 
