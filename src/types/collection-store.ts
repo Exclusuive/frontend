@@ -1,62 +1,60 @@
 import { MoveStruct } from "@mysten/sui/client";
-interface CollectionElementType {
+// interface CollectionElementType {
+//   type: string;
+//   fields: {
+//     collection_id: string;
+//     type: string;
+//   };
+// }
+
+// export interface ItemType {
+//   type: string;
+//   fields: {
+//     collection_id: string;
+//     img_url: string;
+//     item_type: string;
+//     type: CollectionElementType;
+//   };
+// }
+export interface Condition {
   type: string;
   fields: {
-    collection_id: string;
-    type: string;
-  };
-}
-
-export interface ItemType {
-  type: string;
-  fields: {
-    collection_id: string;
-    img_url: string;
-    item_type: string;
-    type: CollectionElementType;
-  };
-}
-
-export type CollectionType = {
-  balance: string;
-  base_type: {
-    type: string;
-    fields: {
-      collection_id: string;
+    requirement: string;
+    ticket_type: {
       type: string;
+      fields: {
+        collection_id: string;
+        type: string;
+      };
     };
   };
+}
+
+export interface Slot {
+  type: string;
+  fields: {
+    conditions: Condition[];
+    number: number;
+    price: number;
+    product: {
+      type: string;
+      fields: {
+        name: string;
+      };
+    };
+  };
+}
+export interface StoreType {
   id: {
     id: string;
   };
-  item_types: {
-    type: string;
-    fields: {
-      contents: ItemType[];
-    };
-  };
-  layer_types: {
-    type: string;
-    fields: {
-      contents: CollectionElementType[];
-    };
-  };
-  property_types: {
-    type: string;
-    fields: {
-      contents: CollectionElementType[];
-    };
-  };
-  ticket_types: {
-    type: string;
-    fields: {
-      contents: CollectionElementType[];
-    };
-  };
-  version: string;
-};
+  balance: string;
+  collection_id: string;
+  name: string;
+  slot: any[];
+}
 
-export interface CollectionObjectData {
+export interface StoreObjectData {
   objectId: string;
   version: string;
   digest: string;
@@ -65,13 +63,13 @@ export interface CollectionObjectData {
     dataType: string;
     type: string;
     hasPublicTransfer: boolean;
-    fields: CollectionType | MoveStruct;
+    fields: StoreType | MoveStruct;
   };
 }
 
-export interface CollectionData {
+export interface StoreData {
   id: string;
-  objectData: CollectionObjectData;
+  objectData: StoreObjectData;
   dynamicFieldData: DynamicFieldObjectData[]; // 실제 데이터 타입에 맞게 수정
 }
 
@@ -84,21 +82,19 @@ export interface DynamicFieldObjectData {
     dataType: string;
     type: string;
     hasPublicTransfer: boolean;
-    fields:
-      | {
-          id: {
-            id: string;
-          };
-          name: {
-            type: string;
-            fields: any;
-          };
-          value: {
-            type: string;
-            fields: any;
-          };
-        }
-      | MoveStruct;
+    fields: {
+      id: {
+        id: string;
+      };
+      name: {
+        type: string;
+        fields: any;
+      };
+      value: {
+        type: string;
+        fields: any;
+      };
+    };
   };
 }
 
