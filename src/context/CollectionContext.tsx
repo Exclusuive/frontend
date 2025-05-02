@@ -1,30 +1,57 @@
 import { useGetMyCollections } from "@/hooks/collection";
+import { useGetMyCollectionStores } from "@/hooks/collection-store";
 import { CollectionData } from "@/types/collection";
+import { StoreData } from "@/types/collection-store";
 import { useCurrentAccount } from "@mysten/dapp-kit";
 import { createContext, useState } from "react";
 
 interface Value {
-  collections: CollectionData[] | null;
-  index: number;
-  setIndex: React.Dispatch<React.SetStateAction<number>>;
+  collection: {
+    collections: CollectionData[] | null;
+    index: number;
+    setIndex: React.Dispatch<React.SetStateAction<number>>;
+  };
+  store: {
+    stores: StoreData[] | null;
+    index: number;
+    setIndex: React.Dispatch<React.SetStateAction<number>>;
+  };
 }
 
 export const CollectionContext = createContext<Value>({
-  collections: [],
-  index: 0,
-  setIndex: () => {},
+  collection: {
+    collections: [],
+    index: 0,
+    setIndex: () => {},
+  },
+  store: {
+    stores: [],
+    index: 0,
+    setIndex: () => {},
+  },
 });
 
 export const CollectionProvider = ({ children }: { children: React.ReactNode }) => {
-  const [index, setIndex] = useState<number>(0);
+  const [cIndex, setCIndex] = useState<number>(0);
+  const [SIndex, setSIndex] = useState<number>(0);
 
   const account = useCurrentAccount();
+
   const { collections } = useGetMyCollections({
     owner: account ? account.address : "",
   });
 
+  const { stores } = useGetMyCollectionStores({
+    owner: account ? account.address : "",
+  });
+
   return (
-    <CollectionContext.Provider value={{ collections, index, setIndex }}>
+    <CollectionContext.Provider
+      value={{
+        collection: { collections, index: cIndex, setIndex: setCIndex },
+        store: { stores, index: SIndex, setIndex: setSIndex },
+      }}
+    >
       {children}
     </CollectionContext.Provider>
   );
