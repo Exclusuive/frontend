@@ -17,8 +17,10 @@ import CollectionImg from "./CollectionImg";
 export default function SelectCollectionModal() {
   const {
     collection: { collections, index, setIndex },
+    store: { setIndex: setSIndex },
   } = useContext(CollectionContext);
   const [isOpen, setIsOpen] = useState(false);
+
   return (
     <DialogContent className="max-h-[75vh] w-2/3 min-w-2/3 overflow-y-auto [&>button]:hidden">
       <DialogHeader>
@@ -33,6 +35,9 @@ export default function SelectCollectionModal() {
               key={col.id}
               onClick={() => {
                 setIndex(i);
+                if (i !== index) {
+                  setSIndex(-1);
+                }
               }}
               className={clsx(
                 `${index === i ? "border-blue-400" : ""} cursor-pointer border-2 transition-all hover:border-4 hover:shadow-lg`

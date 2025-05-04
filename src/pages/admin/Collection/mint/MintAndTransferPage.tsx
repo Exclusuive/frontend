@@ -16,10 +16,12 @@ export default function MintAndTransferPage({}: Props) {
   } = useContext(CollectionContext);
 
   useEffect(() => {
-    console.log("finally", collections);
-    console.log("finally index", index);
     if (collections) {
       setCurrentCollection(collections[index]);
+    }
+
+    if (index === -1) {
+      setIsOpen(true);
     }
   }, [collections, index]);
 
