@@ -73,10 +73,15 @@ export interface DynamicFieldObjectData {
         type: string;
         fields: any;
       };
-      value: {
-        type: string;
-        fields: any;
-      };
+      value:
+        | {
+            type: string;
+            fields: any;
+          }
+        | {
+            type: string;
+            fields: any;
+          }[];
     };
   };
 }
