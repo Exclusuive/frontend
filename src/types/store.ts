@@ -1,21 +1,3 @@
-import { MoveStruct } from "@mysten/sui/client";
-// interface CollectionElementType {
-//   type: string;
-//   fields: {
-//     collection_id: string;
-//     type: string;
-//   };
-// }
-
-// export interface ItemType {
-//   type: string;
-//   fields: {
-//     collection_id: string;
-//     img_url: string;
-//     item_type: string;
-//     type: CollectionElementType;
-//   };
-// }
 export interface Condition {
   type: string;
   fields: {
@@ -51,7 +33,7 @@ export interface StoreType {
   balance: string;
   collection_id: string;
   name: string;
-  slot: any[];
+  slots: Slot[];
 }
 
 export interface StoreObjectData {
