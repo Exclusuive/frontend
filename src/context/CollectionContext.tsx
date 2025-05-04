@@ -1,7 +1,7 @@
 import { useGetMyCollections } from "@/hooks/collection";
-import { useGetMyCollectionStores } from "@/hooks/collection-store";
+import { useGetMyCollectionStores } from "@/hooks/store";
 import { CollectionData } from "@/types/collection";
-import { StoreData } from "@/types/collection-store";
+import { StoreData } from "@/types/store";
 import { useCurrentAccount } from "@mysten/dapp-kit";
 import { createContext, useState } from "react";
 
@@ -32,8 +32,8 @@ export const CollectionContext = createContext<Value>({
 });
 
 export const CollectionProvider = ({ children }: { children: React.ReactNode }) => {
-  const [cIndex, setCIndex] = useState<number>(0);
-  const [SIndex, setSIndex] = useState<number>(0);
+  const [cIndex, setCIndex] = useState<number>(-1);
+  const [SIndex, setSIndex] = useState<number>(-1);
 
   const account = useCurrentAccount();
 

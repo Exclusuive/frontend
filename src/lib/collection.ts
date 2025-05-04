@@ -1,5 +1,5 @@
 import { CollectionObjectData, DynamicFieldObjectData } from "@/types/collection";
-import { StoreObjectData } from "@/types/collection-store";
+import { StoreObjectData } from "@/types/store";
 import { SuiObjectData } from "@mysten/sui/client";
 
 export const parseCollectionObjectData = (data: SuiObjectData): CollectionObjectData | null => {

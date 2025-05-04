@@ -1,7 +1,7 @@
 // import { parseCollectionObjectData, parseDynamicBaseTypeField } from "@/lib/collection";
 // import { CollectionData } from "@/types/collection";
 import { parseDynamicBaseTypeField, parseStoreObjectData } from "@/lib/collection";
-import { StoreData } from "@/types/collection-store";
+import { StoreData } from "@/types/store";
 import { getFullnodeUrl, SuiClient } from "@mysten/sui/client";
 import { useEffect, useState } from "react";
 
