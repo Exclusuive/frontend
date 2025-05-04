@@ -8,7 +8,7 @@ import { CreateCollectionModal } from "./CreateCollectionModal";
 import { useEffect, useState } from "react";
 import { Dialog } from "@/components/ui/dialog";
 
-export default function Collection() {
+export default function CollectionPage() {
   const [isOpen, setIsOpen] = useState(false);
 
   const account = useCurrentAccount();

@@ -1,4 +1,4 @@
-export default function Page() {
+export default function MembershipPolicyPage() {
   return (
     <div>
       <h1>Hello It's MembershipPolicy</h1>

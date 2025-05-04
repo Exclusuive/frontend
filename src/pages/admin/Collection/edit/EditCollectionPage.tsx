@@ -12,7 +12,7 @@ import TicketInfo from "./TicketInfo";
 
 interface Props {}
 
-export default function EditCollection({}: Props) {
+export default function EditCollectionPage({}: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [currentCollection, setCurrentCollection] = useState<CollectionData>();
 

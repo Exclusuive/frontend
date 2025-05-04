@@ -10,7 +10,7 @@ import SelectStoreModal from "./SelectStoreModal";
 
 interface Props {}
 
-export default function ManageStore({}: Props) {
+export default function ManageStorePage({}: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [currentCollection, setCurrentCollection] = useState<CollectionData>();
 

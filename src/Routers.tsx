@@ -1,17 +1,19 @@
 import { BrowserRouter as Router, Routes, Route, Outlet } from "react-router-dom";
+import { CollectionProvider } from "./context/CollectionContext";
+
 import Layout from "./Layout";
+import NotFound from "./NotFound";
+
 import LandingPage from "./pages/LandingPage";
 
-import Collection from "./pages/admin/collection/Collection";
-import MembershipPolicy from "./pages/admin/membership-policy/MembershipPolicy";
+import CollectionPage from "./pages/admin/collection/CollectionPage";
+import EditCollectionPage from "./pages/admin/collection/edit/EditCollectionPage";
+import ManageStorePage from "./pages/admin/collection/store/ManageStorePage";
+import MintAndTransferPage from "./pages/admin/collection/mint/MintAndTransferPage";
 
-import MyMembership from "./pages/members/my-membership/MyMembership";
-import MembershipStore from "./pages/members/membership-store/MembershipStore";
-import NotFound from "./NotFound";
-import EditCollection from "./pages/admin/collection/edit/EditCollection";
-import { CollectionProvider } from "./context/CollectionContext";
-import ManageStore from "./pages/admin/collection/store/ManageStore";
-import MintAndTransfer from "./pages/admin/collection/mint/MintAndTransfer";
+import MembershipPolicyPage from "./pages/admin/membership-policy/MembershipPolicyPage";
+
+import MembershipStorePage from "./pages/members/membership-store/MembershipStorePage";
 
 export default function Routers() {
   return (
@@ -30,18 +32,18 @@ export default function Routers() {
                 </CollectionProvider>
               }
             >
-              <Route path="" element={<Collection />} />
-              <Route path="edit" element={<EditCollection />} />
-              <Route path="store" element={<ManageStore />} />
-              <Route path="mint" element={<MintAndTransfer />} />
+              <Route path="" element={<CollectionPage />} />
+              <Route path="edit" element={<EditCollectionPage />} />
+              <Route path="store" element={<ManageStorePage />} />
+              <Route path="mint" element={<MintAndTransferPage />} />
             </Route>
-            <Route path="membershippolicy" element={<MembershipPolicy />} />
+            <Route path="membershippolicy" element={<MembershipPolicyPage />} />
           </Route>
 
           {/* Member Pages */}
           <Route path="member">
-            <Route path="mymembership" element={<MyMembership />} />
-            <Route path="membershipstore" element={<MembershipStore />} />
+            <Route path="mymembership" element={<MembershipPolicyPage />} />
+            <Route path="membershipstore" element={<MembershipStorePage />} />
           </Route>
 
           {/* 임시 404 */}
