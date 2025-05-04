@@ -16,7 +16,9 @@ export default function EditCollection({}: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [currentCollection, setCurrentCollection] = useState<CollectionData>();
 
-  const { collections, index } = useContext(CollectionContext);
+  const {
+    collection: { collections, index },
+  } = useContext(CollectionContext);
 
   useEffect(() => {
     console.log("finally", collections);

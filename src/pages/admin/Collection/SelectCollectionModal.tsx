@@ -15,7 +15,9 @@ import { CreateCollectionModal } from "./CreateCollectionModal";
 import CollectionImg from "./CollectionImg";
 
 export default function SelectCollectionModal() {
-  const { collections, index, setIndex } = useContext(CollectionContext);
+  const {
+    collection: { collections, index, setIndex },
+  } = useContext(CollectionContext);
   const [isOpen, setIsOpen] = useState(false);
   return (
     <DialogContent className="max-h-[75vh] w-2/3 min-w-2/3 overflow-y-auto [&>button]:hidden">
