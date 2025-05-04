@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { useContext, useEffect, useState } from "react";
 import { CollectionContext } from "@/context/CollectionContext";
 import { StoreData } from "@/types/store";
+import { DialogClose } from "@radix-ui/react-dialog";
 
 export default function SelectStoreModal() {
   const [isOpen, setIsOpen] = useState(false);
@@ -34,7 +35,7 @@ export default function SelectStoreModal() {
     <DialogContent className="max-h-[75vh] w-2/3 min-w-2/3 overflow-y-auto [&>button]:hidden">
       <DialogHeader>
         <DialogTitle className="text-2xl">Pick Your Collection Store</DialogTitle>
-        {/* <p className="text-muted-foreground text-sm">Choose one to view or customize your NFTs.</p> */}
+        <p className="text-muted-foreground text-md">Choose one of stores.</p>
       </DialogHeader>
 
       <div className="grid grid-cols-1 gap-4 overflow-y-auto pt-2 md:grid-cols-2 lg:grid-cols-3">
@@ -43,29 +44,33 @@ export default function SelectStoreModal() {
             <p>nothing</p>
           ) : (
             filterdStores.map((store, i) => (
-              <Card
-                key={store.id}
-                onClick={() => {
-                  setIndex(i);
-                }}
-                className={clsx(
-                  `${index === i ? "border-blue-400" : ""} cursor-pointer border-2 transition-all hover:border-4 hover:shadow-lg`
-                )}
-              >
-                <CardHeader>
-                  {/* <CollectionImg
+              <DialogClose>
+                <Card
+                  key={store.id}
+                  onClick={() => {
+                    setIndex(i);
+                  }}
+                  className={clsx(
+                    `${index === i ? "border-blue-400" : ""} cursor-pointer border-2 transition-all hover:border-4 hover:shadow-lg`
+                  )}
+                >
+                  <CardHeader>
+                    {/* <CollectionImg
                   collection={col}
                   alt={col.objectData.content.fields.base_type.fields.type}
                   className="aspect-video w-full rounded-md object-cover"
                 /> */}
-                </CardHeader>
-                <CardContent>
-                  <CardTitle className="text-lg">{store.objectData.content.fields.name}</CardTitle>
-                  <p className="text-muted-foreground line-clamp-2 text-sm">
-                    {store.objectData.content.fields.id.id}
-                  </p>
-                </CardContent>
-              </Card>
+                  </CardHeader>
+                  <CardContent>
+                    <CardTitle className="text-lg">
+                      {store.objectData.content.fields.name}
+                    </CardTitle>
+                    <p className="text-muted-foreground line-clamp-2 text-sm">
+                      {store.objectData.content.fields.id.id}
+                    </p>
+                  </CardContent>
+                </Card>
+              </DialogClose>
             ))
           ))}
       </div>
