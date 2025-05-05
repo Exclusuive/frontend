@@ -64,9 +64,15 @@ export default function ManageStorePage({}: Props) {
           <div className="mb-6 flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-semibold">
-                {currentStore.objectData.content.fields.name} slots
+                {currentStore.objectData.content.fields.name} Store
               </h2>
               <p className="text-muted-foreground truncate text-sm">ID: {currentStore.id}</p>
+              <p className="text-muted-foreground truncate text-sm">
+                Collection ID: {currentStore.objectData.content.fields.collection_id}
+              </p>
+              <p className="text-muted-foreground truncate text-sm">
+                Balance: {currentStore.objectData.content.fields.balance} MIST
+              </p>
             </div>
             <div className="flex gap-2">
               <Dialog open={isSOpen} onOpenChange={setIsSOpen}>
