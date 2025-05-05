@@ -13,20 +13,31 @@ interface Props {}
 export default function ManageStorePage({}: Props) {
   const [isCOpen, setIsCOpen] = useState(false);
   const [isSOpen, setIsSOpen] = useState(false);
+  const [filterdStores, setFilteredStores] = useState<StoreData[]>();
   const [currentStore, setCurrentStore] = useState<StoreData>();
 
   const account = useCurrentAccount();
 
   const {
-    collection: { index: cIndex },
+    collection: { collections, index: cIndex },
     store: { stores, index: sIndex },
   } = useContext(CollectionContext);
 
   useEffect(() => {
-    if (stores) {
-      setCurrentStore(stores[sIndex]);
+    if (stores && collections && collections.length > 0 && cIndex !== -1) {
+      setFilteredStores(
+        stores.filter(
+          (store) => store.objectData.content.fields.collection_id === collections[cIndex].id
+        )
+      );
     }
-  }, [stores, sIndex]);
+  }, [stores, cIndex]);
+
+  useEffect(() => {
+    if (filterdStores) {
+      setCurrentStore(filterdStores[sIndex]);
+    }
+  }, [filterdStores, sIndex]);
 
   useEffect(() => {
     if (cIndex === -1) {

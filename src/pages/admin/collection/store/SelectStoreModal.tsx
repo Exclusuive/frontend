@@ -13,9 +13,9 @@ import { useContext, useEffect, useState } from "react";
 import { CollectionContext } from "@/context/CollectionContext";
 import { StoreData } from "@/types/store";
 import { DialogClose } from "@radix-ui/react-dialog";
+import CreateStoreModal from "./CreateStoreModal";
 
 export default function SelectStoreModal() {
-  const [isOpen, setIsOpen] = useState(false);
   const [filterdStores, setFilteredStores] = useState<StoreData[]>();
   const {
     collection: { collections, index: cIndex },
@@ -31,10 +31,11 @@ export default function SelectStoreModal() {
       );
     }
   }, [stores, cIndex]);
+
   return (
     <DialogContent className="max-h-[75vh] w-2/3 min-w-2/3 overflow-y-auto [&>button]:hidden">
       <DialogHeader>
-        <DialogTitle className="text-2xl">Pick Your Collection Store</DialogTitle>
+        <DialogTitle className="text-2xl">Pick Your Store</DialogTitle>
         <p className="text-muted-foreground text-md">Choose one of stores.</p>
       </DialogHeader>
 
@@ -74,11 +75,11 @@ export default function SelectStoreModal() {
       </div>
 
       <DialogFooter>
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog>
           <DialogTrigger>
             <Button>Create New Store</Button>
           </DialogTrigger>
-          {/* <CreateCollectionModal isOpen={isOpen} /> */}
+          <CreateStoreModal />
         </Dialog>
       </DialogFooter>
     </DialogContent>
