@@ -1,4 +1,3 @@
-import { MoveStruct } from "@mysten/sui/client";
 interface CollectionElementType {
   type: string;
   fields: {
