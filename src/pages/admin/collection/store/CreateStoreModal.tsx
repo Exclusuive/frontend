@@ -8,30 +8,15 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useSignAndExecuteTransaction } from "@mysten/dapp-kit";
 import { DialogDescription } from "@radix-ui/react-dialog";
-import { useContext, useEffect, useState } from "react";
+import { useState } from "react";
 
-import { Transaction } from "@mysten/sui/transactions";
-import { PACKAGE_ID } from "@/config/contants";
-import { CollectionContext } from "@/context/CollectionContext";
-import { CollectionData } from "@/types/collection";
+import { useCreateStore } from "@/hooks/moveCall/store";
 
 export default function CreateStoreModal() {
   const [newStoreName, setNewStoreName] = useState("");
-  const [currentCollection, setCurrentCollection] = useState<CollectionData>();
-  const {
-    collection: { collections, index: cIndex },
-    store: { refetch },
-  } = useContext(CollectionContext);
 
-  const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction();
-
-  useEffect(() => {
-    if (collections && cIndex !== -1) {
-      setCurrentCollection(collections[cIndex]);
-    }
-  }, [collections, cIndex]);
+  const { createStore } = useCreateStore();
 
   return (
     <DialogContent>
@@ -56,31 +41,8 @@ export default function CreateStoreModal() {
         <DialogClose>
           <Button
             onClick={() => {
-              if (currentCollection) {
-                const tx = new Transaction();
-                tx.moveCall({
-                  package: PACKAGE_ID,
-                  module: "collection",
-                  function: "create_store",
-                  arguments: [
-                    tx.object(currentCollection.id),
-                    tx.object(currentCollection.cap),
-                    tx.pure.string(newStoreName),
-                  ],
-                });
-                signAndExecuteTransaction(
-                  {
-                    transaction: tx,
-                  },
-                  {
-                    onSuccess: (data) => {
-                      console.log("Success! data:", data);
-                      refetch();
-                    },
-                  }
-                );
-                setNewStoreName("");
-              }
+              createStore({ storeName: newStoreName });
+              setNewStoreName("");
             }}
           >
             Create
