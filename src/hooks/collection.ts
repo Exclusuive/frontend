@@ -7,11 +7,17 @@ export const useGetMyCollections = ({ owner }: { owner: string }) => {
   const [collections, setCollecitons] = useState<CollectionData[]>([]);
   const [isPending, setIsPending] = useState<boolean>(true);
   const [error, setError] = useState(null);
+  const [refetchSwitch, setRefetchSwitch] = useState(false);
 
   const PACKAGE_ID = import.meta.env.VITE_PACKAGE_ID;
   const COL_CAP_TYPE = `${PACKAGE_ID}::collection::CollectionCap`;
 
   const client = new SuiClient({ url: getFullnodeUrl("testnet") });
+
+  const refetch = () => {
+    setRefetchSwitch((prev) => !prev);
+  };
+
   useEffect(() => {
     client
       .getOwnedObjects({
@@ -129,5 +135,6 @@ export const useGetMyCollections = ({ owner }: { owner: string }) => {
     collections,
     isPending,
     error,
+    refetch,
   };
 };

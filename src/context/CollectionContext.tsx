@@ -10,11 +10,13 @@ interface Value {
     collections: CollectionData[] | null;
     index: number;
     setIndex: React.Dispatch<React.SetStateAction<number>>;
+    refetch: () => void;
   };
   store: {
     stores: StoreData[] | null;
     index: number;
     setIndex: React.Dispatch<React.SetStateAction<number>>;
+    refetch: () => void;
   };
 }
 
@@ -23,11 +25,13 @@ export const CollectionContext = createContext<Value>({
     collections: [],
     index: 0,
     setIndex: () => {},
+    refetch: () => {},
   },
   store: {
     stores: [],
     index: 0,
     setIndex: () => {},
+    refetch: () => {},
   },
 });
 
@@ -37,19 +41,19 @@ export const CollectionProvider = ({ children }: { children: React.ReactNode }) 
 
   const account = useCurrentAccount();
 
-  const { collections } = useGetMyCollections({
+  const { collections, refetch: refetchCollection } = useGetMyCollections({
     owner: account ? account.address : "",
   });
 
-  const { stores } = useGetMyCollectionStores({
+  const { stores, refetch: refetchStore } = useGetMyCollectionStores({
     owner: account ? account.address : "",
   });
 
   return (
     <CollectionContext.Provider
       value={{
-        collection: { collections, index: cIndex, setIndex: setCIndex },
-        store: { stores, index: SIndex, setIndex: setSIndex },
+        collection: { collections, index: cIndex, setIndex: setCIndex, refetch: refetchCollection },
+        store: { stores, index: SIndex, setIndex: setSIndex, refetch: refetchStore },
       }}
     >
       {children}
