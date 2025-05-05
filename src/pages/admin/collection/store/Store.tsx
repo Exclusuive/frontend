@@ -71,7 +71,7 @@ export default function Store({ store }: { store: StoreData }) {
                           </span>
                         </div>
                         <div className="grid grid-cols-2">
-                          {data.content.fields.value.map((v) => {
+                          {data.content.fields.value.slice(0, 4).map((v) => {
                             const typeName = v.type.split("::")[2];
                             const product = v.fields;
 
