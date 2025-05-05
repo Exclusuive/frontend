@@ -55,18 +55,16 @@ export default function SelectStoreModal() {
                   )}
                 >
                   <CardHeader>
-                    {/* <CollectionImg
-                  collection={col}
-                  alt={col.objectData.content.fields.base_type.fields.type}
-                  className="aspect-video w-full rounded-md object-cover"
-                /> */}
-                  </CardHeader>
-                  <CardContent>
                     <CardTitle className="text-lg">
                       {store.objectData.content.fields.name}
                     </CardTitle>
+                    <p className="text-muted-foreground line-clamp-2 truncate text-sm">
+                      ID: {store.objectData.content.fields.id.id}
+                    </p>
+                  </CardHeader>
+                  <CardContent>
                     <p className="text-muted-foreground line-clamp-2 text-sm">
-                      {store.objectData.content.fields.id.id}
+                      Slots: {store.objectData.content.fields.slots.length}
                     </p>
                   </CardContent>
                 </Card>
