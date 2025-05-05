@@ -1,5 +1,5 @@
-import { useGetMyCollections } from "@/hooks/collection";
-import { useGetMyCollectionStores } from "@/hooks/store";
+import { useGetMyCollections } from "@/hooks/useGetData/collection";
+import { useGetMyCollectionStores } from "@/hooks/useGetData/store";
 import { CollectionData } from "@/types/collection";
 import { StoreData } from "@/types/store";
 import { useCurrentAccount } from "@mysten/dapp-kit";

@@ -1,5 +1,5 @@
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { useGetMyCollections } from "@/hooks/collection";
+import { useGetMyCollections } from "@/hooks/useGetData/collection";
 import CollectionOverview from "./CollectionOverview";
 import { useCurrentAccount } from "@mysten/dapp-kit";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
