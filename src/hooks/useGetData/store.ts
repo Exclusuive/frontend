@@ -4,7 +4,7 @@ import { StoreData } from "@/types/store";
 import { getFullnodeUrl, SuiClient } from "@mysten/sui/client";
 import { useEffect, useState } from "react";
 
-export const useGetMyCollectionStores = ({ owner }: { owner: string }) => {
+export const useGetMyStores = ({ owner }: { owner: string }) => {
   const [stores, setStores] = useState<StoreData[]>([]);
   const [isPending, setIsPending] = useState<boolean>(true);
   const [error, setError] = useState(null);
