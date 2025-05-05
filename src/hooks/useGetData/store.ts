@@ -1,5 +1,3 @@
-// import { parseCollectionObjectData, parseDynamicBaseTypeField } from "@/lib/collection";
-// import { CollectionData } from "@/types/collection";
 import { PACKAGE_ID } from "@/config/contants";
 import { parseDynamicBaseTypeField, parseStoreObjectData } from "@/lib/collection";
 import { StoreData } from "@/types/store";
@@ -19,6 +17,7 @@ export const useGetMyCollectionStores = ({ owner }: { owner: string }) => {
   const refetch = () => {
     setRefetchSwitch((prev) => !prev);
   };
+
   useEffect(() => {
     client
       .getOwnedObjects({

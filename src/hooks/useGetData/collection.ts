@@ -129,7 +129,7 @@ export const useGetMyCollections = ({ owner }: { owner: string }) => {
       .catch((e) => {
         setError(e);
       });
-  }, [owner]);
+  }, [owner, refetchSwitch]);
 
   return {
     collections,
