@@ -39,7 +39,7 @@ export default function CollectionPage() {
 
   return (
     <div className="container w-full p-4">
-      <Tabs defaultValue={collections[0].id} className="w-full">
+      <Tabs defaultValue={collections.length > 0 ? collections[0].id : ""} className="w-full">
         <div className="flex">
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger>

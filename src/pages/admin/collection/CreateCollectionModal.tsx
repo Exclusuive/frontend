@@ -11,6 +11,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { PlusCircle, Trash2, Upload } from "lucide-react";
 import { Label } from "@/components/ui/label";
+import { useCreateCollection } from "@/hooks/moveCall/collection";
+import { DialogClose } from "@radix-ui/react-dialog";
 
 interface Props {
   isOpen: boolean;
@@ -21,6 +23,8 @@ export const CreateCollectionModal = ({ isOpen }: Props) => {
   const [description, setDescription] = useState<string>("");
   const [imageFile, setImageFile] = useState<File>();
   const [layers, setLayers] = useState<string[]>([]);
+
+  const { createCollection } = useCreateCollection();
 
   const inputId = useId();
 
@@ -42,23 +46,6 @@ export const CreateCollectionModal = ({ isOpen }: Props) => {
     }
   };
 
-  // Handle form submission
-  const handleCreateCollection = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      // const { success, result, error } = await newCollection(formData);
-      // if (!success) {
-      //   throw error;
-      // }
-      // setOpen(false);
-      // const { collection, collectionCap } = parseCreateCollectionFromCreatedObject(result);
-      // onSuccess(collection, collectionCap);
-      resetForm();
-    } catch (error) {
-      console.error("Failed to create collection:", error);
-    }
-  };
-
   return (
     <DialogContent className="sm:max-w-[500px]">
       <DialogHeader>
@@ -67,7 +54,16 @@ export const CreateCollectionModal = ({ isOpen }: Props) => {
       </DialogHeader>
 
       <form
-        onSubmit={handleCreateCollection}
+        // onSubmit={(e) => {
+        //   e.preventDefault();
+        //   try {
+        //     createCollection({ collectionName: name, description: "", bannerImgURL: "", layers });
+        //   } catch (err) {
+        //     console.error("Failed to create collection:", err);
+        //   } finally {
+        //     resetForm();
+        //   }
+        // }}
         className="scrollbar-hide max-h-[500px] space-y-4 overflow-auto"
       >
         {/* Collection Name */}
@@ -182,7 +178,28 @@ export const CreateCollectionModal = ({ isOpen }: Props) => {
         </div>
 
         <DialogFooter>
-          <Button type="submit">Create Collection</Button>
+          <DialogClose>
+            <Button
+              type="submit"
+              onClick={(e) => {
+                e.preventDefault();
+                try {
+                  createCollection({
+                    collectionName: name,
+                    description: description,
+                    bannerImgURL: "",
+                    layers,
+                  });
+                } catch (err) {
+                  console.error("Failed to create collection:", err);
+                } finally {
+                  resetForm();
+                }
+              }}
+            >
+              Create Collection
+            </Button>
+          </DialogClose>
         </DialogFooter>
       </form>
     </DialogContent>
