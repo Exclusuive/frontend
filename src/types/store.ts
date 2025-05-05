@@ -52,6 +52,7 @@ export interface StoreObjectData {
 
 export interface StoreData {
   id: string;
+  cap: string;
   objectData: StoreObjectData;
   dynamicFieldData: DynamicFieldObjectData[]; // 실제 데이터 타입에 맞게 수정
 }

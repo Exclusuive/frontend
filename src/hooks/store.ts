@@ -25,7 +25,23 @@ export const useGetMyCollectionStores = ({ owner }: { owner: string }) => {
         },
       })
       .then(async (data) => {
-        const ids = data.data.flatMap((item) => {
+        const capIds = data.data.flatMap((item) => {
+          const content = item.data?.content;
+          if (
+            content &&
+            "fields" in content &&
+            content.fields !== null &&
+            "id" in content.fields &&
+            typeof content.fields.id === "object" &&
+            content.fields.id !== null &&
+            "id" in content.fields.id &&
+            typeof content.fields.id.id === "string"
+          ) {
+            return [content.fields.id.id];
+          }
+          return [];
+        });
+        const storeIds = data.data.flatMap((item) => {
           const content = item.data?.content;
           if (
             content &&
@@ -40,7 +56,7 @@ export const useGetMyCollectionStores = ({ owner }: { owner: string }) => {
 
         const [objectDataArray, dynamicFieldDatasArray] = await Promise.all([
           Promise.all(
-            ids.map((id) =>
+            storeIds.map((id) =>
               client.getObject({
                 id,
                 options: {
@@ -51,7 +67,7 @@ export const useGetMyCollectionStores = ({ owner }: { owner: string }) => {
             )
           ),
           Promise.all(
-            ids.map((id) =>
+            storeIds.map((id) =>
               client
                 .getDynamicFields({ parentId: id }) // line break
                 .then((data) => {
@@ -68,7 +84,7 @@ export const useGetMyCollectionStores = ({ owner }: { owner: string }) => {
           ),
         ]);
 
-        return ids.map((id, i) => {
+        return storeIds.map((id, i) => {
           if (!objectDataArray[i].data) return;
 
           const storeObjectData = parseStoreObjectData(objectDataArray[i].data);
@@ -90,6 +106,7 @@ export const useGetMyCollectionStores = ({ owner }: { owner: string }) => {
 
           return {
             id,
+            cap: capIds[i],
             objectData: storeObjectData,
             dynamicFieldData: filteredDynamicFieldDatas,
           } as StoreData;

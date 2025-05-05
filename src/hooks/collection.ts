@@ -23,7 +23,23 @@ export const useGetMyCollections = ({ owner }: { owner: string }) => {
         },
       })
       .then(async (data) => {
-        const ids = data.data.flatMap((item) => {
+        const capIds = data.data.flatMap((item) => {
+          const content = item.data?.content;
+          if (
+            content &&
+            "fields" in content &&
+            content.fields !== null &&
+            "id" in content.fields &&
+            typeof content.fields.id === "object" &&
+            content.fields.id !== null &&
+            "id" in content.fields.id &&
+            typeof content.fields.id.id === "string"
+          ) {
+            return [content.fields.id.id];
+          }
+          return [];
+        });
+        const collectionIds = data.data.flatMap((item) => {
           const content = item.data?.content;
           if (
             content &&
@@ -38,7 +54,7 @@ export const useGetMyCollections = ({ owner }: { owner: string }) => {
 
         const [objectDataArray, dynamicFieldDatasArray] = await Promise.all([
           Promise.all(
-            ids.map((id) =>
+            collectionIds.map((id) =>
               client.getObject({
                 id,
                 options: {
@@ -49,7 +65,7 @@ export const useGetMyCollections = ({ owner }: { owner: string }) => {
             )
           ),
           Promise.all(
-            ids.map((id) =>
+            collectionIds.map((id) =>
               client
                 .getDynamicFields({ parentId: id }) // line break
                 .then((data) => {
@@ -66,7 +82,7 @@ export const useGetMyCollections = ({ owner }: { owner: string }) => {
           ),
         ]);
 
-        return ids.map((id, i) => {
+        return collectionIds.map((id, i) => {
           if (!objectDataArray[i].data) return;
 
           const collectionObjectData = parseCollectionObjectData(objectDataArray[i].data);
@@ -88,6 +104,7 @@ export const useGetMyCollections = ({ owner }: { owner: string }) => {
 
           return {
             id,
+            cap: capIds[i],
             objectData: collectionObjectData,
             dynamicFieldData: filteredDynamicFieldDatas,
           } as CollectionData;

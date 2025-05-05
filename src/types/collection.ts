@@ -72,6 +72,7 @@ export interface CollectionObjectData {
 
 export interface CollectionData {
   id: string;
+  cap: string;
   objectData: CollectionObjectData;
   dynamicFieldData: DynamicFieldObjectData[]; // 실제 데이터 타입에 맞게 수정
 }
