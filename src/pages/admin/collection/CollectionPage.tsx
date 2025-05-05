@@ -7,6 +7,7 @@ import CollectionMiniCard from "./CollectionMiniCard";
 import { CreateCollectionModal } from "./CreateCollectionModal";
 import { useEffect, useState } from "react";
 import { Dialog } from "@/components/ui/dialog";
+import { DialogTrigger } from "@radix-ui/react-dialog";
 
 export default function CollectionPage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,20 +41,21 @@ export default function CollectionPage() {
     <div className="container w-full p-4">
       <Tabs defaultValue={collections[0].id} className="w-full">
         <div className="flex">
-          <Card
-            className={
-              "col-span-1 flex h-auto cursor-pointer items-center justify-center border-2 transition-all hover:shadow-lg"
-            }
-            onClick={() => {
-              // Create Collection
-              setIsOpen(true);
-            }}
-          >
-            <CardContent>
-              <CardTitle className="text-center text-lg">Create</CardTitle>
-              <CardTitle className="text-center text-lg">Collection</CardTitle>
-            </CardContent>
-          </Card>
+          <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger>
+              <Card
+                className={
+                  "col-span-1 flex h-full cursor-pointer items-center justify-center border-2 transition-all hover:shadow-lg"
+                }
+              >
+                <CardContent>
+                  <CardTitle className="text-center text-lg">Create</CardTitle>
+                  <CardTitle className="text-center text-lg">Collection</CardTitle>
+                </CardContent>
+              </Card>
+            </DialogTrigger>
+            <CreateCollectionModal isOpen={isOpen} />
+          </Dialog>
           <div className="scrollbar-hide grid h-full w-full auto-cols-[minmax(100px,1fr)] grid-flow-col grid-cols-4 gap-4 overflow-x-auto rounded-md bg-gray-100">
             <TabsList className="h-full">
               {collections.map((col) => (
@@ -72,10 +74,6 @@ export default function CollectionPage() {
           </TabsContent>
         ))}
       </Tabs>
-
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <CreateCollectionModal isOpen={isOpen} />
-      </Dialog>
     </div>
   );
 }

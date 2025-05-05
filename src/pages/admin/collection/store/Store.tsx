@@ -3,10 +3,9 @@ import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import AddNewSlotModal from "./AddNewSlotModal";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { StoreData } from "@/types/store";
-import { useState } from "react";
+import AddProductModal from "./AddProductModal";
 
 export default function Store({ store }: { store: StoreData }) {
-  const [isOpen, setIsOpen] = useState(false);
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
@@ -24,7 +23,7 @@ export default function Store({ store }: { store: StoreData }) {
           <DialogTrigger>
             <Button>Select Store</Button>
           </DialogTrigger>
-          <Dialog open={isOpen} onOpenChange={setIsOpen}>
+          <Dialog>
             <DialogTrigger>
               <Button>Add New Slot</Button>
             </DialogTrigger>
@@ -134,9 +133,14 @@ export default function Store({ store }: { store: StoreData }) {
             <Button variant="outline" className="w-full">
               Add Condition
             </Button>
-            <Button variant="outline" className="w-full">
-              Add Product
-            </Button>
+            <Dialog>
+              <DialogTrigger>
+                <Button variant="outline" className="w-full">
+                  Add Product
+                </Button>
+              </DialogTrigger>
+              <AddProductModal></AddProductModal>
+            </Dialog>
 
             {/* {manage ? (
                   <CardFooter className="flex flex-col gap-2">
