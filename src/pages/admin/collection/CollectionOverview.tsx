@@ -1,6 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsList } from "@/components/ui/tabs";
-import { TabsContent, TabsTrigger } from "@radix-ui/react-tabs";
+import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { CollectionData, ItemType } from "@/types/collection";
 import { useState } from "react";
@@ -142,7 +141,9 @@ export default function CollectionOverview({ collection }: Props) {
         <Card title="Items by Layer" className="flex-1">
           <CardHeader>
             <CardTitle>Items by layer</CardTitle>
+            <CardDescription>Items by layer</CardDescription>
           </CardHeader>
+
           <CardContent>
             <Tabs defaultValue={"layers"} className="w-full" onValueChange={setSelectedLayer}>
               <TabsList className="w-full">
@@ -156,6 +157,7 @@ export default function CollectionOverview({ collection }: Props) {
                   <TabsTrigger value="no-layers">No Layers</TabsTrigger>
                 )}
               </TabsList>
+
               <TabsContent value={selectedLayer}>
                 <div className="space-y-4 overflow-auto">
                   {collection.objectData.content.fields.item_types.fields.contents
