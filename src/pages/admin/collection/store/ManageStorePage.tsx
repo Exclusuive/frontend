@@ -84,7 +84,7 @@ export default function ManageStorePage({}: Props) {
                 <CardHeader>
                   <CardTitle>Slot {slot.fields.number}</CardTitle>
                   <CardDescription>
-                    Product Type : {slot.fields.product.fields.name.split("::")[2]}&lt;type&gt;
+                    Product Type : {slot.fields.product.fields.name.split("::")[2]}
                   </CardDescription>
                   <CardDescription>Price: {slot.fields.price} MIST</CardDescription>
                   <CardDescription>
@@ -117,58 +117,57 @@ export default function ManageStorePage({}: Props) {
                             <div className="grid grid-cols-2">
                               {data.content.fields.value.map((v) => {
                                 const typeName = v.type.split("::")[2];
+                                const product = v.fields;
 
-                                return Object.values(v.fields).map((val: any) => {
-                                  return Object.entries(val)
-                                    .filter(([k, _]) => k === "fields")
-                                    .map(([k, v]: [k: string, v: any]) => {
-                                      if (typeName === "Base") {
-                                        return (
-                                          <Card>
-                                            <CardContent>
-                                              {k}: {JSON.stringify(v)}
-                                            </CardContent>
-                                          </Card>
-                                        );
-                                      } else if (typeName === "Item") {
-                                        return (
-                                          <Card>
-                                            <CardContent>
-                                              {k}: {JSON.stringify(v)}
-                                            </CardContent>
-                                          </Card>
-                                        );
-                                      } else if (typeName === "Ticket") {
-                                        return (
-                                          <Card className="p-2">
-                                            <CardContent>
-                                              {k}: {v.type}
-                                            </CardContent>
-                                          </Card>
-                                        );
-                                      } else if (typeName === "PropertyScroll") {
-                                        return (
-                                          <Card className="p-2">
-                                            <CardContent>
-                                              <div>
-                                                {k}: {v.type.fields.type}
-                                              </div>
-                                              <div>value: {v.value}</div>
-                                            </CardContent>
-                                          </Card>
-                                        );
-                                      }
-
-                                      return (
-                                        <Card>
-                                          <CardContent>
-                                            {k}
-                                            {JSON.stringify(v)}
-                                          </CardContent>
-                                        </Card>
-                                      );
-                                    });
-                                });
+                                if (typeName === "Base") {
+                                  return (
+                                    <Card>
+                                      <CardContent>
+                                        <p className="truncate">{product.id.id}</p>
+                                        <p>{product.type.fields.type}</p>
+                                        <img className="h-5 w-5" src={product.img_url} />
+                                      </CardContent>
+                                    </Card>
+                                  );
+                                } else if (typeName === "Item") {
+                                  return (
+                                    <Card>
+                                      <CardContent>
+                                        <p className="truncate">{product.id.id}</p>
+                                        <p>Layer: {product.type.fields.type}</p>
+                                        <p>{product.item_type}</p>
+                                        <img className="h-5 w-5" src={product.img_url} />
+                                      </CardContent>
+                                    </Card>
+                                  );
+                                } else if (typeName === "Ticket") {
+                                  return (
+                                    <Card>
+                                      <CardContent>
+                                        <p className="truncate">{product.id.id}</p>
+                                        <p>{product.type.fields.type}</p>
+                                      </CardContent>
+                                    </Card>
+                                  );
+                                } else if (typeName === "PropertyScroll") {
+                                  return (
+                                    <Card>
+                                      <CardContent>
+                                        <p className="truncate">{product.id.id}</p>
+                                        <p>{product.property.fields.type.fields.type}</p>
+                                        <p>Value: {product.property.fields.value}</p>
+                                      </CardContent>
+                                    </Card>
+                                  );
+                                }
+                                return (
+                                  <Card>
+                                    <CardContent>
+                                      <p>{typeName}</p>
+                                      <p>{JSON.stringify(product)}</p>
+                                    </CardContent>
+                                  </Card>
+                                );
                               })}
                             </div>
                           </div>
