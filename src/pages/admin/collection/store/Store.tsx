@@ -4,6 +4,7 @@ import AddNewSlotModal from "./AddNewSlotModal";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { StoreData } from "@/types/store";
 import AddProductModal from "./AddProductModal";
+import AddConditionModal from "./AddConditionModal";
 
 export default function Store({ store }: { store: StoreData }) {
   return (
@@ -52,6 +53,7 @@ export default function Store({ store }: { store: StoreData }) {
                 ))}
               </CardDescription>
             </CardHeader>
+
             <CardContent>
               {store.dynamicFieldData
                 .filter(
@@ -130,108 +132,24 @@ export default function Store({ store }: { store: StoreData }) {
                 ))}
             </CardContent>
 
-            <Button variant="outline" className="w-full">
-              Add Condition
-            </Button>
-            <Dialog>
-              <DialogTrigger>
-                <Button variant="outline" className="w-full">
-                  Add Product
-                </Button>
-              </DialogTrigger>
-              <AddProductModal></AddProductModal>
-            </Dialog>
-
-            {/* {manage ? (
-                  <CardFooter className="flex flex-col gap-2">
-                    <div className="flex w-full justify-between">
-                      <AddProductDialog
-                        collection={collection}
-                        selectionNumber={slot.fields.number}
-                        storeId={selectedStore.store_id}
-                        selectionType={slot.fields.type}
-                      />
-                    </div>
-                    <div className="flex w-full justify-between">
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button variant="outline" className="w-full">
-                            Add Condition
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                          <DialogHeader>
-                            <DialogTitle>
-                              Add Condition to Selection {slot.fields.number}
-                            </DialogTitle>
-                            <DialogDescription>
-                              Enter the details for the new condition.
-                            </DialogDescription>
-                          </DialogHeader>
-                          <div className="grid gap-4 py-4">
-                            <div className="grid grid-cols-4 items-center gap-4">
-                              <Label htmlFor="ticketType" className="text-right">
-                                Ticket Type
-                              </Label>
-                              <Select
-                                value={selectionData.newTicketType}
-                                onValueChange={handleTicketTypeChange}
-                              >
-                                <SelectTrigger className="col-span-3">
-                                  <SelectValue placeholder="Select ticket type" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {collection?.ticket_types?.map((ticketType) => (
-                                    <SelectItem key={ticketType} value={ticketType}>
-                                      {ticketType}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                              <Label htmlFor="requirements" className="text-right">
-                                Requirements
-                              </Label>
-                              <Input
-                                id="requirements"
-                                value={selectionData.newRequirements}
-                                onChange={(e) => handleRequirementsChange(e.target.value)}
-                                className="col-span-3"
-                              />
-                            </div>
-                          </div>
-                          <DialogFooter>
-                            <Button
-                              onClick={() => handleAddConditionToSelection(slot.fields.number)}
-                            >
-                              Add Condition
-                            </Button>
-                          </DialogFooter>
-                        </DialogContent>
-                      </Dialog>
-                    </div>
-                  </CardFooter>
-                ) : (
-                  <CardFooter className="flex flex-col gap-2">
-                    <div className="flex w-full justify-between">
-                      <Button
-                        className="w-full"
-                        onClick={() =>
-                          handleBuyProduct(
-                            slot.fields.number,
-                            slot.fields.type,
-                            slot.fields.conditions,
-                            tickets || {},
-                            slot.fields.price
-                          )
-                        }
-                      >
-                        Buy
-                      </Button>
-                    </div>
-                  </CardFooter>
-                )} */}
+            <CardContent className="space-y-2">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="w-full">
+                    Add Condition
+                  </Button>
+                </DialogTrigger>
+                <AddConditionModal></AddConditionModal>
+              </Dialog>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="w-full">
+                    Add Product
+                  </Button>
+                </DialogTrigger>
+                <AddProductModal></AddProductModal>
+              </Dialog>
+            </CardContent>
           </Card>
         ))}
       </div>
