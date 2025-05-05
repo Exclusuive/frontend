@@ -1,5 +1,6 @@
 // import { parseCollectionObjectData, parseDynamicBaseTypeField } from "@/lib/collection";
 // import { CollectionData } from "@/types/collection";
+import { PACKAGE_ID } from "@/config/contants";
 import { parseDynamicBaseTypeField, parseStoreObjectData } from "@/lib/collection";
 import { StoreData } from "@/types/store";
 import { getFullnodeUrl, SuiClient } from "@mysten/sui/client";
@@ -11,7 +12,6 @@ export const useGetMyCollectionStores = ({ owner }: { owner: string }) => {
   const [error, setError] = useState(null);
   const [refetchSwitch, setRefetchSwitch] = useState(false);
 
-  const PACKAGE_ID = import.meta.env.VITE_PACKAGE_ID;
   const STORE_CAP_TYPE = `${PACKAGE_ID}::collection::StoreCap`;
 
   const client = new SuiClient({ url: getFullnodeUrl("testnet") });
