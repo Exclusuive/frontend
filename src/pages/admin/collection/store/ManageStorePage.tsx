@@ -121,7 +121,7 @@ export default function ManageStorePage({}: Props) {
 
                                 if (typeName === "Base") {
                                   return (
-                                    <Card>
+                                    <Card className="cursor-default">
                                       <CardContent>
                                         <p className="truncate">{product.id.id}</p>
                                         <p>{product.type.fields.type}</p>
@@ -131,7 +131,7 @@ export default function ManageStorePage({}: Props) {
                                   );
                                 } else if (typeName === "Item") {
                                   return (
-                                    <Card>
+                                    <Card className="cursor-default">
                                       <CardContent>
                                         <p className="truncate">{product.id.id}</p>
                                         <p>Layer: {product.type.fields.type}</p>
@@ -142,7 +142,7 @@ export default function ManageStorePage({}: Props) {
                                   );
                                 } else if (typeName === "Ticket") {
                                   return (
-                                    <Card>
+                                    <Card className="cursor-default">
                                       <CardContent>
                                         <p className="truncate">{product.id.id}</p>
                                         <p>{product.type.fields.type}</p>
@@ -151,7 +151,7 @@ export default function ManageStorePage({}: Props) {
                                   );
                                 } else if (typeName === "PropertyScroll") {
                                   return (
-                                    <Card>
+                                    <Card className="cursor-default">
                                       <CardContent>
                                         <p className="truncate">{product.id.id}</p>
                                         <p>{product.property.fields.type.fields.type}</p>
@@ -161,7 +161,7 @@ export default function ManageStorePage({}: Props) {
                                   );
                                 }
                                 return (
-                                  <Card>
+                                  <Card className="cursor-default">
                                     <CardContent>
                                       <p>{typeName}</p>
                                       <p>{JSON.stringify(product)}</p>
