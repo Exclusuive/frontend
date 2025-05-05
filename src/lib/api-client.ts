@@ -28,10 +28,8 @@ api.interceptors.response.use(
   (error: AxiosError<ErrorResponse>) => {
     const message = error.response?.data?.message || error.message;
 
-    // Error notification logic removed - we'll use the built-in toast component directly where needed
     console.error("API Error:", typeof message === "string" ? message : "An error occurred");
 
-    // Handle 401 unauthorized errors by redirecting to login page
     if (error.response?.status === 401) {
       const searchParams = new URLSearchParams(window.location.search);
       const redirectTo = searchParams.get("redirectTo") || window.location.pathname;
