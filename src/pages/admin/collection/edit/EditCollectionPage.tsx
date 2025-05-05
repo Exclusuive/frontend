@@ -21,7 +21,7 @@ export default function EditCollectionPage({}: Props) {
   } = useContext(CollectionContext);
 
   useEffect(() => {
-    if (collections) {
+    if (collections && index !== -1) {
       setCurrentCollection(collections[index]);
     }
 

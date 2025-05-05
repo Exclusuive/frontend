@@ -35,7 +35,7 @@ export default function ManageStorePage({}: Props) {
   }, [cIndex]);
 
   useEffect(() => {
-    if (!isCOpen && cIndex !== -1 && sIndex === -1) {
+    if (!isCOpen && cIndex !== -1) {
       setIsSOpen(true);
     }
   }, [isCOpen]);
