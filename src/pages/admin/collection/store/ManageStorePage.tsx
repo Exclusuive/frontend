@@ -55,9 +55,6 @@ export default function ManageStorePage({}: Props) {
       </Dialog>
       {cIndex !== -1 && (
         <Dialog open={isSOpen} onOpenChange={setIsSOpen}>
-          <DialogTrigger>
-            <Button>Select Store</Button>
-          </DialogTrigger>
           <SelectStoreModal />
         </Dialog>
       )}
@@ -72,9 +69,17 @@ export default function ManageStorePage({}: Props) {
               <p className="text-muted-foreground truncate text-sm">ID: {currentStore.id}</p>
             </div>
             <div className="flex gap-2">
-              {/* <Button onClick={() => setShowStoreContractDialog(true)}> */}
-              <Button onClick={() => {}}>Change Store Contract</Button>
-              <Button>Add New Slot</Button>
+              <Dialog open={isSOpen} onOpenChange={setIsSOpen}>
+                <DialogTrigger>
+                  <Button>Select Store</Button>
+                </DialogTrigger>
+              </Dialog>
+              <Dialog open={isSOpen} onOpenChange={setIsSOpen}>
+                <DialogTrigger>
+                  <Button>Add New Slot</Button>
+                </DialogTrigger>
+                {/* <SelectStoreModal /> */}
+              </Dialog>
             </div>
           </div>
 
