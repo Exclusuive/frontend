@@ -1,4 +1,4 @@
-import { ReactNode, useLayoutEffect } from "react";
+import { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import {
   HomeIcon,
@@ -7,7 +7,7 @@ import {
   HeartIcon,
   GlobeIcon,
 } from "@radix-ui/react-icons";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/stores/useAuthStore";
 
 interface ProtectedWebViewLayoutProps {
@@ -16,29 +16,12 @@ interface ProtectedWebViewLayoutProps {
 
 export function ProtectedWebViewLayout({ children }: ProtectedWebViewLayoutProps) {
   const navigate = useNavigate();
-  const location = useLocation();
   const { veginUserIsLogin, logout } = useAuthStore();
-
-  const isLoginPage = location.pathname === "/login";
-
-  useLayoutEffect(() => {
-    if (!veginUserIsLogin && !isLoginPage) {
-      navigate("/login");
-    }
-
-    if (veginUserIsLogin && isLoginPage) {
-      navigate("/");
-    }
-  }, [veginUserIsLogin, isLoginPage, navigate]);
 
   const handleLogout = () => {
     logout();
     navigate("/login");
   };
-
-  if (!veginUserIsLogin && !isLoginPage) {
-    return null;
-  }
 
   return (
     <div className="flex justify-center bg-gray-200 min-h-screen w-full">
@@ -110,39 +93,35 @@ export function ProtectedWebViewLayout({ children }: ProtectedWebViewLayoutProps
             </Button>
           </div>
         </header>
-
-        {!isLoginPage && (
-          <div className="bg-white py-3">
-            <div className="px-4">
-              <div className="rounded-lg overflow-hidden bg-gray-100">
-                <div className="relative">
-                  <img
-                    src="https://images.unsplash.com/photo-1615484477778-ca3b77940c25?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cGVhcnN8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
-                    alt="Pears"
-                    className="w-full h-40 object-cover"
-                  />
-                  <div className="absolute top-6 left-6 text-black font-bold">
-                    <h3 className="text-lg mb-1">광고/배너</h3>
-                    <p className="text-lg">영역</p>
-                  </div>
+        (
+        <div className="bg-white py-3">
+          <div className="px-4">
+            <div className="rounded-lg overflow-hidden bg-gray-100">
+              <div className="relative">
+                <img
+                  src="https://images.unsplash.com/photo-1615484477778-ca3b77940c25?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cGVhcnN8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
+                  alt="Pears"
+                  className="w-full h-40 object-cover"
+                />
+                <div className="absolute top-6 left-6 text-black font-bold">
+                  <h3 className="text-lg mb-1">광고/배너</h3>
+                  <p className="text-lg">영역</p>
                 </div>
-                <div className="flex justify-center py-2">
-                  <div className="flex space-x-1">
-                    {[0, 1, 2, 3, 4].map((i) => (
-                      <div
-                        key={i}
-                        className={`h-2 w-2 rounded-full ${i === 0 ? "bg-black" : "bg-gray-300"}`}
-                      />
-                    ))}
-                  </div>
+              </div>
+              <div className="flex justify-center py-2">
+                <div className="flex space-x-1">
+                  {[0, 1, 2, 3, 4].map((i) => (
+                    <div
+                      key={i}
+                      className={`h-2 w-2 rounded-full ${i === 0 ? "bg-black" : "bg-gray-300"}`}
+                    />
+                  ))}
                 </div>
               </div>
             </div>
           </div>
-        )}
-
+        </div>
         <main className="flex-grow px-4 py-4 overflow-y-auto">{children}</main>
-
         {veginUserIsLogin && (
           <div className="bg-white border-t py-2 sticky bottom-0 w-full">
             <div className="px-2">
