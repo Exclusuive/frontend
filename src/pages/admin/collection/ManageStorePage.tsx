@@ -15,6 +15,7 @@ export default function ManageStorePage({}: Props) {
   const account = useCurrentAccount();
   const {
     collection: { index: cIndex },
+    store: { index: sIndex },
   } = useContext(CollectionContext);
 
   useEffect(() => {
@@ -24,7 +25,7 @@ export default function ManageStorePage({}: Props) {
   }, [cIndex]);
 
   useEffect(() => {
-    if (!isCOpen && cIndex !== -1) {
+    if (sIndex === -1 && cIndex !== -1) {
       setIsSOpen(true);
     }
   }, [isCOpen]);
