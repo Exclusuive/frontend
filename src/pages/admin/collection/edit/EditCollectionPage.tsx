@@ -57,15 +57,11 @@ export default function EditCollectionPage({}: Props) {
         </TabsList>
 
         <TabsContent value="info">
-          {currentCollection && (
-            <CollectionInfo key={currentCollection.id} collection={currentCollection} />
-          )}
+          <CollectionInfo />
         </TabsContent>
 
         <TabsContent value="layers">
-          {currentCollection && (
-            <LayerInfo key={currentCollection.id} collection={currentCollection} />
-          )}
+          <LayerInfo />
         </TabsContent>
 
         <TabsContent value="properties" className="space-y-4">

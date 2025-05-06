@@ -1,6 +1,5 @@
 import { PACKAGE_ID } from "@/config/contants";
 import { CollectionContext } from "@/context/CollectionContext";
-// import { CollectionData } from "@/types/collection";
 import { useCurrentAccount, useSignAndExecuteTransaction } from "@mysten/dapp-kit";
 import { Transaction } from "@mysten/sui/transactions";
 import { useContext } from "react";
@@ -210,7 +209,7 @@ export function useAddLayerType() {
   } = useContext(CollectionContext);
   const { setToastState } = useToast();
 
-  const addCollectionLayerType = ({ layer }: { layer: string }) => {
+  const addLayerType = ({ layer }: { layer: string }) => {
     if (!account) return;
 
     setToastState({
@@ -261,6 +260,6 @@ export function useAddLayerType() {
     );
   };
   return {
-    addCollectionLayerType,
+    addLayerType,
   };
 }

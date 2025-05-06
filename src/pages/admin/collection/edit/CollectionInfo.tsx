@@ -2,20 +2,20 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Upload } from "lucide-react";
-import { CollectionData } from "@/types/collection";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import CollectionImg from "../CollectionImg";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useUpdateCollection } from "@/hooks/moveCall/collection";
+import { CollectionContext } from "@/context/CollectionContext";
 
-interface Props {
-  collection: CollectionData;
-}
-
-export default function CollectionInfo({ collection }: Props) {
+export default function CollectionInfo() {
   const [imageFile, setImageFile] = useState<File>();
   const [description, setDescription] = useState("");
+
+  const {
+    collection: { collections, index },
+  } = useContext(CollectionContext);
 
   const { updateCollectionInfo } = useUpdateCollection();
 
@@ -43,7 +43,10 @@ export default function CollectionInfo({ collection }: Props) {
                   className="h-full w-full object-cover"
                 />
               ) : (
-                <CollectionImg collection={collection} alt="Collection Image" />
+                collections &&
+                index !== -1 && (
+                  <CollectionImg collection={collections[index]} alt="Collection Image" />
+                )
               )}
             </div>
             <div className="flex flex-col items-center gap-2">

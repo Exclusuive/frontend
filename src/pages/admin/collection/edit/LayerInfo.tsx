@@ -1,6 +1,6 @@
 import { CollectionData } from "@/types/collection";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus } from "lucide-react";
@@ -14,27 +14,41 @@ import {
 } from "@dnd-kit/core";
 import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import SortableItem from "./SortableItem";
+import { useAddLayerType } from "@/hooks/moveCall/collection";
+import { CollectionContext } from "@/context/CollectionContext";
 
-interface Props {
-  collection: CollectionData;
-}
-
-export default function LayerInfo({ collection }: Props) {
+export default function LayerInfo() {
   const [newLayerName, setNewLayerName] = useState("");
-  const [layers, setLayers] = useState(
-    collection.objectData.content.fields.layer_types.fields.contents.map((l) => l.fields.type)
-  );
+  const [currentCollection, setCurrentCollection] = useState<CollectionData>();
+  const [layers, setLayers] = useState<string[]>();
 
-  const handleAddLayer = async () => {
-    console.log("TX!");
-  };
+  const {
+    collection: { collections, index },
+  } = useContext(CollectionContext);
+  const { addLayerType } = useAddLayerType();
 
   const sensors = useSensors(useSensor(PointerSensor));
+
+  useEffect(() => {
+    if (collections && index !== -1) {
+      setCurrentCollection(collections[index]);
+    }
+  }, [collections, index]);
+
+  useEffect(() => {
+    if (currentCollection) {
+      setLayers(
+        currentCollection.objectData.content.fields.layer_types.fields.contents.map(
+          (l) => l.fields.type
+        )
+      );
+    }
+  }, [currentCollection]);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
-    if (active.id !== over?.id && over) {
+    if (active.id !== over?.id && over && layers) {
       const oldIndex = layers.indexOf(active.id.toString());
       const newIndex = layers.indexOf(over.id.toString());
       setLayers(arrayMove(layers, oldIndex, newIndex));
@@ -56,7 +70,13 @@ export default function LayerInfo({ collection }: Props) {
           placeholder="Enter new layer name"
           className="flex-1"
         />
-        <Button onClick={handleAddLayer} disabled={!newLayerName.trim()}>
+        <Button
+          onClick={() => {
+            addLayerType({ layer: newLayerName });
+            setNewLayerName("");
+          }}
+          disabled={!newLayerName.trim()}
+        >
           <Plus className="mr-2 h-4 w-4" />
           Add Layer Type
         </Button>
@@ -67,22 +87,25 @@ export default function LayerInfo({ collection }: Props) {
       </CardHeader>
 
       <CardContent>
-        {collection.objectData.content.fields.layer_types.fields.contents.length === 0 ? (
+        {currentCollection &&
+        currentCollection.objectData.content.fields.layer_types.fields.contents.length === 0 ? (
           <CardDescription>No layers added yet</CardDescription>
         ) : (
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-          >
-            <SortableContext items={layers} strategy={verticalListSortingStrategy}>
-              <div className="flex w-full flex-col space-y-2">
-                {layers.map((layer) => (
-                  <SortableItem key={layer} name={layer} />
-                ))}
-              </div>
-            </SortableContext>
-          </DndContext>
+          layers && (
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+            >
+              <SortableContext items={layers} strategy={verticalListSortingStrategy}>
+                <div className="flex w-full flex-col space-y-2">
+                  {layers.map((layer) => (
+                    <SortableItem key={layer} name={layer} />
+                  ))}
+                </div>
+              </SortableContext>
+            </DndContext>
+          )
         )}
       </CardContent>
     </Card>
