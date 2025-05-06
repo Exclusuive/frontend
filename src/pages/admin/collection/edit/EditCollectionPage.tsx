@@ -4,7 +4,6 @@ import SelectCollectionModal from "../SelectCollectionModal";
 import { useContext, useEffect, useState } from "react";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { CollectionContext } from "@/context/CollectionContext";
-import { CollectionData } from "@/types/collection";
 import CollectionInfo from "./CollectionInfo";
 import LayerInfo from "./LayerInfo";
 import PropertyInfo from "./PropertyInfo";
@@ -14,17 +13,12 @@ interface Props {}
 
 export default function EditCollectionPage({}: Props) {
   const [isOpen, setIsOpen] = useState(false);
-  const [currentCollection, setCurrentCollection] = useState<CollectionData>();
 
   const {
     collection: { collections, index },
   } = useContext(CollectionContext);
 
   useEffect(() => {
-    if (collections && index !== -1) {
-      setCurrentCollection(collections[index]);
-    }
-
     if (index === -1) {
       setIsOpen(true);
     }
@@ -69,9 +63,7 @@ export default function EditCollectionPage({}: Props) {
         </TabsContent>
 
         <TabsContent value="tickets" className="space-y-4">
-          {currentCollection && (
-            <TicketInfo key={currentCollection.id} collection={currentCollection} />
-          )}
+          <TicketInfo />
         </TabsContent>
       </Tabs>
     </div>
