@@ -16,9 +16,10 @@ import { DialogClose } from "@radix-ui/react-dialog";
 
 interface Props {
   isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
-export const CreateCollectionModal = ({ isOpen }: Props) => {
+export const CreateCollectionModal = ({ isOpen, onOpenChange }: Props) => {
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [imageFile, setImageFile] = useState<File>();
@@ -47,8 +48,8 @@ export const CreateCollectionModal = ({ isOpen }: Props) => {
   };
 
   return (
-    <DialogContent className="sm:max-w-[500px]">
-      <DialogHeader>
+    <DialogContent className="max-h-[90vh] overflow-y-auto p-6 sm:max-w-[600px]">
+      <DialogHeader className="pb-4">
         <DialogTitle>Create Collection</DialogTitle>
         <DialogDescription>Create a new collection with layers.</DialogDescription>
       </DialogHeader>
@@ -64,7 +65,7 @@ export const CreateCollectionModal = ({ isOpen }: Props) => {
         //     resetForm();
         //   }
         // }}
-        className="scrollbar-hide max-h-[500px] space-y-4 overflow-auto"
+        className="max-h-[500px] space-y-6 overflow-auto pr-4 pl-2"
       >
         {/* Collection Name */}
         <div className="space-y-2">
@@ -190,6 +191,7 @@ export const CreateCollectionModal = ({ isOpen }: Props) => {
                     bannerImgURL: "",
                     layers,
                   });
+                  onOpenChange(false);
                 } catch (err) {
                   console.error("Failed to create collection:", err);
                 } finally {
