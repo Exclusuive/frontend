@@ -23,7 +23,7 @@ export default function AddNewSlotModal() {
   const [productType, setProductType] = useState("");
   const [price, setPrice] = useState(0);
 
-  const { createStore } = useAddSlot();
+  const { addSlotToStore } = useAddSlot();
 
   return (
     <DialogContent>
@@ -47,6 +47,7 @@ export default function AddNewSlotModal() {
               <SelectValue placeholder="Select type" />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value="Base">Base</SelectItem>
               <SelectItem value="Item">Item</SelectItem>
               <SelectItem value="PropertyScroll">PropertyScroll</SelectItem>
               <SelectItem value="Ticket">Ticket</SelectItem>
@@ -74,11 +75,12 @@ export default function AddNewSlotModal() {
           <Button
             onClick={() => {
               if (
+                productType === "Base" ||
                 productType === "Item" ||
                 productType === "PropertyScroll" ||
                 productType === "Ticket"
               ) {
-                createStore({ productType, price });
+                addSlotToStore({ productType, price });
                 setPrice(0);
                 setProductType("");
               }

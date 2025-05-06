@@ -7,6 +7,7 @@ import AddConditionModal from "./AddConditionModal";
 import { useContext, useEffect, useState } from "react";
 import { CollectionContext } from "@/context/CollectionContext";
 import { StoreData } from "@/types/store";
+import AddProductToSlotModal from "./AddProductToSlotModal";
 
 export default function Store() {
   const [currentStore, setCurrentStore] = useState<StoreData>();
@@ -58,6 +59,13 @@ export default function Store() {
               </DialogTrigger>
               <AddNewSlotModal></AddNewSlotModal>
             </Dialog>
+            <Dialog>
+              <DialogTrigger>
+                <Button>Add Product to Slot</Button>
+              </DialogTrigger>
+              <AddProductToSlotModal />
+              {/* <AddNewSlotModal></AddNewSlotModal> */}
+            </Dialog>
           </div>
         </div>
       )}
@@ -89,7 +97,7 @@ export default function Store() {
                   .filter(
                     (data) => data.content.fields.name.fields.slot_number === slot.fields.number
                   )
-                  .map((data) => (
+                  .map((data, i) => (
                     <div>
                       {!("type" in data.content.fields.value) && (
                         <div>
@@ -176,7 +184,7 @@ export default function Store() {
                       Add Product
                     </Button>
                   </DialogTrigger>
-                  <AddProductModal></AddProductModal>
+                  <AddProductModal />
                 </Dialog>
               </CardContent>
             </Card>

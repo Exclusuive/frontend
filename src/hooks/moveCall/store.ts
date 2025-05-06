@@ -105,7 +105,7 @@ export function useAddSlot() {
     }
   }, [collections, cIndex]);
 
-  const createStore = ({ productType, price }: { productType: string; price: number }) => {
+  const addSlotToStore = ({ productType, price }: { productType: string; price: number }) => {
     if (currentCollection && currentStore) {
       setToastState({
         type: "loading",
@@ -152,6 +152,311 @@ export function useAddSlot() {
   };
 
   return {
-    createStore,
+    addSlotToStore,
+  };
+}
+
+export function useAddProductToSlot() {
+  const [currentCollection, setCurrentCollection] = useState<CollectionData>();
+  const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction();
+
+  const [currentStore, setCurrentStore] = useState<StoreData>();
+  const [filterdStores, setFilteredStores] = useState<StoreData[]>();
+  const {
+    collection: { collections, index: cIndex },
+    store: { stores, index: sIndex, refetch },
+  } = useContext(CollectionContext);
+
+  const { setToastState } = useToast();
+
+  useEffect(() => {
+    if (stores && collections && collections.length > 0 && cIndex !== -1) {
+      setFilteredStores(
+        stores.filter(
+          (store) => store.objectData.content.fields.collection_id === collections[cIndex].id
+        )
+      );
+    }
+  }, [stores, cIndex]);
+
+  useEffect(() => {
+    if (filterdStores) {
+      setCurrentStore(filterdStores[sIndex]);
+    }
+  }, [filterdStores, sIndex]);
+
+  useEffect(() => {
+    if (collections && cIndex !== -1) {
+      setCurrentCollection(collections[cIndex]);
+    }
+  }, [collections, cIndex]);
+
+  const addBaseToSlot = ({ slotNumber, imgURL }: { slotNumber: number; imgURL: string }) => {
+    if (currentCollection && currentStore) {
+      setToastState({
+        type: "loading",
+        message: "Product is being created and added to slot...",
+      });
+
+      const tx = new Transaction();
+
+      const [product] = tx.moveCall({
+        package: PACKAGE_ID,
+        module: "collection",
+        function: "new_base",
+        arguments: [
+          tx.object(currentCollection.id),
+          tx.object(currentCollection.cap),
+          tx.pure.string(imgURL),
+        ],
+      });
+
+      tx.moveCall({
+        package: PACKAGE_ID,
+        module: "collection",
+        function: "add_product_to_store",
+        typeArguments: [`${PACKAGE_ID}::collection::Base`],
+        arguments: [
+          tx.object(currentCollection.id),
+          tx.object(currentStore.id),
+          tx.object(currentStore.cap),
+          tx.pure.u64(slotNumber),
+          tx.object(product),
+        ],
+      });
+
+      signAndExecuteTransaction(
+        {
+          transaction: tx,
+        },
+        {
+          onSuccess: (data) => {
+            console.log("Success! data:", data);
+            refetch();
+            setToastState({
+              type: "success",
+              message: "Creating the product succeeded.",
+            });
+          },
+          onError: (err) => {
+            console.log("Error", err);
+            setToastState({
+              type: "error",
+              message: "Something went wrong while creating the product. Please try again.",
+            });
+          },
+        }
+      );
+    }
+  };
+
+  const addItemToSlot = ({
+    slotNumber,
+    layerType,
+    itemType,
+    imgURL,
+  }: {
+    slotNumber: number;
+    layerType: string;
+    itemType: string;
+    imgURL: string;
+  }) => {
+    if (currentCollection && currentStore) {
+      setToastState({
+        type: "loading",
+        message: "Product is being created and added to slot...",
+      });
+
+      const tx = new Transaction();
+
+      const [product] = tx.moveCall({
+        package: PACKAGE_ID,
+        module: "collection",
+        function: "new_item",
+        arguments: [
+          tx.object(currentCollection.id),
+          tx.object(currentCollection.cap),
+          tx.pure.string(layerType),
+          tx.pure.string(itemType),
+          tx.pure.string(imgURL),
+        ],
+      });
+
+      tx.moveCall({
+        package: PACKAGE_ID,
+        module: "collection",
+        function: "add_product_to_store",
+        typeArguments: [`${PACKAGE_ID}::collection::Item`],
+        arguments: [
+          tx.object(currentCollection.id),
+          tx.object(currentStore.id),
+          tx.object(currentStore.cap),
+          tx.pure.u64(slotNumber),
+          tx.object(product),
+        ],
+      });
+
+      signAndExecuteTransaction(
+        {
+          transaction: tx,
+        },
+        {
+          onSuccess: (data) => {
+            console.log("Success! data:", data);
+            refetch();
+            setToastState({
+              type: "success",
+              message: "Creating the product succeeded.",
+            });
+          },
+          onError: (err) => {
+            console.log("Error", err);
+            setToastState({
+              type: "error",
+              message: "Something went wrong while creating the product. Please try again.",
+            });
+          },
+        }
+      );
+    }
+  };
+
+  const addTicketToSlot = ({
+    slotNumber,
+    ticketType,
+  }: {
+    slotNumber: number;
+    ticketType: string;
+  }) => {
+    if (currentCollection && currentStore) {
+      setToastState({
+        type: "loading",
+        message: "Product is being created and added to slot...",
+      });
+
+      const tx = new Transaction();
+
+      const [product] = tx.moveCall({
+        package: PACKAGE_ID,
+        module: "collection",
+        function: "new_ticket",
+        arguments: [
+          tx.object(currentCollection.id),
+          tx.object(currentCollection.cap),
+          tx.pure.string(ticketType),
+        ],
+      });
+
+      tx.moveCall({
+        package: PACKAGE_ID,
+        module: "collection",
+        function: "add_product_to_store",
+        typeArguments: [`${PACKAGE_ID}::collection::Ticket`],
+        arguments: [
+          tx.object(currentCollection.id),
+          tx.object(currentStore.id),
+          tx.object(currentStore.cap),
+          tx.pure.u64(slotNumber),
+          tx.object(product),
+        ],
+      });
+
+      signAndExecuteTransaction(
+        {
+          transaction: tx,
+        },
+        {
+          onSuccess: (data) => {
+            console.log("Success! data:", data);
+            refetch();
+            setToastState({
+              type: "success",
+              message: "Creating the product succeeded.",
+            });
+          },
+          onError: (err) => {
+            console.log("Error", err);
+            setToastState({
+              type: "error",
+              message: "Something went wrong while creating the product. Please try again.",
+            });
+          },
+        }
+      );
+    }
+  };
+
+  const addPropertyScrollToSlot = ({
+    slotNumber,
+    propertyType,
+    propertyValue,
+  }: {
+    slotNumber: number;
+    propertyType: string;
+    propertyValue: number;
+  }) => {
+    if (currentCollection && currentStore) {
+      setToastState({
+        type: "loading",
+        message: "Product is being created and added to slot...",
+      });
+
+      const tx = new Transaction();
+
+      const [product] = tx.moveCall({
+        package: PACKAGE_ID,
+        module: "collection",
+        function: "new_property_scroll",
+        arguments: [
+          tx.object(currentCollection.id),
+          tx.object(currentCollection.cap),
+          tx.pure.string(propertyType),
+          tx.pure.u64(propertyValue),
+        ],
+      });
+
+      tx.moveCall({
+        package: PACKAGE_ID,
+        module: "collection",
+        function: "add_product_to_store",
+        typeArguments: [`${PACKAGE_ID}::collection::PropertyScroll`],
+        arguments: [
+          tx.object(currentCollection.id),
+          tx.object(currentStore.id),
+          tx.object(currentStore.cap),
+          tx.pure.u64(slotNumber),
+          tx.object(product),
+        ],
+      });
+
+      signAndExecuteTransaction(
+        {
+          transaction: tx,
+        },
+        {
+          onSuccess: (data) => {
+            console.log("Success! data:", data);
+            refetch();
+            setToastState({
+              type: "success",
+              message: "Creating the product succeeded.",
+            });
+          },
+          onError: (err) => {
+            console.log("Error", err);
+            setToastState({
+              type: "error",
+              message: "Something went wrong while creating the product. Please try again.",
+            });
+          },
+        }
+      );
+    }
+  };
+  return {
+    addBaseToSlot,
+    addItemToSlot,
+    addTicketToSlot,
+    addPropertyScrollToSlot,
   };
 }
