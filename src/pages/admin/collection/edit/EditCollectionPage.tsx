@@ -65,9 +65,7 @@ export default function EditCollectionPage({}: Props) {
         </TabsContent>
 
         <TabsContent value="properties" className="space-y-4">
-          {currentCollection && (
-            <PropertyInfo key={currentCollection.id} collection={currentCollection} />
-          )}
+          <PropertyInfo />
         </TabsContent>
 
         <TabsContent value="tickets" className="space-y-4">

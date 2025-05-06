@@ -209,7 +209,7 @@ export function useAddLayerType() {
   } = useContext(CollectionContext);
   const { setToastState } = useToast();
 
-  const addLayerType = ({ layer }: { layer: string }) => {
+  const addLayerType = ({ typeName }: { typeName: string }) => {
     if (!account) return;
 
     setToastState({
@@ -232,7 +232,7 @@ export function useAddLayerType() {
       arguments: [
         tx.object(currentCollection.id),
         tx.object(currentCollection.cap),
-        tx.pure.string(layer),
+        tx.pure.string(typeName),
       ],
     });
 
@@ -261,5 +261,68 @@ export function useAddLayerType() {
   };
   return {
     addLayerType,
+  };
+}
+
+export function useAddPropertyType() {
+  const account = useCurrentAccount();
+  const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction();
+  const {
+    collection: { collections, index, refetch },
+  } = useContext(CollectionContext);
+  const { setToastState } = useToast();
+
+  const addPropertyType = ({ typeName }: { typeName: string }) => {
+    if (!account) return;
+
+    setToastState({
+      type: "loading",
+      message: "Property type is being created...",
+    });
+
+    if (!collections) return;
+
+    const currentCollection = collections[index];
+
+    if (!currentCollection) return;
+
+    const tx = new Transaction();
+
+    tx.moveCall({
+      package: PACKAGE_ID,
+      module: "collection",
+      function: "add_property_type",
+      arguments: [
+        tx.object(currentCollection.id),
+        tx.object(currentCollection.cap),
+        tx.pure.string(typeName),
+      ],
+    });
+
+    signAndExecuteTransaction(
+      {
+        transaction: tx,
+      },
+      {
+        onSuccess: (data) => {
+          console.log("Success! data:", data);
+          refetch();
+          setToastState({
+            type: "success",
+            message: "Creating the property type succeeded.",
+          });
+        },
+        onError: (err) => {
+          console.log("Error", err);
+          setToastState({
+            type: "error",
+            message: "Something went wrong while creating the property type. Please try again.",
+          });
+        },
+      }
+    );
+  };
+  return {
+    addPropertyType,
   };
 }

@@ -72,7 +72,7 @@ export default function LayerInfo() {
         />
         <Button
           onClick={() => {
-            addLayerType({ layer: newLayerName });
+            addLayerType({ typeName: newLayerName });
             setNewLayerName("");
           }}
           disabled={!newLayerName.trim()}
