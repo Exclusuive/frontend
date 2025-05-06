@@ -5,7 +5,6 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { CollectionContext } from "@/context/CollectionContext";
 import { useCurrentAccount } from "@mysten/dapp-kit";
 import SelectStoreModal from "./SelectStoreModal";
-import { StoreData } from "@/types/store";
 import Store from "./Store";
 
 interface Props {}
@@ -13,31 +12,11 @@ interface Props {}
 export default function ManageStorePage({}: Props) {
   const [isCOpen, setIsCOpen] = useState(false);
   const [isSOpen, setIsSOpen] = useState(false);
-  const [filterdStores, setFilteredStores] = useState<StoreData[]>();
-  const [currentStore, setCurrentStore] = useState<StoreData>();
 
   const account = useCurrentAccount();
-
   const {
-    collection: { collections, index: cIndex },
-    store: { stores, index: sIndex },
+    collection: { index: cIndex },
   } = useContext(CollectionContext);
-
-  useEffect(() => {
-    if (stores && collections && collections.length > 0 && cIndex !== -1) {
-      setFilteredStores(
-        stores.filter(
-          (store) => store.objectData.content.fields.collection_id === collections[cIndex].id
-        )
-      );
-    }
-  }, [stores, cIndex]);
-
-  useEffect(() => {
-    if (filterdStores) {
-      setCurrentStore(filterdStores[sIndex]);
-    }
-  }, [filterdStores, sIndex]);
 
   useEffect(() => {
     if (cIndex === -1) {
@@ -70,11 +49,9 @@ export default function ManageStorePage({}: Props) {
         </Dialog>
       )}
 
-      {currentStore && (
-        <Dialog open={isSOpen} onOpenChange={setIsSOpen}>
-          <Store store={currentStore} />
-        </Dialog>
-      )}
+      <Dialog open={isSOpen} onOpenChange={setIsSOpen}>
+        <Store />
+      </Dialog>
     </div>
   );
 }
