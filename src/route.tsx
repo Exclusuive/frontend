@@ -1,17 +1,18 @@
 import { createBrowserRouter, redirect, RouterProvider } from "react-router-dom";
-import { ProtectedWebViewLayout } from "./layouts/ProtectedWebViewLayout";
-import { AuthWebViewLayout } from "./layouts/AuthWebviewLayout";
+import { ProtectedWebViewLayout } from "@/layouts/ProtectedWebViewLayout";
+import { AuthWebViewLayout } from "@/layouts/AuthWebviewLayout";
 import { lazy } from "react";
-import { loader as homeLoader } from "./pages/Home";
-import ServiceProtectedRouter from "./components/provider/service-protected-router";
-import AuthProtectedRouter from "./components/provider/auth-protected-router";
+import { loader as homeLoader } from "@/pages/Home";
+import { paths } from "@/config/paths";
+import ServiceProtectedRouter from "@/components/provider/service-protected-router";
+import AuthProtectedRouter from "@/components/provider/auth-protected-router";
 
 const Home = lazy(() => import("@/pages/Home"));
-const Login = lazy(() => import("./pages/Login"));
+const Login = lazy(() => import("@/pages/Login"));
 
 const router = createBrowserRouter([
   {
-    path: "/login",
+    path: paths.auth.login.path,
     element: (
       <AuthProtectedRouter>
         <AuthWebViewLayout>
@@ -21,7 +22,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/",
+    path: paths.home.path,
     element: (
       <ServiceProtectedRouter>
         <ProtectedWebViewLayout>
