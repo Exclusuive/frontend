@@ -113,3 +113,91 @@ export function useCreateCollection() {
     createCollection,
   };
 }
+
+export function useUpdateCollection() {
+  const account = useCurrentAccount();
+  const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction();
+  const {
+    collection: { collections, index, refetch },
+  } = useContext(CollectionContext);
+  const { setToastState } = useToast();
+
+  const updateCollectionInfo = ({
+    bannerImgURL,
+    description,
+  }: {
+    bannerImgURL: string;
+    description: string;
+  }) => {
+    if (!account) return;
+
+    if (!collections) return;
+
+    const currentCollection = collections[index];
+
+    if (!currentCollection) return;
+
+    const collectionName = currentCollection.objectData.content.fields.base_type.fields.type;
+
+    setToastState({
+      type: "loading",
+      message: "Collection is being updated...",
+    });
+
+    const tx = new Transaction();
+
+    tx.moveCall({
+      package: PACKAGE_ID,
+      module: "collection",
+      function: "update_config_to_type",
+      typeArguments: [`${PACKAGE_ID}::collection::BaseType`],
+      arguments: [
+        tx.object(currentCollection.id),
+        tx.object(currentCollection.cap),
+        tx.pure.string(collectionName),
+        tx.pure.string("img_url"),
+        tx.pure.string(bannerImgURL),
+      ],
+    });
+
+    tx.moveCall({
+      package: PACKAGE_ID,
+      module: "collection",
+      function: "update_config_to_type",
+      typeArguments: [`${PACKAGE_ID}::collection::BaseType`],
+      arguments: [
+        tx.object(currentCollection.id),
+        tx.object(currentCollection.cap),
+        tx.pure.string(collectionName),
+        tx.pure.string("description"),
+        tx.pure.string(description),
+      ],
+    });
+
+    signAndExecuteTransaction(
+      {
+        transaction: tx,
+      },
+      {
+        onSuccess: (data) => {
+          console.log("Success! data:", data);
+          refetch();
+          setToastState({
+            type: "success",
+            message: "Updating collection succeeded.",
+          });
+        },
+        onError: (err) => {
+          console.log("Error", err);
+          setToastState({
+            type: "error",
+            message: "Something went wrong while creating the collection. Please try again.",
+          });
+        },
+      }
+    );
+  };
+  return {
+    updateCollectionInfo,
+  };
+}
