@@ -3,7 +3,8 @@ import { ProtectedWebViewLayout } from "./layouts/ProtectedWebViewLayout";
 import { AuthWebViewLayout } from "./layouts/AuthWebviewLayout";
 import { lazy } from "react";
 import { loader as homeLoader } from "./pages/Home";
-import ServiceProtectedRouter from "./components/provider/service-protect-router";
+import ServiceProtectedRouter from "./components/provider/service-protected-router";
+import AuthProtectedRouter from "./components/provider/auth-protected-router";
 
 const Home = lazy(() => import("@/pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
@@ -12,9 +13,11 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: (
-      <AuthWebViewLayout>
-        <Login />
-      </AuthWebViewLayout>
+      <AuthProtectedRouter>
+        <AuthWebViewLayout>
+          <Login />
+        </AuthWebViewLayout>
+      </AuthProtectedRouter>
     ),
   },
   {
