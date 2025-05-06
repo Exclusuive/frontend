@@ -5,7 +5,7 @@ import { CollectionData, ItemType } from "@/types/collection";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import CollectionImg from "./CollectionImg";
+import CollectionImg from "../../../page-components/admin/collection/CollectionImg";
 
 interface Props {
   collection: CollectionData;

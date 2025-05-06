@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import SelectCollectionModal from "../SelectCollectionModal";
+import { SelectCollectionModal } from "@/page-components/admin/collection";
 import { useContext, useEffect, useState } from "react";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { CollectionContext } from "@/context/CollectionContext";
