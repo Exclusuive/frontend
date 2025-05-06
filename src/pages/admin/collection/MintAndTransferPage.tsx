@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { CollectionContext } from "@/context/CollectionContext";
 import { CollectionData } from "@/types/collection";
+import { MintBase, MintExistingItem, MintNewItem } from "@/page-components/admin/collection/mint";
 
 interface Props {}
 
@@ -34,6 +35,9 @@ export default function MintAndTransferPage({}: Props) {
         </DialogTrigger>
         <SelectCollectionModal />
       </Dialog>
+      <MintBase />
+      <MintExistingItem />
+      <MintNewItem />
     </div>
   );
 }
