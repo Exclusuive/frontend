@@ -64,15 +64,6 @@ export default function SelectCollectionModal() {
             </DialogClose>
           ))}
       </div>
-
-      <DialogFooter>
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <DialogTrigger>
-            <Button>Create New Collection</Button>
-          </DialogTrigger>
-          <CreateCollectionModal isOpen={isOpen} />
-        </Dialog>
-      </DialogFooter>
     </DialogContent>
   );
 }
