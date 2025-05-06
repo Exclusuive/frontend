@@ -19,7 +19,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Button } from "../components/ui/button";
+import { Button } from "./components/ui/button";
 import {
   useWallets,
   useDisconnectWallet,
