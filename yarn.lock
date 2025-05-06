@@ -1038,6 +1038,37 @@
     "@tailwindcss/oxide" "4.1.5"
     tailwindcss "4.1.5"
 
+"@tanstack/eslint-plugin-query@^5.74.7":
+  version "5.74.7"
+  resolved "https://registry.yarnpkg.com/@tanstack/eslint-plugin-query/-/eslint-plugin-query-5.74.7.tgz#e73433ed8ba2399dc56a225ae4e9b79300878aac"
+  integrity sha512-EeHuaaYiCOD+XOGyB7LMNEx9OEByAa5lkgP+S3ZggjKJpmIO6iRWeoIYYDKo2F8uc3qXcVhTfC7pn7NddQiNtA==
+  dependencies:
+    "@typescript-eslint/utils" "^8.18.1"
+
+"@tanstack/query-core@5.75.0":
+  version "5.75.0"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.75.0.tgz#6a29620a58cf91cac5f804dde44bb8904df071d7"
+  integrity sha512-rk8KQuCdhoRkzjRVF3QxLgAfFUyS0k7+GCQjlGEpEGco+qazJ0eMH6aO1DjDjibH7/ik383nnztua3BG+lOnwg==
+
+"@tanstack/query-devtools@5.74.7":
+  version "5.74.7"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-devtools/-/query-devtools-5.74.7.tgz#c9b022b386ac86e6395228b5d6912e6444b3b971"
+  integrity sha512-nSNlfuGdnHf4yB0S+BoNYOE1o3oAH093weAYZolIHfS2stulyA/gWfSk/9H4ZFk5mAAHb5vNqAeJOmbdcGPEQw==
+
+"@tanstack/react-query-devtools@^5.75.2":
+  version "5.75.2"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query-devtools/-/react-query-devtools-5.75.2.tgz#434ce074449da2e30381aec552d9327143221412"
+  integrity sha512-bOwfNBka4Xc4Q2EhOW15arll7UkavwMgEAbbqnEDbrpHFxbZR33EYIMh9SyUmqVsZEv0rGmbvzK8OsXRjTTTuA==
+  dependencies:
+    "@tanstack/query-devtools" "5.74.7"
+
+"@tanstack/react-query@^5.75.2":
+  version "5.75.2"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.75.2.tgz#6397277c90aa4d4203bf1b53738397bc51c00d7c"
+  integrity sha512-8F8VOsWUfSkCFoi62O9HSZT9jDgg28Ln8Z2dYKfRo/O2A0sgvr0uxTuNoon3PPXoDuHofv5V3elBI1M2Gh1MPg==
+  dependencies:
+    "@tanstack/query-core" "5.75.0"
+
 "@ts-morph/common@~0.19.0":
   version "0.19.0"
   resolved "https://registry.yarnpkg.com/@ts-morph/common/-/common-0.19.0.tgz#927fcd81d1bbc09c89c4a310a84577fb55f3694e"
@@ -1195,7 +1226,7 @@
     semver "^7.6.0"
     ts-api-utils "^2.0.1"
 
-"@typescript-eslint/utils@8.31.1":
+"@typescript-eslint/utils@8.31.1", "@typescript-eslint/utils@^8.18.1":
   version "8.31.1"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/utils/-/utils-8.31.1.tgz#5628ea0393598a0b2f143d0fc6d019f0dee9dd14"
   integrity sha512-2DSI4SNfF5T4oRveQ4nUrSjUqjMND0nLq9rEkz0gfGr3tg0S5KB6DhwR+WZPCjzkZl3cH+4x2ce3EsL50FubjQ==
@@ -1439,7 +1470,7 @@ chalk@^4.0.0:
     ansi-styles "^4.1.0"
     supports-color "^7.1.0"
 
-chalk@^5.0.0, chalk@^5.4.1:
+chalk@^5.0.0:
   version "5.4.1"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-5.4.1.tgz#1b48bf0963ec158dce2aacf69c093ae2dd2092d8"
   integrity sha512-zgVZuo2WcZgfUEmsn6eO3kINexW8RAE4maiQ8QNs8CtpPCSyMiYsULR3HQYkm3w8FIA3SberyMJMSldGsW+U3w==
@@ -3182,13 +3213,6 @@ setprototypeof@1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/setprototypeof/-/setprototypeof-1.2.0.tgz#66c9a24a73f9fc28cbe66b09fed3d33dcaf1b424"
   integrity sha512-E5LDX7Wrp85Kil5bhZv46j8jOeboKq5JMmYM3gVGdGH8xFpPWXUMsNrlODCrkoxMEeNi/XZIwuRvY4XNwYMJpw==
-
-shadcn-ui@^0.9.5:
-  version "0.9.5"
-  resolved "https://registry.yarnpkg.com/shadcn-ui/-/shadcn-ui-0.9.5.tgz#b7f35b78f2c7fe0b71651fe542ed62f01795b4a6"
-  integrity sha512-dsBQWpdLLYCdSdmvOmu53nJhhWnQD1OiblhuhkI4rPYxPKTyfbmZ2NTJHWMu1fXN9PTfN6IVK5vvh+BrjHJx2g==
-  dependencies:
-    chalk "^5.4.1"
 
 shadcn@^2.5.0:
   version "2.5.0"

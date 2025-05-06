@@ -1,10 +1,10 @@
-import { createBrowserRouter, redirect } from "react-router-dom";
+import { createBrowserRouter, redirect, RouterProvider } from "react-router-dom";
 import { ProtectedWebViewLayout } from "./layouts/ProtectedWebViewLayout";
+import { AuthWebViewLayout } from "./layouts/AuthWebviewLayout";
 import Home, { loader as homeLoader } from "./pages/Home";
 import Login from "./pages/Login";
-import { AuthWebViewLayout } from "./layouts/AuthWebviewLayout";
 
-export const router = createBrowserRouter([
+const router = createBrowserRouter([
   {
     path: "/",
     element: (
@@ -27,3 +27,7 @@ export const router = createBrowserRouter([
     loader: () => redirect("/"),
   },
 ]);
+
+export const AppRouter = () => {
+  return <RouterProvider router={router} />;
+};
