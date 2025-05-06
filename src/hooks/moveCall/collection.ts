@@ -191,7 +191,7 @@ export function useUpdateCollection() {
           console.log("Error", err);
           setToastState({
             type: "error",
-            message: "Something went wrong while creating the collection. Please try again.",
+            message: "Something went wrong while updating the collection. Please try again.",
           });
         },
       }
@@ -199,5 +199,68 @@ export function useUpdateCollection() {
   };
   return {
     updateCollectionInfo,
+  };
+}
+
+export function useAddLayerType() {
+  const account = useCurrentAccount();
+  const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction();
+  const {
+    collection: { collections, index, refetch },
+  } = useContext(CollectionContext);
+  const { setToastState } = useToast();
+
+  const addCollectionLayerType = ({ layer }: { layer: string }) => {
+    if (!account) return;
+
+    setToastState({
+      type: "loading",
+      message: "Layer type is being created...",
+    });
+
+    if (!collections) return;
+
+    const currentCollection = collections[index];
+
+    if (!currentCollection) return;
+
+    const tx = new Transaction();
+
+    tx.moveCall({
+      package: PACKAGE_ID,
+      module: "collection",
+      function: "add_layer_type",
+      arguments: [
+        tx.object(currentCollection.id),
+        tx.object(currentCollection.cap),
+        tx.pure.string(layer),
+      ],
+    });
+
+    signAndExecuteTransaction(
+      {
+        transaction: tx,
+      },
+      {
+        onSuccess: (data) => {
+          console.log("Success! data:", data);
+          refetch();
+          setToastState({
+            type: "success",
+            message: "Creating the layer type succeeded.",
+          });
+        },
+        onError: (err) => {
+          console.log("Error", err);
+          setToastState({
+            type: "error",
+            message: "Something went wrong while creating the layer type. Please try again.",
+          });
+        },
+      }
+    );
+  };
+  return {
+    addCollectionLayerType,
   };
 }
