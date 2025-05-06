@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import AddNewSlotModal from "./AddNewSlotModal";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import AddProductModal from "./AddProductModal";
 import AddConditionModal from "./AddConditionModal";
 import { useContext, useEffect, useState } from "react";
 import { CollectionContext } from "@/context/CollectionContext";
@@ -177,14 +176,6 @@ export default function Store() {
                     </Button>
                   </DialogTrigger>
                   <AddConditionModal></AddConditionModal>
-                </Dialog>
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button variant="outline" className="w-full">
-                      Add Product
-                    </Button>
-                  </DialogTrigger>
-                  <AddProductModal />
                 </Dialog>
               </CardContent>
             </Card>
