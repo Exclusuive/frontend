@@ -26,7 +26,7 @@ export default function EditCollectionPage({}: Props) {
 
   return (
     <div className="container w-full space-y-6 p-4">
-      <h1 className="text-2xl font-bold">Edit Collection Information</h1>
+      <h1 className="text-2xl font-bold">Edit Collection</h1>
       <div className="flex items-center gap-4">
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger>
