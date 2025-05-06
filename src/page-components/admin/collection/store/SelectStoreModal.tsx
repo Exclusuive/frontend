@@ -13,7 +13,7 @@ import { useContext, useEffect, useState } from "react";
 import { CollectionContext } from "@/context/CollectionContext";
 import { StoreData } from "@/types/store";
 import { DialogClose } from "@radix-ui/react-dialog";
-import CreateStoreModal from "./CreateStoreModal";
+import CreateStoreModal from "../../../../page-components/admin/collection/store/CreateStoreModal";
 
 export default function SelectStoreModal() {
   const [filterdStores, setFilteredStores] = useState<StoreData[]>();

@@ -1,11 +1,10 @@
-import { Button } from "@/components/ui/button";
-import { SelectCollectionModal } from "@/page-components/admin/collection";
 import { useContext, useEffect, useState } from "react";
+import { useCurrentAccount } from "@mysten/dapp-kit";
+import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { CollectionContext } from "@/context/CollectionContext";
-import { useCurrentAccount } from "@mysten/dapp-kit";
-import SelectStoreModal from "./SelectStoreModal";
-import Store from "./Store";
+import { SelectCollectionModal } from "@/page-components/admin/collection";
+import { SelectStoreModal, Store } from "@/page-components/admin/collection/store";
 
 interface Props {}
 

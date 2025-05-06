@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { useContext, useState } from "react";
 import { CollectionContext } from "@/context/CollectionContext";
 import { CreateCollectionModal } from "./";
-import CollectionImg from "../../../page-components/admin/collection/CollectionImg";
+import CollectionImg from "@/page-components/admin/collection/CollectionImg";
 import { DialogClose } from "@radix-ui/react-dialog";
 
 export default function SelectCollectionModal() {

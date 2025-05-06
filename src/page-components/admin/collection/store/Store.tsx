@@ -1,11 +1,11 @@
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
-import AddNewSlotModal from "./AddNewSlotModal";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import AddConditionModal from "./AddConditionModal";
 import { useContext, useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CollectionContext } from "@/context/CollectionContext";
 import { StoreData } from "@/types/store";
+import AddNewSlotModal from "./AddNewSlotModal";
+import AddConditionModal from "./AddConditionModal";
 import AddProductToSlotModal from "./AddProductToSlotModal";
 
 export default function Store() {

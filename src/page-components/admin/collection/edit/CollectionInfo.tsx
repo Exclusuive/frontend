@@ -3,7 +3,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Upload } from "lucide-react";
 import { useContext, useState } from "react";
-import CollectionImg from "../../../../page-components/admin/collection/CollectionImg";
+import CollectionImg from "@/page-components/admin/collection/CollectionImg";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useUpdateCollection } from "@/hooks/moveCall/collection";

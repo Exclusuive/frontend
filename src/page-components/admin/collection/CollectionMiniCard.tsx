@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CollectionData } from "@/types/collection";
-import CollectionImg from "../../../page-components/admin/collection/CollectionImg";
+import CollectionImg from "@/page-components/admin/collection/CollectionImg";
 interface Props {
   collection: CollectionData;
 }

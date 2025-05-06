@@ -11,7 +11,7 @@ import {
 import { CollectionContext } from "@/context/CollectionContext";
 import { StoreData } from "@/types/store";
 import { useContext, useEffect, useState } from "react";
-import AddItemModal from "./AddItemModal";
+import AddItemModal from "../../../../page-components/admin/collection/store/AddItemModal";
 import AddPropertyScrollModal from "./AddPropertyScrollModal";
 import AddTicketModal from "./AddTicketModal";
 import AddBaseModal from "./AddBaseModal";
