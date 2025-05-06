@@ -7,9 +7,9 @@ import NotFound from "./NotFound";
 import LandingPage from "./pages/LandingPage";
 
 import CollectionPage from "./pages/admin/collection/CollectionPage";
-import EditCollectionPage from "./pages/admin/collection/edit/EditCollectionPage";
-import ManageStorePage from "./pages/admin/collection/store/ManageStorePage";
-import MintAndTransferPage from "./pages/admin/collection/mint/MintAndTransferPage";
+import EditCollectionPage from "./pages/admin/collection/EditCollectionPage";
+import ManageStorePage from "./pages/admin/collection/ManageStorePage";
+import MintAndTransferPage from "./pages/admin/collection/MintAndTransferPage";
 
 import MembershipPolicyPage from "./pages/admin/membership-policy/MembershipPolicyPage";
 
