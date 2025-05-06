@@ -7,6 +7,7 @@ import { StoreData } from "@/types/store";
 import AddNewSlotModal from "./AddNewSlotModal";
 import AddConditionModal from "./AddConditionModal";
 import AddProductToSlotModal from "./AddProductToSlotModal";
+import AddConditionToSlotModal from "./AddConditionToSlotModal";
 
 export default function Store() {
   const [currentStore, setCurrentStore] = useState<StoreData>();
@@ -58,16 +59,25 @@ export default function Store() {
               </DialogTrigger>
               <AddNewSlotModal></AddNewSlotModal>
             </Dialog>
-            <Dialog>
-              <DialogTrigger>
-                <Button>Add Product to Slot</Button>
-              </DialogTrigger>
-              <AddProductToSlotModal />
-              {/* <AddNewSlotModal></AddNewSlotModal> */}
-            </Dialog>
           </div>
         </div>
       )}
+      <div className="mb-6 flex gap-2">
+        <Dialog>
+          <DialogTrigger>
+            <Button>Add Product to Slot</Button>
+          </DialogTrigger>
+          <AddProductToSlotModal />
+          {/* <AddNewSlotModal></AddNewSlotModal> */}
+        </Dialog>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button>Add Condition to Slot</Button>
+          </DialogTrigger>
+          {/* <AddConditionModal></AddConditionModal> */}
+          <AddConditionToSlotModal />
+        </Dialog>
+      </div>
 
       {currentStore && (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -166,17 +176,6 @@ export default function Store() {
                       )}
                     </div>
                   ))}
-              </CardContent>
-
-              <CardContent className="space-y-2">
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button variant="outline" className="w-full">
-                      Add Condition
-                    </Button>
-                  </DialogTrigger>
-                  <AddConditionModal></AddConditionModal>
-                </Dialog>
               </CardContent>
             </Card>
           ))}

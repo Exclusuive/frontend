@@ -10,14 +10,9 @@ import {
 import { CollectionContext } from "@/context/CollectionContext";
 import { StoreData } from "@/types/store";
 import { useContext, useEffect, useState } from "react";
-import {
-  AddItemModal,
-  AddPropertyScrollModal,
-  AddTicketModal,
-  AddBaseModal,
-} from "@/page-components/admin/collection/store";
+import { AddConditionModal } from "@/page-components/admin/collection/store";
 
-export default function AddProductToSlotModal() {
+export default function AddConditionToSlotModal() {
   const [currentStore, setCurrentStore] = useState<StoreData>();
   const [filterdStores, setFilteredStores] = useState<StoreData[]>();
   const {
@@ -44,7 +39,7 @@ export default function AddProductToSlotModal() {
   return (
     <DialogContent className="sm:max-w-[600px]">
       <DialogHeader>
-        <DialogTitle>Add Product to Slot</DialogTitle>
+        <DialogTitle>Add Condition to Slot</DialogTitle>
         <DialogDescription>Select a slot to add product.</DialogDescription>
       </DialogHeader>
       {currentStore && (
@@ -74,15 +69,7 @@ export default function AddProductToSlotModal() {
                 </Card>
               </DialogTrigger>
               <DialogContent>
-                {slot.fields.product.fields.name.split("::")[2] === "Base" ? (
-                  <AddBaseModal slotNumber={Number(slot.fields.number)} />
-                ) : slot.fields.product.fields.name.split("::")[2] === "Item" ? (
-                  <AddItemModal slotNumber={Number(slot.fields.number)} />
-                ) : slot.fields.product.fields.name.split("::")[2] === "PropertyScroll" ? (
-                  <AddPropertyScrollModal slotNumber={Number(slot.fields.number)} />
-                ) : (
-                  <AddTicketModal slotNumber={Number(slot.fields.number)} />
-                )}
+                <AddConditionModal slotNumber={slot.fields.number} />
               </DialogContent>
             </Dialog>
           ))}

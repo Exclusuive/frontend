@@ -460,3 +460,99 @@ export function useAddProductToSlot() {
     addPropertyScrollToSlot,
   };
 }
+
+export function useAddConditionToSlot() {
+  const [currentCollection, setCurrentCollection] = useState<CollectionData>();
+  const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction();
+
+  const [currentStore, setCurrentStore] = useState<StoreData>();
+  const [filterdStores, setFilteredStores] = useState<StoreData[]>();
+  const {
+    collection: { collections, index: cIndex },
+    store: { stores, index: sIndex, refetch },
+  } = useContext(CollectionContext);
+
+  const { setToastState } = useToast();
+
+  useEffect(() => {
+    if (stores && collections && collections.length > 0 && cIndex !== -1) {
+      setFilteredStores(
+        stores.filter(
+          (store) => store.objectData.content.fields.collection_id === collections[cIndex].id
+        )
+      );
+    }
+  }, [stores, cIndex]);
+
+  useEffect(() => {
+    if (filterdStores) {
+      setCurrentStore(filterdStores[sIndex]);
+    }
+  }, [filterdStores, sIndex]);
+
+  useEffect(() => {
+    if (collections && cIndex !== -1) {
+      setCurrentCollection(collections[cIndex]);
+    }
+  }, [collections, cIndex]);
+
+  const addConditionToSlot = ({
+    slotNumber,
+    ticketType,
+    requirement,
+  }: {
+    slotNumber: number;
+    ticketType: string;
+    requirement: number;
+  }) => {
+    if (currentCollection && currentStore) {
+      setToastState({
+        type: "loading",
+        message: "Condition is being created and added to slot...",
+      });
+
+      const tx = new Transaction();
+
+      tx.moveCall({
+        package: PACKAGE_ID,
+        module: "collection",
+        function: "add_condition_to_slot",
+        arguments: [
+          tx.object(currentCollection.id),
+          tx.object(currentStore.id),
+          tx.object(currentStore.cap),
+          tx.pure.u64(slotNumber),
+          tx.pure.string(ticketType),
+          tx.pure.u64(requirement),
+        ],
+      });
+
+      signAndExecuteTransaction(
+        {
+          transaction: tx,
+        },
+        {
+          onSuccess: (data) => {
+            console.log("Success! data:", data);
+            refetch();
+            setToastState({
+              type: "success",
+              message: "Creating the condition succeeded.",
+            });
+          },
+          onError: (err) => {
+            console.log("Error", err);
+            setToastState({
+              type: "error",
+              message: "Something went wrong while creating the condition. Please try again.",
+            });
+          },
+        }
+      );
+    }
+  };
+
+  return {
+    addConditionToSlot,
+  };
+}

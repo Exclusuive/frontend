@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import {
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -15,8 +16,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { CollectionContext } from "@/context/CollectionContext";
+import { useAddConditionToSlot } from "@/hooks/moveCall/store";
+import { CollectionData } from "@/types/collection";
+import { useContext, useEffect, useState } from "react";
 
-export default function AddConditionModal() {
+export default function AddConditionModal({ slotNumber }: { slotNumber: number }) {
+  const [ticketType, setTicketType] = useState("Select Ticket Type");
+  const [requirement, setRequirement] = useState(0);
+  const [currentCollection, setCurrentCollection] = useState<CollectionData>();
+
+  const { addConditionToSlot } = useAddConditionToSlot();
+
+  const {
+    collection: { collections, index },
+  } = useContext(CollectionContext);
+
+  useEffect(() => {
+    if (collections && index !== -1) {
+      setCurrentCollection(collections[index]);
+    }
+  }, [collections, index]);
   return (
     <DialogContent>
       <DialogHeader>
@@ -31,17 +51,19 @@ export default function AddConditionModal() {
           <Label htmlFor="ticketType" className="text-right">
             Ticket Type
           </Label>
-          {/* <Select value={selectionData.newTicketType} onValueChange={handleTicketTypeChange}> */}
-          <Select value={"new Ticket Type"} onValueChange={() => {}}>
+          <Select value={ticketType} onValueChange={setTicketType}>
             <SelectTrigger className="col-span-3">
-              <SelectValue placeholder="Select ticket type" />
+              <SelectValue>{ticketType}</SelectValue>
             </SelectTrigger>
             <SelectContent>
-              {/* {collection?.ticket_types?.map((ticketType) => (
-                <SelectItem key={ticketType} value={ticketType}>
-                  {ticketType}
-                </SelectItem>
-              ))} */}
+              {currentCollection &&
+                currentCollection.objectData.content.fields.ticket_types.fields.contents.map(
+                  (t) => (
+                    <SelectItem key={t.fields.type} value={t.fields.type}>
+                      {t.fields.type}
+                    </SelectItem>
+                  )
+                )}
             </SelectContent>
           </Select>
         </div>
@@ -51,17 +73,25 @@ export default function AddConditionModal() {
           </Label>
           <Input
             id="requirements"
-            // value={selectionData.newRequirements}
-            value={"new Requirmentes"}
-            // onChange={(e) => handleRequirementsChange(e.target.value)}
-            onChange={(e) => {}}
+            value={requirement}
+            onChange={(e) => {
+              setRequirement(Number(e.target.value));
+            }}
             className="col-span-3"
           />
         </div>
       </div>
       <DialogFooter>
         {/* <Button onClick={() => handleAddConditionToSelection(slot.fields.number)}> */}
-        <Button onClick={() => {}}>Add Condition</Button>
+        <DialogClose>
+          <Button
+            onClick={() => {
+              addConditionToSlot({ slotNumber, ticketType, requirement });
+            }}
+          >
+            Add Condition
+          </Button>
+        </DialogClose>
       </DialogFooter>
     </DialogContent>
   );
