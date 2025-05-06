@@ -4,6 +4,7 @@ import { CollectionData } from "@/types/collection";
 import { useSignAndExecuteTransaction } from "@mysten/dapp-kit";
 import { Transaction } from "@mysten/sui/transactions";
 import { useContext, useEffect, useState } from "react";
+import { useToast } from "../UI/useToast";
 
 export function useCreateStore() {
   const [currentCollection, setCurrentCollection] = useState<CollectionData>();
@@ -12,6 +13,7 @@ export function useCreateStore() {
     collection: { collections, index: cIndex },
     store: { refetch },
   } = useContext(CollectionContext);
+  const { setToastState } = useToast();
 
   useEffect(() => {
     if (collections && cIndex !== -1) {
@@ -21,6 +23,11 @@ export function useCreateStore() {
 
   const createStore = ({ storeName }: { storeName: string }) => {
     if (currentCollection) {
+      setToastState({
+        type: "loading",
+        message: "Store is being created...",
+      });
+
       const tx = new Transaction();
       tx.moveCall({
         package: PACKAGE_ID,
@@ -40,6 +47,17 @@ export function useCreateStore() {
           onSuccess: (data) => {
             console.log("Success! data:", data);
             refetch();
+            setToastState({
+              type: "success",
+              message: "Creating store succeeded.",
+            });
+          },
+          onError: (err) => {
+            console.log("Error", err);
+            setToastState({
+              type: "error",
+              message: "Something went wrong while creating the store. Please try again.",
+            });
           },
         }
       );

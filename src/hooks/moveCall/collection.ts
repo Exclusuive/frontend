@@ -4,6 +4,7 @@ import { CollectionContext } from "@/context/CollectionContext";
 import { useCurrentAccount, useSignAndExecuteTransaction } from "@mysten/dapp-kit";
 import { Transaction } from "@mysten/sui/transactions";
 import { useContext } from "react";
+import { useToast } from "../UI/useToast";
 
 export function useCreateCollection() {
   const account = useCurrentAccount();
@@ -11,6 +12,7 @@ export function useCreateCollection() {
   const {
     collection: { refetch },
   } = useContext(CollectionContext);
+  const { setToastState } = useToast();
 
   const createCollection = ({
     collectionName,
@@ -24,6 +26,10 @@ export function useCreateCollection() {
     layers: string[];
   }) => {
     if (!account) return;
+    setToastState({
+      type: "loading",
+      message: "Collection is being created...",
+    });
 
     const tx = new Transaction();
     const [col, cap] = tx.moveCall({
@@ -88,6 +94,17 @@ export function useCreateCollection() {
         onSuccess: (data) => {
           console.log("Success! data:", data);
           refetch();
+          setToastState({
+            type: "success",
+            message: "Creating collection succeeded.",
+          });
+        },
+        onError: (err) => {
+          console.log("Error", err);
+          setToastState({
+            type: "error",
+            message: "Something went wrong while creating the collection. Please try again.",
+          });
         },
       }
     );
