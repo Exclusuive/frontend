@@ -7,6 +7,7 @@ import { useState } from "react";
 import CollectionImg from "../CollectionImg";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useUpdateCollection } from "@/hooks/moveCall/collection";
 
 interface Props {
   collection: CollectionData;
@@ -15,6 +16,8 @@ interface Props {
 export default function CollectionInfo({ collection }: Props) {
   const [imageFile, setImageFile] = useState<File>();
   const [description, setDescription] = useState("");
+
+  const { updateCollectionInfo } = useUpdateCollection();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
@@ -78,7 +81,9 @@ export default function CollectionInfo({ collection }: Props) {
 
         <Button
           onClick={() => {
-            // Update Collection Info Tx
+            updateCollectionInfo({ bannerImgURL: "", description });
+            setImageFile(undefined);
+            setDescription("");
           }}
           className="w-full"
         >
