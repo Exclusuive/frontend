@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -23,13 +23,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 export default function Login() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const { login, veginUserIsLogin } = useAuthStore();
-
-  useEffect(() => {
-    if (veginUserIsLogin) {
-      navigate("/");
-    }
-  }, [veginUserIsLogin, navigate]);
+  const { login } = useAuthStore();
 
   const {
     register,
