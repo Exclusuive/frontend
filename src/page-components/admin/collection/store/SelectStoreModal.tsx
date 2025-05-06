@@ -76,7 +76,7 @@ export default function SelectStoreModal() {
 
       <DialogFooter>
         <Dialog>
-          <DialogTrigger>
+          <DialogTrigger asChild>
             <Button>Create New Store</Button>
           </DialogTrigger>
           <CreateStoreModal />

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { DialogClose, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAddProductToSlot } from "@/hooks/moveCall/store";
@@ -30,14 +30,16 @@ export default function AddBaseModal({ slotNumber }: { slotNumber: number }) {
           className="col-span-3"
         />
       </div>
-      <Button
-        onClick={() => {
-          addBaseToSlot({ slotNumber, imgURL });
-          setImgURL("");
-        }}
-      >
-        Add Base to Slot
-      </Button>
+      <DialogClose>
+        <Button
+          onClick={() => {
+            addBaseToSlot({ slotNumber, imgURL });
+            setImgURL("");
+          }}
+        >
+          Add Base to Slot
+        </Button>
+      </DialogClose>
     </DialogContent>
   );
 }

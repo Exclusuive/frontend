@@ -4,10 +4,11 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CollectionContext } from "@/context/CollectionContext";
 import { StoreData } from "@/types/store";
-import AddNewSlotModal from "./AddNewSlotModal";
-import AddConditionModal from "./AddConditionModal";
-import AddProductToSlotModal from "./AddProductToSlotModal";
-import AddConditionToSlotModal from "./AddConditionToSlotModal";
+import {
+  AddNewSlotModal,
+  AddProductToSlotModal,
+  AddConditionToSlotModal,
+} from "@/page-components/admin/collection/store";
 
 export default function Store() {
   const [currentStore, setCurrentStore] = useState<StoreData>();
@@ -50,11 +51,11 @@ export default function Store() {
             </p>
           </div>
           <div className="flex gap-2">
-            <DialogTrigger>
+            <DialogTrigger asChild>
               <Button>Select Store</Button>
             </DialogTrigger>
             <Dialog>
-              <DialogTrigger>
+              <DialogTrigger asChild>
                 <Button>Add New Slot</Button>
               </DialogTrigger>
               <AddNewSlotModal></AddNewSlotModal>
@@ -64,17 +65,15 @@ export default function Store() {
       )}
       <div className="mb-6 flex gap-2">
         <Dialog>
-          <DialogTrigger>
+          <DialogTrigger asChild>
             <Button>Add Product to Slot</Button>
           </DialogTrigger>
           <AddProductToSlotModal />
-          {/* <AddNewSlotModal></AddNewSlotModal> */}
         </Dialog>
         <Dialog>
           <DialogTrigger asChild>
             <Button>Add Condition to Slot</Button>
           </DialogTrigger>
-          {/* <AddConditionModal></AddConditionModal> */}
           <AddConditionToSlotModal />
         </Dialog>
       </div>

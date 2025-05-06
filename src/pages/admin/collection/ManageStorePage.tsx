@@ -38,7 +38,7 @@ export default function ManageStorePage({}: Props) {
     <div className="container w-full space-y-6 p-4">
       <h1 className="text-2xl font-bold">Manage Collection Store</h1>
       <Dialog open={isCOpen} onOpenChange={setIsCOpen}>
-        <DialogTrigger>
+        <DialogTrigger asChild>
           <Button>Select Collection</Button>
         </DialogTrigger>
         <SelectCollectionModal />

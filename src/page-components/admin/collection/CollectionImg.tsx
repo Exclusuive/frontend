@@ -14,5 +14,5 @@ export default function CollectionImg({ collection, ...props }: Props) {
       }
     });
   }, [collection]);
-  return <img src={imgURL} {...props} />;
+  return <img src={imgURL ? imgURL : "/DOKPAMI.png"} {...props} />;
 }

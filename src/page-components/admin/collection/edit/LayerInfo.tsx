@@ -13,7 +13,7 @@ import {
   DragEndEvent,
 } from "@dnd-kit/core";
 import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import SortableItem from "./SortableItem";
+import { SortableItem } from "@/page-components/admin/collection/edit";
 import { useAddLayerType } from "@/hooks/moveCall/collection";
 import { CollectionContext } from "@/context/CollectionContext";
 

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { DialogClose, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -78,15 +78,17 @@ export default function AddPropertyScrollModal({ slotNumber }: { slotNumber: num
           className="col-span-3"
         />
       </div>
-      <Button
-        onClick={() => {
-          addPropertyScrollToSlot({ slotNumber, propertyType, propertyValue });
-          setPropertyType("Select Property Type");
-          setPropertyValue(0);
-        }}
-      >
-        Add PropertyScroll to Slot
-      </Button>
+      <DialogClose>
+        <Button
+          onClick={() => {
+            addPropertyScrollToSlot({ slotNumber, propertyType, propertyValue });
+            setPropertyType("Select Property Type");
+            setPropertyValue(0);
+          }}
+        >
+          Add PropertyScroll to Slot
+        </Button>
+      </DialogClose>
     </DialogContent>
   );
 }

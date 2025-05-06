@@ -32,7 +32,7 @@ export default function SelectCollectionModal() {
       <div className="grid grid-cols-1 gap-4 overflow-y-auto pt-2 md:grid-cols-2 lg:grid-cols-3">
         {collections &&
           collections.map((col, i) => (
-            <DialogClose>
+            <DialogClose key={col.id}>
               <Card
                 key={col.id}
                 onClick={() => {
@@ -67,7 +67,7 @@ export default function SelectCollectionModal() {
 
       <DialogFooter>
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <DialogTrigger>
+          <DialogTrigger asChild>
             <Button>Create New Collection</Button>
           </DialogTrigger>
           <CreateCollectionModal isOpen={isOpen} />

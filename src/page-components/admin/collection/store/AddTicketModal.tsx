@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { DialogClose, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -64,14 +64,16 @@ export default function AddTicketModal({ slotNumber }: { slotNumber: number }) {
           </SelectContent>
         </Select>
       </div>
-      <Button
-        onClick={() => {
-          addTicketToSlot({ slotNumber, ticketType });
-          setTicketType("Select Ticket Type");
-        }}
-      >
-        Add Ticket to Slot
-      </Button>
+      <DialogClose>
+        <Button
+          onClick={() => {
+            addTicketToSlot({ slotNumber, ticketType });
+            setTicketType("Select Ticket Type");
+          }}
+        >
+          Add Ticket to Slot
+        </Button>
+      </DialogClose>
     </DialogContent>
   );
 }
