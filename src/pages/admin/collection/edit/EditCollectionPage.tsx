@@ -4,10 +4,12 @@ import { SelectCollectionModal } from "@/page-components/admin/collection";
 import { useContext, useEffect, useState } from "react";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { CollectionContext } from "@/context/CollectionContext";
-import CollectionInfo from "./CollectionInfo";
-import LayerInfo from "./LayerInfo";
-import PropertyInfo from "./PropertyInfo";
-import TicketInfo from "./TicketInfo";
+import {
+  LayerInfo,
+  PropertyInfo,
+  TicketInfo,
+  ColectionInfo,
+} from "@/page-components/admin/collection/edit";
 
 interface Props {}
 
@@ -51,7 +53,7 @@ export default function EditCollectionPage({}: Props) {
         </TabsList>
 
         <TabsContent value="info">
-          <CollectionInfo />
+          <ColectionInfo />
         </TabsContent>
 
         <TabsContent value="layers">
