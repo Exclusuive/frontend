@@ -31,7 +31,7 @@ import { useContext, useEffect, useState } from "react";
 import { ImagePlus } from "lucide-react";
 import { useMint } from "@/hooks/moveCall/mint";
 
-export default function MintNewItem() {
+export default function MintItem() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [currentCollection, setCurrentCollection] = useState<CollectionData>();
   const [layer, setLayer] = useState<string>("");
@@ -74,14 +74,14 @@ export default function MintNewItem() {
       <DialogTrigger>
         <Card className="cursor-pointer transition-all hover:shadow-lg">
           <CardHeader>
-            <CardTitle>Create New Item</CardTitle>
+            <CardTitle>Mint Item</CardTitle>
             <CardDescription>Create a new item and mint it to a recipient</CardDescription>
           </CardHeader>
           <CardContent>
             <p>Create a brand new item with custom name and image, then mint it to a recipient.</p>
           </CardContent>
           <CardFooter>
-            <Button className="w-full">Create & Mint New Item</Button>
+            <Button className="w-full">Mint Item</Button>
           </CardFooter>
         </Card>
       </DialogTrigger>

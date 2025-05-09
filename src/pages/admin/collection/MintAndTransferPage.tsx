@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { SelectCollectionModal } from "@/page-components/admin/collection";
 import { useState } from "react";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { MintBase, MintExistingItem, MintNewItem } from "@/page-components/admin/collection/mint";
+import { MintBase, MintItem } from "@/page-components/admin/collection/mint";
 
 interface Props {}
 
@@ -19,8 +19,7 @@ export default function MintAndTransferPage({}: Props) {
         <SelectCollectionModal />
       </Dialog>
       <MintBase />
-      <MintNewItem />
-      <MintExistingItem />
+      <MintItem />
     </div>
   );
 }
