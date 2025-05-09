@@ -29,6 +29,7 @@ import { CollectionContext } from "@/context/CollectionContext";
 import { CollectionData } from "@/types/collection";
 import { useContext, useEffect, useState } from "react";
 import { ImagePlus } from "lucide-react";
+import { useMint } from "@/hooks/moveCall/mint";
 
 export default function MintNewItem() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -45,6 +46,8 @@ export default function MintNewItem() {
   const {
     collection: { collections, index, refetch },
   } = useContext(CollectionContext);
+
+  const { mintNewItem } = useMint();
 
   useEffect(() => {
     if (collections && index !== -1) {
@@ -333,6 +336,14 @@ export default function MintNewItem() {
               className="cursor-pointer"
               onClick={() => {
                 resetForm();
+                if (!addedProperties) return;
+                mintNewItem({
+                  layer,
+                  itemType,
+                  imgURL: "",
+                  properties: addedProperties,
+                  recipient,
+                });
               }}
             >
               Mint
