@@ -9,10 +9,13 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useMint } from "@/hooks/moveCall/mint";
 import { useState } from "react";
 
 export default function MintBase() {
   const [recipient, setRecipient] = useState("");
+
+  const { mintBase } = useMint();
   return (
     <div className="container mx-auto py-8">
       <Card className="mx-auto max-w-2xl">
@@ -38,7 +41,13 @@ export default function MintBase() {
         </CardContent>
         <CardFooter>
           {/* <Button onClick={handleMintBase} disabled={isLoading || !recipient} className="w-full"> */}
-          <Button onClick={() => {}} disabled={false} className="w-full">
+          <Button
+            onClick={() => {
+              mintBase({ imgURL: "", recipient });
+            }}
+            disabled={!recipient}
+            className="w-full"
+          >
             {/* {isLoading ? "Minting..." : "Mint Base NFT"} */}
             {"Mininting"}
           </Button>

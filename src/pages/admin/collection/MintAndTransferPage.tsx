@@ -36,8 +36,8 @@ export default function MintAndTransferPage({}: Props) {
         <SelectCollectionModal />
       </Dialog>
       <MintBase />
-      <MintExistingItem />
       <MintNewItem />
+      <MintExistingItem />
     </div>
   );
 }
