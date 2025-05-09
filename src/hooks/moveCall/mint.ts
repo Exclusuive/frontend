@@ -12,7 +12,7 @@ export function useMint() {
   const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction();
 
   const {
-    collection: { collections, index: cIndex },
+    collection: { collections, index: cIndex, refetch },
   } = useContext(CollectionContext);
 
   const { setToastState } = useToast();
@@ -151,6 +151,7 @@ export function useMint() {
         {
           onSuccess: (data) => {
             console.log("Success! data:", data);
+            refetch();
             setToastState({
               type: "success",
               message: "Creating item NFT succeeded.",
@@ -238,6 +239,7 @@ export function useMint() {
         {
           onSuccess: (data) => {
             console.log("Success! data:", data);
+            refetch();
             setToastState({
               type: "success",
               message: "Creating item NFT succeeded.",
