@@ -1,4 +1,4 @@
-import { PACKAGE_ID } from "@/config/contants";
+import { ORIGIN_PACKAGE_ID } from "@/config/contants";
 import { parseDynamicBaseTypeField, parseStoreObjectData } from "@/lib/collection";
 import { StoreData } from "@/types/store";
 import { getFullnodeUrl, SuiClient } from "@mysten/sui/client";
@@ -10,7 +10,7 @@ export const useGetMyStores = ({ owner }: { owner: string }) => {
   const [error, setError] = useState(null);
   const [refetchSwitch, setRefetchSwitch] = useState(false);
 
-  const STORE_CAP_TYPE = `${PACKAGE_ID}::collection::StoreCap`;
+  const STORE_CAP_TYPE = `${ORIGIN_PACKAGE_ID}::collection::StoreCap`;
 
   const client = new SuiClient({ url: getFullnodeUrl("testnet") });
 

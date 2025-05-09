@@ -47,7 +47,7 @@ export default function MintNewItem() {
     collection: { collections, index, refetch },
   } = useContext(CollectionContext);
 
-  const { mintNewItem } = useMint();
+  const { mintNewItem, mintExistingItem } = useMint();
 
   useEffect(() => {
     if (collections && index !== -1) {
@@ -223,89 +223,85 @@ export default function MintNewItem() {
           )}
 
           {/* Property Type Selection and Value Input */}
-          {/* {propertyTypes.length > 0 && ( */}
-          {true && (
-            <div className="space-y-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="propertyType" className="text-right">
-                  Property Type
-                </Label>
-                <Select value={property} onValueChange={(value) => setProperty(value)}>
-                  <SelectTrigger className="col-span-3">
-                    <SelectValue placeholder="Select a property type">{property}</SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    {currentCollection &&
-                      currentCollection.objectData.content.fields.property_types.fields.contents.map(
-                        (property) => (
-                          <SelectItem key={property.fields.type} value={property.fields.type}>
-                            {property.fields.type}
-                          </SelectItem>
-                        )
-                      )}
-                  </SelectContent>
-                </Select>
-              </div>
+          <div className="space-y-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="propertyType" className="text-right">
+                Property Type
+              </Label>
+              <Select value={property} onValueChange={(value) => setProperty(value)}>
+                <SelectTrigger className="col-span-3">
+                  <SelectValue placeholder="Select a property type">{property}</SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  {currentCollection &&
+                    currentCollection.objectData.content.fields.property_types.fields.contents.map(
+                      (property) => (
+                        <SelectItem key={property.fields.type} value={property.fields.type}>
+                          {property.fields.type}
+                        </SelectItem>
+                      )
+                    )}
+                </SelectContent>
+              </Select>
+            </div>
 
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="propertyValue" className="text-right">
-                  Property Value
-                </Label>
-                <div className="col-span-3 flex gap-2">
-                  <Input
-                    id={property + propertyValue}
-                    value={propertyValue}
-                    onChange={(e) => setPropertyValue(Number(e.target.value))}
-                    className="flex-1"
-                    placeholder="Input a property value"
-                  />
-                  <Button
-                    className="cursor-pointer"
-                    type="button"
-                    onClick={() => {
-                      if (!property) return;
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="propertyValue" className="text-right">
+                Property Value
+              </Label>
+              <div className="col-span-3 flex gap-2">
+                <Input
+                  id={property + propertyValue}
+                  value={propertyValue}
+                  onChange={(e) => setPropertyValue(Number(e.target.value))}
+                  className="flex-1"
+                  placeholder="Input a property value"
+                />
+                <Button
+                  className="cursor-pointer"
+                  type="button"
+                  onClick={() => {
+                    if (!property) return;
 
-                      setAddedProperties((prev) => ({ ...prev, [property]: propertyValue }));
-                      setProperty("");
-                      setPropertyValue(0);
-                    }}
-                    disabled={!propertyValue}
-                  >
-                    Add
-                  </Button>
-                </div>
-              </div>
-
-              {/* Display added properties */}
-              <div className="col-span-4 space-y-2">
-                <Label className="block text-right">Added Properties</Label>
-                <div className="space-y-2">
-                  {addedProperties &&
-                    Object.keys(addedProperties).map((property, i) => (
-                      <div
-                        key={i}
-                        className="flex items-center justify-between rounded-md border p-2"
-                      >
-                        <div>
-                          <span className="font-medium">{property}:</span>{" "}
-                          {addedProperties[property]}
-                        </div>
-                        <Button
-                          className="cursor-pointer"
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => {
-                            delete addedProperties[property];
-                          }}
-                        >
-                          Remove
-                        </Button>
-                      </div>
-                    ))}
-                </div>
+                    setAddedProperties((prev) => ({ ...prev, [property]: propertyValue }));
+                    setProperty("");
+                    setPropertyValue(0);
+                  }}
+                  disabled={!propertyValue}
+                >
+                  Add
+                </Button>
               </div>
             </div>
-          )}
+
+            {/* Display added properties */}
+            <div className="col-span-4 space-y-2">
+              <Label className="block text-right">Added Properties</Label>
+              <div className="space-y-2">
+                {addedProperties &&
+                  Object.keys(addedProperties).map((property, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center justify-between rounded-md border p-2"
+                    >
+                      <div>
+                        <span className="font-medium">{property}:</span> {addedProperties[property]}
+                      </div>
+                      <Button
+                        className="cursor-pointer"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          delete addedProperties[property];
+                        }}
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          </div>
 
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="recipient" className="text-right">
@@ -337,13 +333,21 @@ export default function MintNewItem() {
               onClick={() => {
                 resetForm();
                 if (!addedProperties) return;
-                mintNewItem({
-                  layer,
-                  itemType,
-                  imgURL: "",
-                  properties: addedProperties,
-                  recipient,
-                });
+
+                isNewItem
+                  ? mintNewItem({
+                      layer,
+                      itemType,
+                      imgURL: "",
+                      properties: addedProperties,
+                      recipient,
+                    })
+                  : mintExistingItem({
+                      layer,
+                      itemType,
+                      properties: addedProperties,
+                      recipient,
+                    });
               }}
             >
               Mint

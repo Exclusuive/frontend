@@ -1,4 +1,4 @@
-import { PACKAGE_ID } from "@/config/contants";
+import { ORIGIN_PACKAGE_ID, UPGRADED_PACKAGE_ID } from "@/config/contants";
 import { CollectionContext } from "@/context/CollectionContext";
 import { CollectionData } from "@/types/collection";
 import { useSignAndExecuteTransaction } from "@mysten/dapp-kit";
@@ -31,7 +31,7 @@ export function useCreateStore() {
 
       const tx = new Transaction();
       tx.moveCall({
-        package: PACKAGE_ID,
+        package: UPGRADED_PACKAGE_ID,
         module: "collection",
         function: "create_store",
         arguments: [
@@ -114,10 +114,10 @@ export function useAddSlot() {
 
       const tx = new Transaction();
       tx.moveCall({
-        package: PACKAGE_ID,
+        package: UPGRADED_PACKAGE_ID,
         module: "collection",
         function: "add_slot_to_store",
-        typeArguments: [`${PACKAGE_ID}::collection::${productType}`],
+        typeArguments: [`${ORIGIN_PACKAGE_ID}::collection::${productType}`],
         arguments: [
           tx.object(currentCollection.id),
           tx.object(currentStore.id),
@@ -201,7 +201,7 @@ export function useAddProductToSlot() {
       const tx = new Transaction();
 
       const [product] = tx.moveCall({
-        package: PACKAGE_ID,
+        package: UPGRADED_PACKAGE_ID,
         module: "collection",
         function: "new_base",
         arguments: [
@@ -212,10 +212,10 @@ export function useAddProductToSlot() {
       });
 
       tx.moveCall({
-        package: PACKAGE_ID,
+        package: UPGRADED_PACKAGE_ID,
         module: "collection",
         function: "add_product_to_store",
-        typeArguments: [`${PACKAGE_ID}::collection::Base`],
+        typeArguments: [`${ORIGIN_PACKAGE_ID}::collection::Base`],
         arguments: [
           tx.object(currentCollection.id),
           tx.object(currentStore.id),
@@ -270,7 +270,7 @@ export function useAddProductToSlot() {
       const tx = new Transaction();
 
       const [product] = tx.moveCall({
-        package: PACKAGE_ID,
+        package: UPGRADED_PACKAGE_ID,
         module: "collection",
         function: "new_item",
         arguments: [
@@ -283,10 +283,10 @@ export function useAddProductToSlot() {
       });
 
       tx.moveCall({
-        package: PACKAGE_ID,
+        package: UPGRADED_PACKAGE_ID,
         module: "collection",
         function: "add_product_to_store",
-        typeArguments: [`${PACKAGE_ID}::collection::Item`],
+        typeArguments: [`${ORIGIN_PACKAGE_ID}::collection::Item`],
         arguments: [
           tx.object(currentCollection.id),
           tx.object(currentStore.id),
@@ -337,7 +337,7 @@ export function useAddProductToSlot() {
       const tx = new Transaction();
 
       const [product] = tx.moveCall({
-        package: PACKAGE_ID,
+        package: UPGRADED_PACKAGE_ID,
         module: "collection",
         function: "new_ticket",
         arguments: [
@@ -348,10 +348,10 @@ export function useAddProductToSlot() {
       });
 
       tx.moveCall({
-        package: PACKAGE_ID,
+        package: UPGRADED_PACKAGE_ID,
         module: "collection",
         function: "add_product_to_store",
-        typeArguments: [`${PACKAGE_ID}::collection::Ticket`],
+        typeArguments: [`${ORIGIN_PACKAGE_ID}::collection::Ticket`],
         arguments: [
           tx.object(currentCollection.id),
           tx.object(currentStore.id),
@@ -404,7 +404,7 @@ export function useAddProductToSlot() {
       const tx = new Transaction();
 
       const [product] = tx.moveCall({
-        package: PACKAGE_ID,
+        package: UPGRADED_PACKAGE_ID,
         module: "collection",
         function: "new_property_scroll",
         arguments: [
@@ -416,10 +416,10 @@ export function useAddProductToSlot() {
       });
 
       tx.moveCall({
-        package: PACKAGE_ID,
+        package: UPGRADED_PACKAGE_ID,
         module: "collection",
         function: "add_product_to_store",
-        typeArguments: [`${PACKAGE_ID}::collection::PropertyScroll`],
+        typeArguments: [`${ORIGIN_PACKAGE_ID}::collection::PropertyScroll`],
         arguments: [
           tx.object(currentCollection.id),
           tx.object(currentStore.id),
@@ -514,7 +514,7 @@ export function useAddConditionToSlot() {
       const tx = new Transaction();
 
       tx.moveCall({
-        package: PACKAGE_ID,
+        package: UPGRADED_PACKAGE_ID,
         module: "collection",
         function: "add_condition_to_slot",
         arguments: [
