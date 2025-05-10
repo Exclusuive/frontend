@@ -1,0 +1,16 @@
+# www.robotstxt.org
+
+# Disallow all crawlers by default
+User-agent: *
+Disallow: /
+
+# For Naver's Yeti crawler (specific to Korean search engines)
+User-agent: Yeti
+Disallow: /
+
+# For Google's crawler
+User-agent: Googlebot
+Disallow: /
+
+# Define sitemap location
+Sitemap: https://yourdomain.com/sitemap.xml 
