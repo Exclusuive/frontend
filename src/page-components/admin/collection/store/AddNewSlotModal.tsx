@@ -5,6 +5,7 @@ import {
   DialogContent,
   DialogDescription,
   DialogTitle,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,8 +16,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAddSlot } from "@/hooks/moveCall/store";
+import { useState } from "react";
 
 export default function AddNewSlotModal() {
+  const [productType, setProductType] = useState("");
+  const [price, setPrice] = useState(0);
+
+  const { addSlotToStore } = useAddSlot();
+
   return (
     <DialogContent>
       <DialogHeader>
@@ -29,12 +37,17 @@ export default function AddNewSlotModal() {
           <Label htmlFor="type" className="text-right">
             Type
           </Label>
-          {/* <Select value={selectionData.selectionType} onValueChange={handleSelectionTypeChange}> */}
-          <Select value={"selectino type"} onValueChange={() => {}}>
+          <Select
+            value={productType}
+            onValueChange={(value) => {
+              setProductType(value);
+            }}
+          >
             <SelectTrigger className="col-span-3">
               <SelectValue placeholder="Select type" />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value="Base">Base</SelectItem>
               <SelectItem value="Item">Item</SelectItem>
               <SelectItem value="PropertyScroll">PropertyScroll</SelectItem>
               <SelectItem value="Ticket">Ticket</SelectItem>
@@ -43,27 +56,39 @@ export default function AddNewSlotModal() {
         </div>
         <div className="grid grid-cols-4 items-center gap-4">
           <Label htmlFor="price" className="text-right">
-            Price (SUI)
+            Price (MIST)
           </Label>
           <Input
             id="price"
-            type="number"
-            // value={selectionData.newSelectionPrice}
-            value={"new seledtion price"}
-            // onChange={(e) => handleSelectionPriceChange(Number(e.target.value))}
-            onChange={(e) => {}}
+            type="text"
+            value={price}
+            onChange={(e) => {
+              setPrice(Number(e.target.value));
+            }}
             className="col-span-3"
           />
         </div>
       </div>
 
       <DialogFooter>
-        <Button
-          // onClick={() => selectedStore && handleAddSelection(selectedStore.store_id)}
-          onClick={() => {}}
-        >
-          Add Selection
-        </Button>
+        <DialogClose>
+          <Button
+            onClick={() => {
+              if (
+                productType === "Base" ||
+                productType === "Item" ||
+                productType === "PropertyScroll" ||
+                productType === "Ticket"
+              ) {
+                addSlotToStore({ productType, price });
+                setPrice(0);
+                setProductType("");
+              }
+            }}
+          >
+            Add Slot
+          </Button>
+        </DialogClose>
       </DialogFooter>
     </DialogContent>
   );

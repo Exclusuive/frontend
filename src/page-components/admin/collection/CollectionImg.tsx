@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import { CollectionData } from "@/types/collection";
 import { useEffect, useState } from "react";
 
@@ -5,7 +6,7 @@ type Props = {
   collection: CollectionData;
 } & React.ComponentProps<"img">;
 
-export default function CollectionImg({ collection, ...props }: Props) {
+export default function CollectionImg({ collection, className, ...props }: Props) {
   const [imgURL, setImgURL] = useState();
   useEffect(() => {
     collection.dynamicFieldData.forEach((d) => {
@@ -14,5 +15,11 @@ export default function CollectionImg({ collection, ...props }: Props) {
       }
     });
   }, [collection]);
-  return <img src={imgURL} {...props} />;
+  return (
+    <img
+      src={imgURL ? imgURL : "/DOKPAMI.png"}
+      className={cn(`opacity-30 ${className}`)}
+      {...props}
+    />
+  );
 }

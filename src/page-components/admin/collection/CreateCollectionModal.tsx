@@ -19,7 +19,7 @@ interface Props {
   onOpenChange: (open: boolean) => void;
 }
 
-export const CreateCollectionModal = ({ isOpen, onOpenChange }: Props) => {
+export default function CreateCollectionModal({ isOpen, onOpenChange }: Props) {
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [imageFile, setImageFile] = useState<File>();
@@ -206,4 +206,4 @@ export const CreateCollectionModal = ({ isOpen, onOpenChange }: Props) => {
       </form>
     </DialogContent>
   );
-};
+}

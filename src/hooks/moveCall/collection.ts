@@ -1,4 +1,4 @@
-import { PACKAGE_ID } from "@/config/contants";
+import { ORIGIN_PACKAGE_ID, UPGRADED_PACKAGE_ID } from "@/config/contants";
 import { CollectionContext } from "@/context/CollectionContext";
 import { useCurrentAccount, useSignAndExecuteTransaction } from "@mysten/dapp-kit";
 import { Transaction } from "@mysten/sui/transactions";
@@ -32,7 +32,7 @@ export function useCreateCollection() {
 
     const tx = new Transaction();
     const [col, cap] = tx.moveCall({
-      package: PACKAGE_ID,
+      package: UPGRADED_PACKAGE_ID,
       module: "collection",
       function: "new",
       arguments: [tx.pure.string(collectionName)],
@@ -40,7 +40,7 @@ export function useCreateCollection() {
 
     layers.forEach((layer) => {
       tx.moveCall({
-        package: PACKAGE_ID,
+        package: UPGRADED_PACKAGE_ID,
         module: "collection",
         function: "add_layer_type",
         arguments: [tx.object(col), tx.object(cap), tx.pure.string(layer)],
@@ -48,10 +48,10 @@ export function useCreateCollection() {
     });
 
     tx.moveCall({
-      package: PACKAGE_ID,
+      package: UPGRADED_PACKAGE_ID,
       module: "collection",
       function: "add_config_to_type",
-      typeArguments: [`${PACKAGE_ID}::collection::BaseType`],
+      typeArguments: [`${ORIGIN_PACKAGE_ID}::collection::BaseType`],
       arguments: [
         tx.object(col),
         tx.object(cap),
@@ -62,10 +62,10 @@ export function useCreateCollection() {
     });
 
     tx.moveCall({
-      package: PACKAGE_ID,
+      package: UPGRADED_PACKAGE_ID,
       module: "collection",
       function: "add_config_to_type",
-      typeArguments: [`${PACKAGE_ID}::collection::BaseType`],
+      typeArguments: [`${ORIGIN_PACKAGE_ID}::collection::BaseType`],
       arguments: [
         tx.object(col),
         tx.object(cap),
@@ -79,7 +79,7 @@ export function useCreateCollection() {
       package: "0x2",
       module: "transfer",
       function: "public_share_object",
-      typeArguments: [`${PACKAGE_ID}::collection::Collection`],
+      typeArguments: [`${ORIGIN_PACKAGE_ID}::collection::Collection`],
       arguments: [tx.object(col)],
     });
 
@@ -146,10 +146,10 @@ export function useUpdateCollection() {
     const tx = new Transaction();
 
     tx.moveCall({
-      package: PACKAGE_ID,
+      package: UPGRADED_PACKAGE_ID,
       module: "collection",
       function: "update_config_to_type",
-      typeArguments: [`${PACKAGE_ID}::collection::BaseType`],
+      typeArguments: [`${ORIGIN_PACKAGE_ID}::collection::BaseType`],
       arguments: [
         tx.object(currentCollection.id),
         tx.object(currentCollection.cap),
@@ -160,10 +160,10 @@ export function useUpdateCollection() {
     });
 
     tx.moveCall({
-      package: PACKAGE_ID,
+      package: UPGRADED_PACKAGE_ID,
       module: "collection",
       function: "update_config_to_type",
-      typeArguments: [`${PACKAGE_ID}::collection::BaseType`],
+      typeArguments: [`${ORIGIN_PACKAGE_ID}::collection::BaseType`],
       arguments: [
         tx.object(currentCollection.id),
         tx.object(currentCollection.cap),
@@ -226,7 +226,7 @@ export function useAddLayerType() {
     const tx = new Transaction();
 
     tx.moveCall({
-      package: PACKAGE_ID,
+      package: UPGRADED_PACKAGE_ID,
       module: "collection",
       function: "add_layer_type",
       arguments: [
@@ -289,7 +289,7 @@ export function useAddPropertyType() {
     const tx = new Transaction();
 
     tx.moveCall({
-      package: PACKAGE_ID,
+      package: UPGRADED_PACKAGE_ID,
       module: "collection",
       function: "add_property_type",
       arguments: [
@@ -352,7 +352,7 @@ export function useAddTicketType() {
     const tx = new Transaction();
 
     tx.moveCall({
-      package: PACKAGE_ID,
+      package: UPGRADED_PACKAGE_ID,
       module: "collection",
       function: "add_ticket_type",
       arguments: [

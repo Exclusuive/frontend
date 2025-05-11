@@ -1,9 +1,11 @@
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import CollectionOverview from "./CollectionOverview";
+import {
+  CollectionOverview,
+  CollectionMiniCard,
+  CreateCollectionModal,
+} from "@/page-components/admin/collection";
 import { useCurrentAccount } from "@mysten/dapp-kit";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import CollectionMiniCard from "./CollectionMiniCard";
-import { CreateCollectionModal } from "./CreateCollectionModal";
 import { useContext, useEffect, useState } from "react";
 import { Dialog } from "@/components/ui/dialog";
 import { DialogTrigger } from "@radix-ui/react-dialog";

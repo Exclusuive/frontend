@@ -11,16 +11,17 @@ import clsx from "clsx";
 import { Button } from "@/components/ui/button";
 import { useContext, useState } from "react";
 import { CollectionContext } from "@/context/CollectionContext";
-import { CreateCollectionModal } from "./CreateCollectionModal";
-import CollectionImg from "./CollectionImg";
+import { CreateCollectionModal } from "./";
+import CollectionImg from "@/page-components/admin/collection/CollectionImg";
 import { DialogClose } from "@radix-ui/react-dialog";
 
 export default function SelectCollectionModal() {
+  const [isOpen, setIsOpen] = useState(false);
+
   const {
     collection: { collections, index, setIndex },
     store: { setIndex: setSIndex },
   } = useContext(CollectionContext);
-  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <DialogContent className="max-h-[75vh] w-2/3 min-w-2/3 overflow-y-auto [&>button]:hidden">
@@ -32,7 +33,7 @@ export default function SelectCollectionModal() {
       <div className="grid grid-cols-1 gap-4 overflow-y-auto pt-2 md:grid-cols-2 lg:grid-cols-3">
         {collections &&
           collections.map((col, i) => (
-            <DialogClose>
+            <DialogClose key={col.id}>
               <Card
                 key={col.id}
                 onClick={() => {
@@ -64,6 +65,16 @@ export default function SelectCollectionModal() {
             </DialogClose>
           ))}
       </div>
+
+      <DialogFooter>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+          {/* <Dialog open={isOpen}> */}
+          <DialogTrigger asChild>
+            <Button>Create New Collection</Button>
+          </DialogTrigger>
+          <CreateCollectionModal isOpen={isOpen} onOpenChange={setIsOpen} />
+        </Dialog>
+      </DialogFooter>
     </DialogContent>
   );
 }

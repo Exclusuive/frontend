@@ -5,7 +5,7 @@ import { CollectionData, ItemType } from "@/types/collection";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import CollectionImg from "./CollectionImg";
+import CollectionImg from "@/page-components/admin/collection/CollectionImg";
 
 interface Props {
   collection: CollectionData;
@@ -15,10 +15,6 @@ export default function CollectionOverview({ collection }: Props) {
   const [selectedItem, setSelectedItem] = useState<ItemType>();
   const [recipient, setRecipient] = useState<string>("");
 
-  // useEffect(() => {
-  //   console.log("active tab:", selectedLayer);
-  // }, [selectedLayer]);
-
   // Sample data for the chart - replace with actual data
   const chartData = [
     { name: "Layer 1", value: 400 },
@@ -27,26 +23,6 @@ export default function CollectionOverview({ collection }: Props) {
     { name: "Layer 4", value: 278 },
     { name: "Layer 5", value: 189 },
   ];
-
-  const handleMintItem = async (item: ItemType) => {
-    if (!recipient) return;
-
-    try {
-      // await mintItem({
-      //   id: collectionId || "",
-      //   capId: capId || "",
-      //   layer: item.layer,
-      //   itemName: item.name,
-      //   itemImageUrl: item.img_url,
-      //   itemImg: null,
-      //   toAddress: recipient,
-      // });
-      setRecipient("");
-      setSelectedItem(undefined);
-    } catch (error) {
-      console.error("Error minting item:", error);
-    }
-  };
 
   return (
     <section className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -191,7 +167,7 @@ export default function CollectionOverview({ collection }: Props) {
                                   }
                                   className="flex-1"
                                 />
-                                <Button onClick={() => handleMintItem(item)} disabled={!recipient}>
+                                <Button onClick={() => {}} disabled={!recipient}>
                                   Mint
                                 </Button>
                               </div>

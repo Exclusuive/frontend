@@ -1,13 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import SelectCollectionModal from "../SelectCollectionModal";
+import { SelectCollectionModal } from "@/page-components/admin/collection";
 import { useContext, useEffect, useState } from "react";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { CollectionContext } from "@/context/CollectionContext";
-import CollectionInfo from "./CollectionInfo";
-import LayerInfo from "./LayerInfo";
-import PropertyInfo from "./PropertyInfo";
-import TicketInfo from "./TicketInfo";
+import {
+  LayerInfo,
+  PropertyInfo,
+  TicketInfo,
+  ColectionInfo,
+} from "@/page-components/admin/collection/edit";
 
 interface Props {}
 
@@ -26,21 +28,18 @@ export default function EditCollectionPage({}: Props) {
 
   return (
     <div className="container w-full space-y-6 p-4">
-      <h1 className="text-2xl font-bold">Edit Collection</h1>
-      <div className="flex items-center gap-4">
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <DialogTrigger>
-            <Button>Select Collection</Button>
-          </DialogTrigger>
-          <SelectCollectionModal />
-        </Dialog>
-        {/* Collection Name 임시 */}
-        {collections && index !== -1 && (
-          <h2 className="text-4xl font-semibold">
-            {collections[index].objectData.content.fields.base_type.fields.type}
-          </h2>
-        )}
-      </div>
+      <h1 className="text-2xl font-bold">Edit Collection Information</h1>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogTrigger asChild>
+          <Button>Select Collection</Button>
+        </DialogTrigger>
+        <SelectCollectionModal />
+      </Dialog>
+      {collections && index !== -1 && (
+        <h2 className="text-4xl font-semibold">
+          {collections[index].objectData.content.fields.base_type.fields.type}
+        </h2>
+      )}
 
       <Tabs defaultValue="info" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
@@ -59,7 +58,7 @@ export default function EditCollectionPage({}: Props) {
         </TabsList>
 
         <TabsContent value="info">
-          <CollectionInfo />
+          <ColectionInfo />
         </TabsContent>
 
         <TabsContent value="layers">
