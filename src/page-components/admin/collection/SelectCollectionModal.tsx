@@ -16,11 +16,12 @@ import CollectionImg from "@/page-components/admin/collection/CollectionImg";
 import { DialogClose } from "@radix-ui/react-dialog";
 
 export default function SelectCollectionModal() {
+  const [isOpen, setIsOpen] = useState(false);
+
   const {
     collection: { collections, index, setIndex },
     store: { setIndex: setSIndex },
   } = useContext(CollectionContext);
-  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <DialogContent className="max-h-[75vh] w-2/3 min-w-2/3 overflow-y-auto [&>button]:hidden">
@@ -67,10 +68,11 @@ export default function SelectCollectionModal() {
 
       <DialogFooter>
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
+          {/* <Dialog open={isOpen}> */}
           <DialogTrigger asChild>
             <Button>Create New Collection</Button>
           </DialogTrigger>
-          <CreateCollectionModal isOpen={isOpen} />
+          <CreateCollectionModal isOpen={isOpen} onOpenChange={setIsOpen} />
         </Dialog>
       </DialogFooter>
     </DialogContent>

@@ -57,7 +57,7 @@ export default function CollectionPage() {
                   </CardContent>
                 </Card>
               </DialogTrigger>
-              <CreateCollectionModal isOpen={isOpen} />
+              <CreateCollectionModal isOpen={isOpen} onOpenChange={setIsOpen} />
             </Dialog>
             <div className="scrollbar-hide grid h-full w-full auto-cols-[minmax(100px,1fr)] grid-flow-col grid-cols-4 gap-4 overflow-x-auto rounded-md bg-gray-100">
               <TabsList className="h-full">

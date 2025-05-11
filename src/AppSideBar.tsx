@@ -38,7 +38,7 @@ const ADMIN_MENUS = {
       icon: LayoutDashboard,
     },
     {
-      title: "Manage Collection",
+      title: "Edit Collection",
       url: "/admin/collections/edit",
       icon: FileEdit,
     },

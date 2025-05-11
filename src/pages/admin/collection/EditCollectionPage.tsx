@@ -35,6 +35,11 @@ export default function EditCollectionPage({}: Props) {
         </DialogTrigger>
         <SelectCollectionModal />
       </Dialog>
+      {collections && index !== -1 && (
+        <h2 className="text-4xl font-semibold">
+          {collections[index].objectData.content.fields.base_type.fields.type}
+        </h2>
+      )}
 
       <Tabs defaultValue="info" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
