@@ -16,7 +16,7 @@ export interface ItemType {
   };
 }
 
-export interface CollectionType {
+export type CollectionType = {
   balance: string;
   base_type: {
     type: string;
@@ -53,7 +53,7 @@ export interface CollectionType {
     };
   };
   version: string;
-}
+};
 
 export interface CollectionObjectData {
   objectId: string;
@@ -64,12 +64,14 @@ export interface CollectionObjectData {
     dataType: string;
     type: string;
     hasPublicTransfer: boolean;
+    // fields: CollectionType | MoveStruct;
     fields: CollectionType;
   };
 }
 
 export interface CollectionData {
   id: string;
+  cap: string;
   objectData: CollectionObjectData;
   dynamicFieldData: DynamicFieldObjectData[]; // 실제 데이터 타입에 맞게 수정
 }
@@ -96,6 +98,7 @@ export interface DynamicFieldObjectData {
         fields: any;
       };
     };
+    // | MoveStruct;
   };
 }
 
