@@ -5,6 +5,7 @@ import Layout from "./Layout";
 import NotFound from "./NotFound";
 
 import LandingPage from "./pages/LandingPage";
+import HomePage from "./pages/Manage/HomePage";
 
 import CollectionPage from "./pages/admin/collection/CollectionPage";
 import EditCollectionPage from "./pages/admin/collection/EditCollectionPage";
