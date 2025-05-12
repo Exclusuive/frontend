@@ -114,7 +114,7 @@ const MEMBER_MENUS = {
   ],
 };
 export default function AppSidebar() {
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(true);
 
   const account = useCurrentAccount();
   const wallets = useWallets();
@@ -237,7 +237,7 @@ export default function AppSidebar() {
           <SidebarGroupLabel>{isAdmin ? "admin" : "member"}</SidebarGroupLabel>
           <span
             className={`relative inline-flex cursor-pointer items-center rounded-full transition-colors duration-200 ease-in-out ${
-              isAdmin ? "bg-pink-500" : "bg-gray-300"
+              isAdmin ? "bg-gray-300" : "bg-pink-500"
             } h-5 w-10`}
           >
             <span
