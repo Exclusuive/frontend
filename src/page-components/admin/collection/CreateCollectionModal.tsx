@@ -13,6 +13,8 @@ import { PlusCircle, Trash2, Upload } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { useCreateCollection } from "@/hooks/moveCall/collection";
 import { DialogClose } from "@radix-ui/react-dialog";
+import { uploadToS3 } from "@/lib/utils";
+import { v4 as uuidv4 } from "uuid";
 
 interface Props {
   isOpen: boolean;
@@ -24,6 +26,7 @@ export default function CreateCollectionModal({ isOpen, onOpenChange }: Props) {
   const [description, setDescription] = useState<string>("");
   const [imageFile, setImageFile] = useState<File>();
   const [layers, setLayers] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { createCollection } = useCreateCollection();
 
@@ -182,24 +185,41 @@ export default function CreateCollectionModal({ isOpen, onOpenChange }: Props) {
           <DialogClose>
             <Button
               type="submit"
-              onClick={(e) => {
+              disabled={isSubmitting}
+              onClick={async (e) => {
                 e.preventDefault();
+                if (!name || !imageFile) return;
+
+                setIsSubmitting(true);
                 try {
-                  createCollection({
+                  // Generate a unique ID for the collection using UUID
+                  const collectionId = uuidv4();
+
+                  // Upload image to S3
+                  const { fileUrl } = await uploadToS3({
+                    type: "collections",
+                    id: collectionId,
+                    file: imageFile,
+                  });
+
+                  // Create collection with the S3 URL
+                  await createCollection({
                     collectionName: name,
                     description: description,
-                    bannerImgURL: "",
+                    bannerImgURL: fileUrl,
                     layers,
                   });
+
                   onOpenChange(false);
                 } catch (err) {
                   console.error("Failed to create collection:", err);
                 } finally {
+                  setIsSubmitting(false);
                   resetForm();
                 }
               }}
             >
-              Create Collection
+              {isSubmitting ? "Creating..." : "Create Collection"}
             </Button>
           </DialogClose>
         </DialogFooter>
