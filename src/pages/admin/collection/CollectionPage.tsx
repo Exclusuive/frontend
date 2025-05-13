@@ -6,18 +6,30 @@ import {
 } from "@/page-components/admin/collection";
 import { useCurrentAccount } from "@mysten/dapp-kit";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { Dialog } from "@/components/ui/dialog";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import { CollectionContext } from "@/context/CollectionContext";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function CollectionPage() {
   const [isOpen, setIsOpen] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const account = useCurrentAccount();
   const {
     collection: { collections, isPending, error },
   } = useContext(CollectionContext);
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = 200;
+      scrollContainerRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
 
   useEffect(() => {
     if (account && collections) {
@@ -43,7 +55,7 @@ export default function CollectionPage() {
     <div className="container w-full p-4">
       {collections && (
         <Tabs defaultValue={collections.length > 0 ? collections[0].id : ""} className="w-full">
-          <div className="flex">
+          <div className="flex gap-1">
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
               <DialogTrigger>
                 <Card
@@ -59,14 +71,38 @@ export default function CollectionPage() {
               </DialogTrigger>
               <CreateCollectionModal isOpen={isOpen} onOpenChange={setIsOpen} />
             </Dialog>
-            <div className="scrollbar-hide grid h-full w-full auto-cols-[minmax(100px,1fr)] grid-flow-col grid-cols-4 gap-4 overflow-x-auto rounded-md bg-gray-100">
-              <TabsList className="h-full">
-                {collections.map((col) => (
-                  <TabsTrigger className="col-span-2" key={col.id} value={col.id}>
-                    <CollectionMiniCard collection={col} />
-                  </TabsTrigger>
-                ))}
-              </TabsList>
+
+            <div className="relative flex-1">
+              <button
+                onClick={() => scroll("left")}
+                className="absolute top-1/2 left-0 z-10 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white"
+              >
+                <ChevronLeft className="h-6 w-6" />
+              </button>
+
+              <div
+                ref={scrollContainerRef}
+                className="scrollbar-hide grid h-full w-full auto-cols-[minmax(100px,1fr)] grid-flow-col grid-cols-4 gap-4 overflow-x-auto rounded-md bg-gray-100 px-4 py-1"
+              >
+                <TabsList className="h-full">
+                  {collections.map((col) => (
+                    <TabsTrigger
+                      className="col-span-2 transition-all duration-200 data-[state=active]:scale-105 data-[state=active]:bg-white data-[state=active]:shadow-md"
+                      key={col.id}
+                      value={col.id}
+                    >
+                      <CollectionMiniCard collection={col} />
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </div>
+
+              <button
+                onClick={() => scroll("right")}
+                className="absolute top-1/2 right-0 z-10 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white"
+              >
+                <ChevronRight className="h-6 w-6" />
+              </button>
             </div>
           </div>
 
