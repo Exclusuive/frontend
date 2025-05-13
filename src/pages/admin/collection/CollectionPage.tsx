@@ -20,10 +20,10 @@ export default function CollectionPage() {
   } = useContext(CollectionContext);
 
   useEffect(() => {
-    if (account && !isPending && collections && collections.length === 0) {
-      setIsOpen(true);
+    if (account && collections) {
+      setIsOpen(collections.length === 0);
     }
-  }, [collections]);
+  }, [collections, account]);
 
   if (!account) {
     return <div className="flex items-center justify-center p-8">Please Connect Wallet</div>;
