@@ -71,7 +71,7 @@ export default function MintItem() {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger>
+      <DialogTrigger className="w-full">
         <Card className="cursor-pointer transition-all hover:shadow-lg">
           <CardHeader>
             <CardTitle>Mint Item</CardTitle>

@@ -16,9 +16,10 @@ export default function MintBase() {
   const [recipient, setRecipient] = useState("");
 
   const { mintBase } = useMint();
+
   return (
-    <div className="container mx-auto py-8">
-      <Card className="mx-auto max-w-2xl">
+    <div className="w-full">
+      <Card className="w-full">
         <CardHeader>
           <CardTitle>Mint Base NFT</CardTitle>
           <CardDescription>Mint a base NFT to a recipient address</CardDescription>
@@ -40,7 +41,6 @@ export default function MintBase() {
           </div>
         </CardContent>
         <CardFooter>
-          {/* <Button onClick={handleMintBase} disabled={isLoading || !recipient} className="w-full"> */}
           <Button
             onClick={() => {
               mintBase({ imgURL: "", recipient });
@@ -48,8 +48,7 @@ export default function MintBase() {
             disabled={!recipient}
             className="w-full"
           >
-            {/* {isLoading ? "Minting..." : "Mint Base NFT"} */}
-            {"Mininting"}
+            Minting
           </Button>
         </CardFooter>
       </Card>
