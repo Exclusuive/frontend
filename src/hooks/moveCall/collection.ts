@@ -92,11 +92,14 @@ export function useCreateCollection() {
       {
         onSuccess: (data) => {
           console.log("Success! data:", data);
-          refetch();
           setToastState({
             type: "success",
             message: "Creating collection succeeded.",
           });
+          setTimeout(() => {
+            refetch();
+            console.log("refetch");
+          }, 1000);
         },
         onError: (err) => {
           console.log("Error", err);
