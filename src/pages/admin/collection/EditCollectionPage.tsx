@@ -29,17 +29,20 @@ export default function EditCollectionPage({}: Props) {
   return (
     <div className="container w-full space-y-6 p-4">
       <h1 className="text-2xl font-bold">Edit Collection Information</h1>
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogTrigger asChild>
-          <Button>Select Collection</Button>
-        </DialogTrigger>
-        <SelectCollectionModal />
-      </Dialog>
-      {collections && index !== -1 && (
-        <h2 className="text-4xl font-semibold">
-          {collections[index].objectData.content.fields.base_type.fields.type}
-        </h2>
-      )}
+
+      <div className="flex items-center justify-between">
+        {collections && index !== -1 && (
+          <h2 className="text-4xl font-semibold">
+            {collections[index].objectData.content.fields.base_type.fields.type}
+          </h2>
+        )}
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+          <DialogTrigger asChild>
+            <Button>Select Collection</Button>
+          </DialogTrigger>
+          <SelectCollectionModal />
+        </Dialog>
+      </div>
 
       <Tabs defaultValue="info" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
