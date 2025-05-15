@@ -5,14 +5,26 @@ import { useCurrentAccount, ConnectButton } from "@mysten/dapp-kit";
 import { useBuyProduct } from "@/hooks/moveCall/store";
 
 const exampleCardContent = [
-  { name: "갓생 팜희", image: "/Life.jpg" },
-  { name: "인싸 팜희", image: "/Friend.jpg" },
-  { name: "욜로 팜희", image: "/Yolo.jpg" },
-  { name: "연애 팜희", image: "/Love.jpg" },
-  { name: "집순 팜희", image: "/Home.jpg" },
-  { name: "N잡 팜희", image: "/Work.jpg" },
-  { name: "리더 팜희", image: "/Leader.jpg" },
-  { name: "열공 팜희", image: "/Study.jpg" },
+  {
+    name: "갓생 팜희",
+    image: "/Life.jpg",
+    parts: [
+      { storeId: "0x2", slotNumber: 1 },
+      { storeId: "0x2", slotNumber: 2 },
+      { storeId: "0x2", slotNumber: 3 },
+      { storeId: "0x2", slotNumber: 4 },
+      { storeId: "0x2", slotNumber: 5 },
+      { storeId: "0x2", slotNumber: 6 },
+      { storeId: "0x2", slotNumber: 7 },
+    ],
+  },
+  { name: "인싸 팜희", image: "/Friend.jpg", collectionId: "0x1", storeId: "0x2" },
+  { name: "욜로 팜희", image: "/Yolo.jpg", collectionId: "0x1", storeId: "0x2" },
+  { name: "연애 팜희", image: "/Love.jpg", collectionId: "0x1", storeId: "0x2" },
+  { name: "집순 팜희", image: "/Home.jpg", collectionId: "0x1", storeId: "0x2" },
+  { name: "N잡 팜희", image: "/Work.jpg", collectionId: "0x1", storeId: "0x2" },
+  { name: "리더 팜희", image: "/Leader.jpg", collectionId: "0x1", storeId: "0x2" },
+  { name: "열공 팜희", image: "/Study.jpg", collectionId: "0x1", storeId: "0x2" },
 ];
 
 export default function EventPage() {

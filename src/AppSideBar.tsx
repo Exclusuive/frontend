@@ -97,14 +97,9 @@ const MEMBER_MENUS = {
   ],
   Explore: [
     {
-      title: "Explore Collection Store",
-      url: "/explore/collection/store",
-      icon: ShoppingCart,
-    },
-    {
-      title: "Explore Vending Machine",
-      url: "/explore/membership/vendingmachine",
-      icon: ShoppingCart,
+      title: "Explore Collections",
+      url: "/explore/collections",
+      icon: LayoutDashboard,
     },
   ],
 };

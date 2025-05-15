@@ -18,7 +18,7 @@ export default function AddBaseModal({ slotNumber }: { slotNumber: number }) {
       </DialogHeader>
       <div className="grid grid-cols-4 items-center gap-4">
         <Label htmlFor="itemURL" className="text-right">
-          Item URL
+          Count
         </Label>
         <Input
           id="itemURL"

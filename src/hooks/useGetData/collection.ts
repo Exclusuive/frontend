@@ -138,3 +138,105 @@ export const useGetMyCollections = ({ owner }: { owner: string }) => {
     refetch,
   };
 };
+
+export const useGetAllCollection = () => {
+  const [collections, setCollections] = useState<CollectionData[]>([]);
+  const [isPending, setIsPending] = useState<boolean>(true);
+  const [error, setError] = useState(null);
+  const [refetchSwitch, setRefetchSwitch] = useState(false);
+
+  const client = new SuiClient({ url: getFullnodeUrl("testnet") });
+
+  const refetch = () => {
+    setRefetchSwitch((prev) => !prev);
+  };
+
+  useEffect(() => {
+    client
+      .queryEvents({
+        query: { MoveEventType: `${ORIGIN_PACKAGE_ID}::collection::CollectionCreated` },
+      })
+      .then(async (data) => {
+        const collectionIds = data.data.map((event: any) => {
+          return event.parsedJson.id;
+        });
+
+        const [objectDataArray, dynamicFieldDatasArray] = await Promise.all([
+          Promise.all(
+            collectionIds.map((id) =>
+              client.getObject({
+                id,
+                options: {
+                  showType: true,
+                  showContent: true,
+                },
+              })
+            )
+          ),
+          Promise.all(
+            collectionIds.map((id) =>
+              client
+                .getDynamicFields({ parentId: id }) // line break
+                .then((data) => {
+                  const dynamicFieldObjectIds = data.data.map((d) => {
+                    return d.objectId;
+                  });
+
+                  return client.multiGetObjects({
+                    ids: dynamicFieldObjectIds,
+                    options: { showContent: true, showType: true },
+                  });
+                })
+            )
+          ),
+        ]);
+
+        return collectionIds.map((id, i) => {
+          if (!objectDataArray[i].data) return;
+
+          const collectionObjectData = parseCollectionObjectData(objectDataArray[i].data);
+
+          if (!collectionObjectData) return;
+
+          const parsedDynamicFieldDatas = dynamicFieldDatasArray[i].map((d) => {
+            if (!d.data) return null;
+            return parseDynamicBaseTypeField(d.data);
+          });
+
+          const filteredDynamicFieldDatas = parsedDynamicFieldDatas.filter(
+            (value) => value !== null
+          );
+
+          if (filteredDynamicFieldDatas.length !== parsedDynamicFieldDatas.length) {
+            return;
+          }
+
+          return {
+            id,
+            objectData: collectionObjectData,
+            dynamicFieldData: filteredDynamicFieldDatas,
+          } as CollectionData;
+        });
+      })
+      .then((collections) => {
+        const collectionsWithoutNull = collections.flatMap((c) => {
+          if (!c) return [];
+          return c;
+        });
+
+        setCollections(collectionsWithoutNull);
+        setIsPending(false);
+        setError(null);
+      })
+      .catch((e) => {
+        setError(e);
+      });
+  }, [refetchSwitch]);
+
+  return {
+    collections,
+    isPending,
+    error,
+    refetch,
+  };
+};

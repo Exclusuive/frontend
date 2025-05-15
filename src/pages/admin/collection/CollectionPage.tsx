@@ -10,7 +10,6 @@ import { useContext, useEffect, useState, useRef } from "react";
 import { Dialog } from "@/components/ui/dialog";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import { CollectionContext } from "@/context/CollectionContext";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function CollectionPage() {
   const [isOpen, setIsOpen] = useState(false);

@@ -106,7 +106,7 @@ export default function Store() {
                     (data) => data.content.fields.name.fields.slot_number === slot.fields.number
                   )
                   .map((data, i) => (
-                    <div key={i}>
+                    <div>
                       {!("type" in data.content.fields.value) && (
                         <div>
                           <div className="py-2">

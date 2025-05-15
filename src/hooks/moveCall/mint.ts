@@ -86,6 +86,8 @@ export function useMint() {
         message: "Item NFT is being created...",
       });
 
+      console.log(imgURL);
+
       const tx = new Transaction();
       tx.moveCall({
         package: UPGRADED_PACKAGE_ID,

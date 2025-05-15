@@ -207,7 +207,7 @@ export function useAddProductToSlot() {
       uploadToS3({
         type: "bases",
         id: baseId,
-        file: new File(["white"], "white.png", { type: "image/png" }),
+        file: new File(["White"], "White.png", { type: "image/png" }),
       }).then(({ fileUrl }) => {
         for (let i = 0; i < count; i++) {
           const [product] = tx.moveCall({
@@ -267,11 +267,13 @@ export function useAddProductToSlot() {
     layerType,
     itemType,
     imgURL,
+    count,
   }: {
     slotNumber: number;
     layerType: string;
     itemType: string;
     imgURL: string;
+    count: number;
   }) => {
     if (currentCollection && currentStore) {
       setToastState({
@@ -281,32 +283,33 @@ export function useAddProductToSlot() {
 
       const tx = new Transaction();
 
-      const [product] = tx.moveCall({
-        package: UPGRADED_PACKAGE_ID,
-        module: "collection",
-        function: "new_item",
-        arguments: [
-          tx.object(currentCollection.id),
-          tx.object(currentCollection.cap),
-          tx.pure.string(layerType),
-          tx.pure.string(itemType),
-          tx.pure.string(imgURL),
-        ],
-      });
+      for (let i = 0; i < count; i++) {
+        const [product] = tx.moveCall({
+          package: UPGRADED_PACKAGE_ID,
+          module: "collection",
+          function: "new_item",
+          arguments: [
+            tx.object(currentCollection.id),
+            tx.object(currentCollection.cap),
+            tx.pure.string(layerType),
+            tx.pure.string(itemType),
+          ],
+        });
 
-      tx.moveCall({
-        package: UPGRADED_PACKAGE_ID,
-        module: "collection",
-        function: "add_product_to_store",
-        typeArguments: [`${ORIGIN_PACKAGE_ID}::collection::Item`],
-        arguments: [
-          tx.object(currentCollection.id),
-          tx.object(currentStore.id),
-          tx.object(currentStore.cap),
-          tx.pure.u64(slotNumber),
-          tx.object(product),
-        ],
-      });
+        tx.moveCall({
+          package: UPGRADED_PACKAGE_ID,
+          module: "collection",
+          function: "add_product_to_store",
+          typeArguments: [`${ORIGIN_PACKAGE_ID}::collection::Item`],
+          arguments: [
+            tx.object(currentCollection.id),
+            tx.object(currentStore.id),
+            tx.object(currentStore.cap),
+            tx.pure.u64(slotNumber),
+            tx.object(product),
+          ],
+        });
+      }
 
       signAndExecuteTransaction(
         {
@@ -315,11 +318,11 @@ export function useAddProductToSlot() {
         {
           onSuccess: (data) => {
             console.log("Success! data:", data);
-            refetch();
             setToastState({
               type: "success",
               message: "Creating the product succeeded.",
             });
+            refetch();
           },
           onError: (err) => {
             console.log("Error", err);
