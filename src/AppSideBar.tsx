@@ -19,16 +19,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Button } from "./components/ui/button";
-import {
-  useWallets,
-  useDisconnectWallet,
-  useCurrentAccount,
-  useConnectWallet,
-} from "@mysten/dapp-kit";
+
 import { Link, useLocation } from "react-router-dom";
 import { navigateWithQuery } from "@/lib/utils";
 import { useState } from "react";
+import { ConnectButton } from "@mysten/dapp-kit";
 
 const ADMIN_MENUS = {
   Collection: [
@@ -116,12 +111,7 @@ const MEMBER_MENUS = {
 export default function AppSidebar() {
   const [isAdmin, setIsAdmin] = useState(true);
 
-  const account = useCurrentAccount();
-  const wallets = useWallets();
   const location = useLocation();
-
-  const { mutate: disconnect } = useDisconnectWallet();
-  const { mutate: connect } = useConnectWallet();
 
   return (
     <Sidebar>
@@ -136,7 +126,8 @@ export default function AppSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
-          {account ? (
+          <ConnectButton />
+          {/* {account ? (
             <div className="mx-auto w-5/6">
               <p className="text-center text-lg font-bold">{account.label}</p>
               <Button
@@ -155,7 +146,7 @@ export default function AppSidebar() {
                 Connect wallet
               </Button>
             </div>
-          )}
+          )} */}
         </SidebarGroup>
 
         <div className="scrollbar-hide overflow-y-auto whitespace-nowrap">

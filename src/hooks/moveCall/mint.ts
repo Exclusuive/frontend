@@ -45,7 +45,7 @@ export function useMint() {
 
       signAndExecuteTransaction(
         {
-          transaction: tx,
+          transaction: tx.serialize(),
         },
         {
           onSuccess: (data) => {
@@ -146,7 +146,7 @@ export function useMint() {
 
       signAndExecuteTransaction(
         {
-          transaction: tx,
+          transaction: tx.serialize(),
         },
         {
           onSuccess: (data) => {
@@ -234,7 +234,7 @@ export function useMint() {
 
       signAndExecuteTransaction(
         {
-          transaction: tx,
+          transaction: tx.serialize(),
         },
         {
           onSuccess: (data) => {

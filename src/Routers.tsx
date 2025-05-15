@@ -5,7 +5,6 @@ import Layout from "./Layout";
 import NotFound from "./NotFound";
 
 import LandingPage from "./pages/LandingPage";
-import HomePage from "./pages/Manage/HomePage";
 
 import CollectionPage from "./pages/admin/collection/CollectionPage";
 import EditCollectionPage from "./pages/admin/collection/EditCollectionPage";
@@ -15,6 +14,7 @@ import MintAndTransferPage from "./pages/admin/collection/MintAndTransferPage";
 import MembershipPolicyPage from "./pages/admin/membership-policy/MembershipPolicyPage";
 
 import MembershipStorePage from "./pages/members/membership-store/MembershipStorePage";
+import EventPage from "./pages/Event";
 
 export default function Routers() {
   return (
@@ -50,6 +50,7 @@ export default function Routers() {
           {/* 임시 404 */}
           <Route path="*" element={<NotFound />} />
         </Route>
+        <Route path="event" element={<EventPage />} />
       </Routes>
     </Router>
   );

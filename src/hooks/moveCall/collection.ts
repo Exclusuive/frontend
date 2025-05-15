@@ -87,7 +87,7 @@ export function useCreateCollection() {
 
     signAndExecuteTransaction(
       {
-        transaction: tx,
+        transaction: tx.serialize(),
       },
       {
         onSuccess: (data) => {
@@ -178,7 +178,7 @@ export function useUpdateCollection() {
 
     signAndExecuteTransaction(
       {
-        transaction: tx,
+        transaction: tx.serialize(),
       },
       {
         onSuccess: (data) => {
@@ -241,7 +241,7 @@ export function useAddLayerType() {
 
     signAndExecuteTransaction(
       {
-        transaction: tx,
+        transaction: tx.serialize(),
       },
       {
         onSuccess: (data) => {
@@ -304,7 +304,7 @@ export function useAddPropertyType() {
 
     signAndExecuteTransaction(
       {
-        transaction: tx,
+        transaction: tx.serialize(),
       },
       {
         onSuccess: (data) => {
@@ -367,7 +367,7 @@ export function useAddTicketType() {
 
     signAndExecuteTransaction(
       {
-        transaction: tx,
+        transaction: tx.serialize(),
       },
       {
         onSuccess: (data) => {

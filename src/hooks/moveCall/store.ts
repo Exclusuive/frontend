@@ -6,6 +6,8 @@ import { Transaction } from "@mysten/sui/transactions";
 import { useContext, useEffect, useState } from "react";
 import { useToast } from "../UI/useToast";
 import { StoreData } from "@/types/store";
+import { uploadToS3 } from "@/lib/utils";
+import { v4 as uuidv4 } from "uuid";
 
 export function useCreateStore() {
   const [currentCollection, setCurrentCollection] = useState<CollectionData>();
@@ -42,7 +44,7 @@ export function useCreateStore() {
       });
       signAndExecuteTransaction(
         {
-          transaction: tx,
+          transaction: tx.serialize(),
         },
         {
           onSuccess: (data) => {
@@ -128,7 +130,7 @@ export function useAddSlot() {
 
       signAndExecuteTransaction(
         {
-          transaction: tx,
+          transaction: tx.serialize(),
         },
         {
           onSuccess: (data) => {
@@ -191,7 +193,7 @@ export function useAddProductToSlot() {
     }
   }, [collections, cIndex]);
 
-  const addBaseToSlot = ({ slotNumber, imgURL }: { slotNumber: number; imgURL: string }) => {
+  const addBaseToSlot = ({ slotNumber, count }: { slotNumber: number; count: number }) => {
     if (currentCollection && currentStore) {
       setToastState({
         type: "loading",
@@ -199,54 +201,64 @@ export function useAddProductToSlot() {
       });
 
       const tx = new Transaction();
+      const baseId = uuidv4();
 
-      const [product] = tx.moveCall({
-        package: UPGRADED_PACKAGE_ID,
-        module: "collection",
-        function: "new_base",
-        arguments: [
-          tx.object(currentCollection.id),
-          tx.object(currentCollection.cap),
-          tx.pure.string(imgURL),
-        ],
-      });
+      // Upload image to S3
+      uploadToS3({
+        type: "bases",
+        id: baseId,
+        file: new File(["white"], "white.png", { type: "image/png" }),
+      }).then(({ fileUrl }) => {
+        for (let i = 0; i < count; i++) {
+          const [product] = tx.moveCall({
+            package: UPGRADED_PACKAGE_ID,
+            module: "collection",
+            function: "new_base",
+            arguments: [
+              tx.object(currentCollection.id),
+              tx.object(currentCollection.cap),
+              tx.pure.string(fileUrl),
+            ],
+          });
 
-      tx.moveCall({
-        package: UPGRADED_PACKAGE_ID,
-        module: "collection",
-        function: "add_product_to_store",
-        typeArguments: [`${ORIGIN_PACKAGE_ID}::collection::Base`],
-        arguments: [
-          tx.object(currentCollection.id),
-          tx.object(currentStore.id),
-          tx.object(currentStore.cap),
-          tx.pure.u64(slotNumber),
-          tx.object(product),
-        ],
-      });
-
-      signAndExecuteTransaction(
-        {
-          transaction: tx,
-        },
-        {
-          onSuccess: (data) => {
-            console.log("Success! data:", data);
-            refetch();
-            setToastState({
-              type: "success",
-              message: "Creating the product succeeded.",
-            });
-          },
-          onError: (err) => {
-            console.log("Error", err);
-            setToastState({
-              type: "error",
-              message: "Something went wrong while creating the product. Please try again.",
-            });
-          },
+          tx.moveCall({
+            package: UPGRADED_PACKAGE_ID,
+            module: "collection",
+            function: "add_product_to_store",
+            typeArguments: [`${ORIGIN_PACKAGE_ID}::collection::Base`],
+            arguments: [
+              tx.object(currentCollection.id),
+              tx.object(currentStore.id),
+              tx.object(currentStore.cap),
+              tx.pure.u64(slotNumber),
+              tx.object(product),
+            ],
+          });
         }
-      );
+
+        signAndExecuteTransaction(
+          {
+            transaction: tx as any,
+          },
+          {
+            onSuccess: (data) => {
+              console.log("Success! data:", data);
+              refetch();
+              setToastState({
+                type: "success",
+                message: "Creating the product succeeded.",
+              });
+            },
+            onError: (err) => {
+              console.log("Error", err);
+              setToastState({
+                type: "error",
+                message: "Something went wrong while creating the product. Please try again.",
+              });
+            },
+          }
+        );
+      });
     }
   };
 
@@ -298,7 +310,7 @@ export function useAddProductToSlot() {
 
       signAndExecuteTransaction(
         {
-          transaction: tx,
+          transaction: tx.serialize(),
         },
         {
           onSuccess: (data) => {
@@ -363,7 +375,7 @@ export function useAddProductToSlot() {
 
       signAndExecuteTransaction(
         {
-          transaction: tx,
+          transaction: tx.serialize(),
         },
         {
           onSuccess: (data) => {
@@ -431,7 +443,7 @@ export function useAddProductToSlot() {
 
       signAndExecuteTransaction(
         {
-          transaction: tx,
+          transaction: tx.serialize(),
         },
         {
           onSuccess: (data) => {
@@ -529,7 +541,7 @@ export function useAddConditionToSlot() {
 
       signAndExecuteTransaction(
         {
-          transaction: tx,
+          transaction: tx.serialize(),
         },
         {
           onSuccess: (data) => {
@@ -554,5 +566,100 @@ export function useAddConditionToSlot() {
 
   return {
     addConditionToSlot,
+  };
+}
+
+export function useBuyProduct() {
+  const [currentCollection, setCurrentCollection] = useState<CollectionData>();
+  const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction();
+
+  const [currentStore, setCurrentStore] = useState<StoreData>();
+  const [filterdStores, setFilteredStores] = useState<StoreData[]>();
+  const {
+    collection: { collections, index: cIndex },
+    store: { stores, index: sIndex, refetch },
+  } = useContext(CollectionContext);
+
+  const { setToastState } = useToast();
+
+  useEffect(() => {
+    if (stores && collections && collections.length > 0 && cIndex !== -1) {
+      setFilteredStores(
+        stores.filter(
+          (store) => store.objectData.content.fields.collection_id === collections[cIndex].id
+        )
+      );
+    }
+  }, [stores, cIndex]);
+
+  useEffect(() => {
+    if (filterdStores) {
+      setCurrentStore(filterdStores[sIndex]);
+    }
+  }, [filterdStores, sIndex]);
+
+  useEffect(() => {
+    if (collections && cIndex !== -1) {
+      setCurrentCollection(collections[cIndex]);
+    }
+  }, [collections, cIndex]);
+
+  const buyEventProduct = ({
+    collectionId,
+    storeId,
+    slotNumber,
+  }: {
+    collectionId: string;
+    storeId: string;
+    slotNumber: number;
+  }) => {
+    if (currentCollection && currentStore) {
+      setToastState({
+        type: "loading",
+        message: "Request is being created...",
+      });
+
+      const tx = new Transaction();
+
+      const [request] = tx.moveCall({
+        package: UPGRADED_PACKAGE_ID,
+        module: "collection",
+        function: "new_request",
+        arguments: [tx.object(collectionId), tx.object(storeId), tx.pure.u64(slotNumber)],
+      });
+
+      tx.moveCall({
+        package: UPGRADED_PACKAGE_ID,
+        module: "collection",
+        function: "confirm_request",
+        arguments: [tx.object(collectionId), tx.object(storeId), tx.object(request)],
+      });
+      signAndExecuteTransaction(
+        {
+          transaction: tx.serialize(),
+        },
+        {
+          onSuccess: (data) => {
+            console.log("Success! data:", data);
+            refetch();
+            setToastState({
+              type: "success",
+              message: "Buying product succeeded.",
+            });
+          },
+          onError: (err) => {
+            console.log("Error", err);
+            setToastState({
+              type: "error",
+              message: "Something went wrong while buying the product. Please try again.",
+            });
+          },
+        }
+      );
+    }
+  };
+
+  return {
+    buyEventProduct,
   };
 }

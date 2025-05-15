@@ -6,7 +6,7 @@ import { useAddProductToSlot } from "@/hooks/moveCall/store";
 import { useState } from "react";
 
 export default function AddBaseModal({ slotNumber }: { slotNumber: number }) {
-  const [imgURL, setImgURL] = useState("");
+  const [count, setCount] = useState(0);
 
   const { addBaseToSlot } = useAddProductToSlot();
 
@@ -22,10 +22,10 @@ export default function AddBaseModal({ slotNumber }: { slotNumber: number }) {
         </Label>
         <Input
           id="itemURL"
-          type="string"
-          value={imgURL}
+          type="number"
+          value={count}
           onChange={(e) => {
-            setImgURL(e.target.value);
+            setCount(Number(e.target.value));
           }}
           className="col-span-3"
         />
@@ -33,8 +33,8 @@ export default function AddBaseModal({ slotNumber }: { slotNumber: number }) {
       <DialogClose>
         <Button
           onClick={() => {
-            addBaseToSlot({ slotNumber, imgURL });
-            setImgURL("");
+            addBaseToSlot({ slotNumber, count });
+            setCount(0);
           }}
         >
           Add Base to Slot

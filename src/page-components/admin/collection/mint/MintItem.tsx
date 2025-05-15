@@ -44,7 +44,7 @@ export default function MintItem() {
   const [imageFile, setImageFile] = useState<File>();
 
   const {
-    collection: { collections, index, refetch },
+    collection: { collections, index },
   } = useContext(CollectionContext);
 
   const { mintNewItem, mintExistingItem } = useMint();
