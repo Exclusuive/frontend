@@ -17,8 +17,8 @@ export default function CollectionImg({ collection, className, ...props }: Props
   }, [collection]);
   return (
     <img
-      src={imgURL ? imgURL : "/DOKPAMI.png"}
-      className={cn(`opacity-30 ${className}`)}
+      src={imgURL ? `${imgURL}?refresh=${Date.now()}` : "/DOKPAMI.png"}
+      className={cn(`opacity-90 ${className}`)}
       {...props}
     />
   );

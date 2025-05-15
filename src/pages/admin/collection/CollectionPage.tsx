@@ -21,16 +21,6 @@ export default function CollectionPage() {
     collection: { collections, isPending, error },
   } = useContext(CollectionContext);
 
-  const scroll = (direction: "left" | "right") => {
-    if (scrollContainerRef.current) {
-      const scrollAmount = 200;
-      scrollContainerRef.current.scrollBy({
-        left: direction === "left" ? -scrollAmount : scrollAmount,
-        behavior: "smooth",
-      });
-    }
-  };
-
   useEffect(() => {
     if (account && collections) {
       setIsOpen(collections.length === 0);
@@ -60,12 +50,12 @@ export default function CollectionPage() {
               <DialogTrigger>
                 <Card
                   className={
-                    "col-span-1 flex h-full cursor-pointer items-center justify-center border-2 transition-all hover:shadow-lg"
+                    "col-span-1 m-auto flex h-full cursor-pointer items-center justify-center border-2 bg-black text-white transition-all hover:shadow-lg"
                   }
                 >
                   <CardContent>
-                    <CardTitle className="text-center text-lg">Create</CardTitle>
-                    <CardTitle className="text-center text-lg">Collection</CardTitle>
+                    <CardTitle className="text-center text-lg text-white">Create</CardTitle>
+                    <CardTitle className="text-center text-lg text-white">Collection</CardTitle>
                   </CardContent>
                 </Card>
               </DialogTrigger>
@@ -73,13 +63,6 @@ export default function CollectionPage() {
             </Dialog>
 
             <div className="relative flex-1">
-              <button
-                onClick={() => scroll("left")}
-                className="absolute top-1/2 left-0 z-10 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white"
-              >
-                <ChevronLeft className="h-6 w-6" />
-              </button>
-
               <div
                 ref={scrollContainerRef}
                 className="scrollbar-hide grid h-full w-full auto-cols-[minmax(100px,1fr)] grid-flow-col grid-cols-4 gap-4 overflow-x-auto rounded-md bg-gray-100 px-4 py-1"
@@ -87,7 +70,7 @@ export default function CollectionPage() {
                 <TabsList className="h-full">
                   {collections.map((col) => (
                     <TabsTrigger
-                      className="col-span-2 transition-all duration-200 data-[state=active]:scale-105 data-[state=active]:bg-white data-[state=active]:shadow-md"
+                      className="col-span-2 transition-all duration-200 data-[state=active]:scale-105 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
                       key={col.id}
                       value={col.id}
                     >
@@ -96,13 +79,6 @@ export default function CollectionPage() {
                   ))}
                 </TabsList>
               </div>
-
-              <button
-                onClick={() => scroll("right")}
-                className="absolute top-1/2 right-0 z-10 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow-md hover:bg-white"
-              >
-                <ChevronRight className="h-6 w-6" />
-              </button>
             </div>
           </div>
 

@@ -26,7 +26,7 @@ export default function SelectCollectionModal() {
   return (
     <DialogContent className="max-h-[75vh] w-2/3 min-w-2/3 overflow-y-auto [&>button]:hidden">
       <DialogHeader>
-        <DialogTitle className="text-2xl">Pick your Collection</DialogTitle>
+        <DialogTitle className="text-2xl">Select Collection</DialogTitle>
         <p className="text-muted-foreground text-md">Choose one to view or customize your NFTs.</p>
       </DialogHeader>
 

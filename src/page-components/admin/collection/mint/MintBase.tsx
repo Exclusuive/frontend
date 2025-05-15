@@ -10,7 +10,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useMint } from "@/hooks/moveCall/mint";
+import { uploadToS3 } from "@/lib/utils";
 import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 export default function MintBase() {
   const [recipient, setRecipient] = useState("");
@@ -42,8 +44,20 @@ export default function MintBase() {
         </CardContent>
         <CardFooter>
           <Button
-            onClick={() => {
-              mintBase({ imgURL: "", recipient });
+            onClick={async (e) => {
+              e.preventDefault();
+              const baseId = uuidv4();
+
+              // Upload image to S3
+              const { fileUrl } = await uploadToS3({
+                type: "bases",
+                id: baseId,
+                file: new File([await fetch("/White.png").then((r) => r.blob())], "White.png", {
+                  type: "image/png",
+                }),
+              });
+
+              mintBase({ imgURL: fileUrl, recipient });
             }}
             disabled={!recipient}
             className="w-full"
