@@ -30,9 +30,9 @@ const router = createBrowserRouter([
   {
     path: paths.home.path,
     element: (
-      <ServiceProtectedRouter>
-        <AppRoot />
-      </ServiceProtectedRouter>
+      // <ServiceProtectedRouter>
+      <AppRoot />
+      // </ServiceProtectedRouter>
     ),
     ErrorBoundary: AppRootErrorBoundary,
     children: [
