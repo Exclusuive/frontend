@@ -2,7 +2,7 @@ import { createBrowserRouter, redirect, RouterProvider } from "react-router-dom"
 import { AuthWebViewLayout } from "@/layouts/AuthWebviewLayout";
 import { lazy } from "react";
 import { paths } from "@/config/paths";
-import ServiceProtectedRouter from "@/components/provider/service-protected-router";
+//import ServiceProtectedRouter from "@/components/provider/service-protected-router";
 import AuthProtectedRouter from "@/components/provider/auth-protected-router";
 import { default as AppRoot, ErrorBoundary as AppRootErrorBoundary } from "@/components/root";
 
