@@ -45,7 +45,7 @@ export function useMint() {
 
       signAndExecuteTransaction(
         {
-          transaction: tx,
+          transaction: tx.serialize(),
         },
         {
           onSuccess: (data) => {
@@ -85,6 +85,8 @@ export function useMint() {
         type: "loading",
         message: "Item NFT is being created...",
       });
+
+      console.log(imgURL);
 
       const tx = new Transaction();
       tx.moveCall({
@@ -146,7 +148,7 @@ export function useMint() {
 
       signAndExecuteTransaction(
         {
-          transaction: tx,
+          transaction: tx.serialize(),
         },
         {
           onSuccess: (data) => {
@@ -234,7 +236,7 @@ export function useMint() {
 
       signAndExecuteTransaction(
         {
-          transaction: tx,
+          transaction: tx.serialize(),
         },
         {
           onSuccess: (data) => {

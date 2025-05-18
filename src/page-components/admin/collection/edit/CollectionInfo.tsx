@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useUpdateCollection } from "@/hooks/moveCall/collection";
 import { CollectionContext } from "@/context/CollectionContext";
+import { uploadToS3 } from "@/lib/utils";
 
 export default function CollectionInfo() {
   const [imageFile, setImageFile] = useState<File>();
@@ -84,7 +85,23 @@ export default function CollectionInfo() {
 
         <Button
           onClick={() => {
-            updateCollectionInfo({ bannerImgURL: "", description });
+            if (imageFile) {
+              const url =
+                (collections &&
+                  index !== -1 &&
+                  collections[index].dynamicFieldData.find(
+                    (d) => d.content.fields.value.fields.name === "img_url"
+                  )?.content.fields.value.fields.content) ||
+                "";
+
+              uploadToS3({
+                type: "collections",
+                id: url.split("/").pop(),
+                file: imageFile || null,
+              });
+            }
+            updateCollectionInfo({ description });
+
             setImageFile(undefined);
             setDescription("");
           }}

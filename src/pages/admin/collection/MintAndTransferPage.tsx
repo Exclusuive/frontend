@@ -21,7 +21,7 @@ export default function MintAndTransferPage({}: Props) {
         </Dialog>
       </div>
 
-      <div className="grid grid-cols-1">
+      <div className="m-auto flex h-full w-full max-w-[1300px] place-content-center">
         <div className="bg-card w-full p-6">
           <MintBase />
         </div>

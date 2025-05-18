@@ -18,6 +18,7 @@ export default function AddItemModal({ slotNumber }: { slotNumber: number }) {
   const [layerType, setLayerType] = useState("Select Layer Type");
   const [itemType, setItemType] = useState("");
   const [imgURL, setImgURL] = useState("");
+  const [count, setCount] = useState(0);
 
   const { addItemToSlot } = useAddProductToSlot();
 
@@ -66,27 +67,33 @@ export default function AddItemModal({ slotNumber }: { slotNumber: number }) {
               )}
           </SelectContent>
         </Select>
-        <Label htmlFor="itemType" className="text-right">
+        <Label htmlFor="item" className="text-right">
           Item Type
         </Label>
-        <Input
-          id="itemType"
-          type="string"
-          value={itemType}
-          onChange={(e) => {
-            setItemType(e.target.value);
-          }}
-          className="col-span-3"
-        />
+        <Select value={itemType} onValueChange={(value) => setItemType(value)}>
+          <SelectTrigger className="col-span-3">
+            <SelectValue placeholder="Select an item" />
+          </SelectTrigger>
+          <SelectContent>
+            {currentCollection &&
+              currentCollection.objectData.content.fields.item_types.fields.contents
+                .filter((item) => item.fields.type.fields.type === layerType)
+                .map((item) => (
+                  <SelectItem key={item.fields.item_type} value={item.fields.item_type}>
+                    {item.fields.item_type}
+                  </SelectItem>
+                ))}
+          </SelectContent>
+        </Select>
         <Label htmlFor="itemURL" className="text-right">
-          Item URL
+          Count
         </Label>
         <Input
           id="itemURL"
-          type="string"
-          value={imgURL}
+          type="number"
+          value={count}
           onChange={(e) => {
-            setImgURL(e.target.value);
+            setCount(Number(e.target.value));
           }}
           className="col-span-3"
         />
@@ -94,10 +101,11 @@ export default function AddItemModal({ slotNumber }: { slotNumber: number }) {
       <DialogClose>
         <Button
           onClick={() => {
-            addItemToSlot({ slotNumber, layerType, itemType, imgURL });
+            addItemToSlot({ slotNumber, layerType, itemType, imgURL, count });
             setLayerType("Select Layer Type");
             setItemType("");
             setImgURL("");
+            setCount(0);
           }}
         >
           Add Item to Slot

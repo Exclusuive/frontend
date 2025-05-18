@@ -35,7 +35,7 @@ export default function SelectStoreModal() {
   return (
     <DialogContent className="max-h-[75vh] w-2/3 min-w-2/3 overflow-y-auto [&>button]:hidden">
       <DialogHeader>
-        <DialogTitle className="text-2xl">Pick Your Store</DialogTitle>
+        <DialogTitle className="text-2xl">Selet Store</DialogTitle>
         <p className="text-muted-foreground text-md">Choose one of stores.</p>
       </DialogHeader>
 

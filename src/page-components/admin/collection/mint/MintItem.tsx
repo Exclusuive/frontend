@@ -30,6 +30,8 @@ import { CollectionData } from "@/types/collection";
 import { useContext, useEffect, useState } from "react";
 import { ImagePlus } from "lucide-react";
 import { useMint } from "@/hooks/moveCall/mint";
+import { uploadToS3 } from "@/lib/utils";
+import { v4 as uuidv4 } from "uuid";
 
 export default function MintItem() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -44,7 +46,7 @@ export default function MintItem() {
   const [imageFile, setImageFile] = useState<File>();
 
   const {
-    collection: { collections, index, refetch },
+    collection: { collections, index },
   } = useContext(CollectionContext);
 
   const { mintNewItem, mintExistingItem } = useMint();
@@ -330,22 +332,30 @@ export default function MintItem() {
           <DialogClose>
             <Button
               className="cursor-pointer"
-              onClick={() => {
+              onClick={async (e) => {
+                e.preventDefault();
                 resetForm();
-                if (!addedProperties) return;
+
+                const itemId = uuidv4();
+
+                const { fileUrl } = await uploadToS3({
+                  type: "items",
+                  id: itemId,
+                  file: imageFile || null,
+                });
 
                 isNewItem
                   ? mintNewItem({
                       layer,
                       itemType,
-                      imgURL: "",
-                      properties: addedProperties,
+                      imgURL: fileUrl,
+                      properties: addedProperties || {},
                       recipient,
                     })
                   : mintExistingItem({
                       layer,
                       itemType,
-                      properties: addedProperties,
+                      properties: addedProperties || {},
                       recipient,
                     });
               }}

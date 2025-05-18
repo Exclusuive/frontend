@@ -87,7 +87,7 @@ export function useCreateCollection() {
 
     signAndExecuteTransaction(
       {
-        transaction: tx,
+        transaction: tx.serialize(),
       },
       {
         onSuccess: (data) => {
@@ -124,13 +124,7 @@ export function useUpdateCollection() {
   } = useContext(CollectionContext);
   const { setToastState } = useToast();
 
-  const updateCollectionInfo = ({
-    bannerImgURL,
-    description,
-  }: {
-    bannerImgURL: string;
-    description: string;
-  }) => {
+  const updateCollectionInfo = ({ description }: { description: string }) => {
     if (!account) return;
 
     if (!collections) return;
@@ -157,20 +151,6 @@ export function useUpdateCollection() {
         tx.object(currentCollection.id),
         tx.object(currentCollection.cap),
         tx.pure.string(collectionName),
-        tx.pure.string("img_url"),
-        tx.pure.string(bannerImgURL),
-      ],
-    });
-
-    tx.moveCall({
-      package: UPGRADED_PACKAGE_ID,
-      module: "collection",
-      function: "update_config_to_type",
-      typeArguments: [`${ORIGIN_PACKAGE_ID}::collection::BaseType`],
-      arguments: [
-        tx.object(currentCollection.id),
-        tx.object(currentCollection.cap),
-        tx.pure.string(collectionName),
         tx.pure.string("description"),
         tx.pure.string(description),
       ],
@@ -178,7 +158,7 @@ export function useUpdateCollection() {
 
     signAndExecuteTransaction(
       {
-        transaction: tx,
+        transaction: tx.serialize(),
       },
       {
         onSuccess: (data) => {
@@ -241,7 +221,7 @@ export function useAddLayerType() {
 
     signAndExecuteTransaction(
       {
-        transaction: tx,
+        transaction: tx.serialize(),
       },
       {
         onSuccess: (data) => {
@@ -304,7 +284,7 @@ export function useAddPropertyType() {
 
     signAndExecuteTransaction(
       {
-        transaction: tx,
+        transaction: tx.serialize(),
       },
       {
         onSuccess: (data) => {
@@ -367,7 +347,7 @@ export function useAddTicketType() {
 
     signAndExecuteTransaction(
       {
-        transaction: tx,
+        transaction: tx.serialize(),
       },
       {
         onSuccess: (data) => {

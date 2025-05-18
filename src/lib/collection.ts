@@ -1,4 +1,4 @@
-import { CollectionObjectData, DynamicFieldObjectData } from "@/types/collection";
+import { CollectionObjectData, DynamicFieldObjectData, CollectionType } from "@/types/collection";
 import { StoreObjectData } from "@/types/store";
 import { SuiObjectData } from "@mysten/sui/client";
 
@@ -16,7 +16,7 @@ export const parseCollectionObjectData = (data: SuiObjectData): CollectionObject
       dataType: content.dataType,
       type: content.type,
       hasPublicTransfer: content.hasPublicTransfer,
-      fields: content.fields,
+      fields: content.fields as CollectionType,
     },
   };
 
@@ -38,7 +38,7 @@ export const parseStoreObjectData = (data: SuiObjectData): StoreObjectData | nul
       dataType: content.dataType,
       type: content.type,
       hasPublicTransfer: content.hasPublicTransfer,
-      fields: content.fields,
+      fields: content.fields as any,
     },
   };
 
@@ -60,7 +60,7 @@ export const parseDynamicBaseTypeField = (data: SuiObjectData): DynamicFieldObje
       dataType: content.dataType,
       type: content.type,
       hasPublicTransfer: content.hasPublicTransfer,
-      fields: content.fields,
+      fields: content.fields as any,
     },
   };
 

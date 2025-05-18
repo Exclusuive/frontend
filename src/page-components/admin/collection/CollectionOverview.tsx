@@ -29,9 +29,9 @@ export default function CollectionOverview({ collection }: Props) {
       {/* Left Column */}
       <div className="flex flex-col gap-4">
         {/* Top Left */}
-        <Card title="Collection Overview Card">
+        <Card title="Collection Information Card">
           <CardHeader>
-            <CardTitle>Collection Overview</CardTitle>
+            <CardTitle>Collection Information</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="aspect-video w-full overflow-hidden rounded-md">
@@ -45,17 +45,15 @@ export default function CollectionOverview({ collection }: Props) {
               <h1 className="text-xl font-bold">
                 {collection.objectData.content.fields.base_type.fields.type}
               </h1>
-              <p className="font-semibold">Collection Configs</p>
               {collection.dynamicFieldData.map((data) => {
                 if (!("name" in data.content.fields.value.fields)) return;
-                return (
-                  <div key={data.objectId}>
-                    <p>
-                      {data.content.fields.value.fields.name}:{" "}
-                      {data.content.fields.value.fields.content}
-                    </p>
-                  </div>
-                );
+                if (data.content.fields.value.fields.name === "description") {
+                  return (
+                    <div key={data.objectId}>
+                      <p>{data.content.fields.value.fields.content}</p>
+                    </div>
+                  );
+                }
               })}
             </div>
           </CardContent>
@@ -117,7 +115,6 @@ export default function CollectionOverview({ collection }: Props) {
         <Card title="Items by Layer" className="flex-1">
           <CardHeader>
             <CardTitle>Items by layer</CardTitle>
-            <CardDescription>Items by layer</CardDescription>
           </CardHeader>
 
           <CardContent>
@@ -140,6 +137,7 @@ export default function CollectionOverview({ collection }: Props) {
                     .filter((d) => d.fields.type.fields.type === selectedLayer)
                     .map((d, i) => {
                       const item = d;
+                      console.log(collection.objectData.content.fields);
                       return (
                         <div key={i}>
                           <div

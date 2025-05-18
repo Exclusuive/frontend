@@ -52,6 +52,8 @@ export default function LayerInfo() {
       const oldIndex = layers.indexOf(active.id.toString());
       const newIndex = layers.indexOf(over.id.toString());
       setLayers(arrayMove(layers, oldIndex, newIndex));
+
+      window.alert(`Swap transactions will be supported soon.`);
       console.log("Tx!!", `swap from ${oldIndex} to ${newIndex}`);
     }
   };
@@ -59,15 +61,15 @@ export default function LayerInfo() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Layer Management</CardTitle>
-        <CardDescription>Add and reorder layers for your collection</CardDescription>
+        <CardTitle>Layer Types</CardTitle>
+        <CardDescription>Add and reorder layer types for your collection.</CardDescription>
       </CardHeader>
 
       <CardContent className="flex gap-2">
         <Input
           value={newLayerName}
           onChange={(e) => setNewLayerName(e.target.value)}
-          placeholder="Enter new layer name"
+          placeholder="Enter new layer type"
           className="flex-1"
         />
         <Button
@@ -83,7 +85,7 @@ export default function LayerInfo() {
       </CardContent>
 
       <CardHeader>
-        <CardTitle>Existing Layers</CardTitle>
+        <CardTitle>Existing Layer Types</CardTitle>
       </CardHeader>
 
       <CardContent>
