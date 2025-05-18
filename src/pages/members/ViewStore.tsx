@@ -1,6 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CollectionContext } from "@/context/CollectionContext";
 import { StoreData } from "@/types/store";
@@ -8,37 +15,27 @@ import {
   AddNewSlotModal,
   AddProductToSlotModal,
   AddConditionToSlotModal,
+  SelectStoreModal,
 } from "@/page-components/admin/collection/store";
 import { useParams } from "react-router-dom";
+import { useGetStoresByCollectionId } from "@/hooks/useGetData/store";
+import clsx from "clsx";
 export default function ViewStore() {
   const [currentStore, setCurrentStore] = useState<StoreData>();
-  const [filterdStores, setFilteredStores] = useState<StoreData[]>();
-  const {
-    collection: { collections, index: cIndex },
-    store: { stores, index: sIndex },
-  } = useContext(CollectionContext);
-
   const { id } = useParams();
-  console.log(id);
+
+  const { stores, isPending, error, refetch } = useGetStoresByCollectionId({
+    collectionId: id || "",
+  });
 
   useEffect(() => {
-    if (stores && collections && collections.length > 0 && cIndex !== -1) {
-      setFilteredStores(
-        stores.filter(
-          (store) => store.objectData.content.fields.collection_id === collections[cIndex].id
-        )
-      );
+    if (stores && stores.length > 0) {
+      setCurrentStore(stores[0]);
     }
-  }, [stores, cIndex]);
-
-  useEffect(() => {
-    if (filterdStores) {
-      setCurrentStore(filterdStores[sIndex]);
-    }
-  }, [filterdStores, sIndex]);
+  }, [stores]);
 
   return (
-    <div>
+    <div className="p-4">
       {currentStore && (
         <div className="mb-6 flex items-center justify-between">
           <div>
@@ -54,32 +51,55 @@ export default function ViewStore() {
             </p>
           </div>
           <div className="flex gap-2">
-            <DialogTrigger asChild>
-              <Button>Select Store</Button>
-            </DialogTrigger>
             <Dialog>
               <DialogTrigger asChild>
-                <Button>Add New Slot</Button>
+                <Button>Select Store</Button>
               </DialogTrigger>
-              <AddNewSlotModal></AddNewSlotModal>
+              <DialogContent className="max-h-[75vh] w-2/3 min-w-2/3 overflow-y-auto [&>button]:hidden">
+                <DialogHeader>
+                  <DialogTitle className="text-2xl">Selet Store</DialogTitle>
+                  <p className="text-muted-foreground text-md">Choose one of stores.</p>
+                </DialogHeader>
+
+                <div className="grid grid-cols-1 gap-4 overflow-y-auto pt-2 md:grid-cols-2 lg:grid-cols-3">
+                  {stores &&
+                    (stores.length === 0 ? (
+                      <p>nothing</p>
+                    ) : (
+                      stores.map((store, i) => (
+                        <DialogClose>
+                          <Card
+                            key={store.id}
+                            onClick={() => {
+                              setCurrentStore(store);
+                            }}
+                            className={clsx(
+                              `${currentStore?.id === store.id ? "border-blue-400" : ""} cursor-pointer border-2 transition-all hover:border-4 hover:shadow-lg`
+                            )}
+                          >
+                            <CardHeader>
+                              <CardTitle className="text-lg">
+                                {store.objectData.content.fields.name}
+                              </CardTitle>
+                              <p className="text-muted-foreground line-clamp-2 truncate text-sm">
+                                ID: {store.objectData.content.fields.id.id}
+                              </p>
+                            </CardHeader>
+                            <CardContent>
+                              <p className="text-muted-foreground line-clamp-2 text-sm">
+                                Slots: {store.objectData.content.fields.slots.length}
+                              </p>
+                            </CardContent>
+                          </Card>
+                        </DialogClose>
+                      ))
+                    ))}
+                </div>
+              </DialogContent>{" "}
             </Dialog>
           </div>
         </div>
       )}
-      <div className="mb-6 flex gap-2">
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button>Add Product to Slot</Button>
-          </DialogTrigger>
-          <AddProductToSlotModal />
-        </Dialog>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button>Add Condition to Slot</Button>
-          </DialogTrigger>
-          <AddConditionToSlotModal />
-        </Dialog>
-      </div>
 
       {currentStore && (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -118,8 +138,8 @@ export default function ViewStore() {
                               {data.content.fields.value.length}{" "}
                             </span>
                           </div>
-                          <div className="grid grid-cols-2">
-                            {data.content.fields.value.slice(0, 4).map((v) => {
+                          <div className="grid grid-cols-1">
+                            {data.content.fields.value.slice(0, 1).map((v) => {
                               const typeName = v.type.split("::")[2];
                               const product = v.fields;
 
@@ -129,7 +149,6 @@ export default function ViewStore() {
                                     <CardContent>
                                       <p className="truncate">{product.id.id}</p>
                                       <p>{product.type.fields.type}</p>
-                                      <img className="h-5 w-5" src={product.img_url} />
                                     </CardContent>
                                   </Card>
                                 );
@@ -137,10 +156,13 @@ export default function ViewStore() {
                                 return (
                                   <Card className="cursor-default">
                                     <CardContent>
-                                      <p className="truncate">{product.id.id}</p>
-                                      <p>Layer: {product.type.fields.type}</p>
-                                      <p>{product.item_type}</p>
-                                      <img className="h-5 w-5" src={product.img_url} />
+                                      <div className="flex items-center gap-2">
+                                        <img className="h-20 w-20" src={product.img_url} />
+                                        <div className="flex flex-col gap-2">
+                                          <p>Layer: {product.type.fields.type}</p>
+                                          <p>{product.item_type}</p>
+                                        </div>
+                                      </div>
                                     </CardContent>
                                   </Card>
                                 );
@@ -148,7 +170,6 @@ export default function ViewStore() {
                                 return (
                                   <Card className="cursor-default">
                                     <CardContent>
-                                      <p className="truncate">{product.id.id}</p>
                                       <p>{product.type.fields.type}</p>
                                     </CardContent>
                                   </Card>
@@ -157,7 +178,6 @@ export default function ViewStore() {
                                 return (
                                   <Card className="cursor-default">
                                     <CardContent>
-                                      <p className="truncate">{product.id.id}</p>
                                       <p>{product.property.fields.type.fields.type}</p>
                                       <p>Value: {product.property.fields.value}</p>
                                     </CardContent>
@@ -179,6 +199,7 @@ export default function ViewStore() {
                     </div>
                   ))}
               </CardContent>
+              <Button className="mx-5">Buy Product</Button>
             </Card>
           ))}
         </div>

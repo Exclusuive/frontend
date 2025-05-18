@@ -138,3 +138,108 @@ export const useGetMyStores = ({ owner }: { owner: string }) => {
     refetch,
   };
 };
+
+export const useGetStoresByCollectionId = ({ collectionId }: { collectionId: string }) => {
+  const [stores, setStores] = useState<StoreData[]>([]);
+  const [isPending, setIsPending] = useState<boolean>(true);
+  const [error, setError] = useState(null);
+  const [refetchSwitch, setRefetchSwitch] = useState(false);
+
+  const client = new SuiClient({ url: getFullnodeUrl("testnet") });
+
+  const refetch = () => {
+    setRefetchSwitch((prev) => !prev);
+  };
+
+  useEffect(() => {
+    client
+      .queryEvents({
+        query: { MoveEventType: `${ORIGIN_PACKAGE_ID}::collection::StoreCreated` },
+      })
+      .then(async (data) => {
+        console.log(data);
+        const storeIds = data.data.map((event: any) => {
+          return event.parsedJson.id;
+        });
+
+        const [objectDataArray, dynamicFieldDatasArray] = await Promise.all([
+          Promise.all(
+            storeIds.map((id) =>
+              client.getObject({
+                id,
+                options: {
+                  showType: true,
+                  showContent: true,
+                },
+              })
+            )
+          ),
+          Promise.all(
+            storeIds.map((id) =>
+              client
+                .getDynamicFields({ parentId: id }) // line break
+                .then((data) => {
+                  const dynamicFieldObjectIds = data.data.map((d) => {
+                    return d.objectId;
+                  });
+
+                  return client.multiGetObjects({
+                    ids: dynamicFieldObjectIds,
+                    options: { showContent: true, showType: true },
+                  });
+                })
+            )
+          ),
+        ]);
+
+        console.log(objectDataArray);
+
+        return storeIds.map((id, i) => {
+          if (!objectDataArray[i].data) return;
+
+          const storeObjectData = parseStoreObjectData(objectDataArray[i].data);
+
+          if (!storeObjectData) return;
+
+          const parsedDynamicFieldDatas = dynamicFieldDatasArray[i].map((d) => {
+            if (!d.data) return null;
+            return parseDynamicBaseTypeField(d.data);
+          });
+
+          const filteredDynamicFieldDatas = parsedDynamicFieldDatas.filter(
+            (value) => value !== null
+          );
+
+          if (filteredDynamicFieldDatas.length !== parsedDynamicFieldDatas.length) {
+            return;
+          }
+
+          return {
+            id,
+            objectData: storeObjectData,
+            dynamicFieldData: filteredDynamicFieldDatas,
+          } as StoreData;
+        });
+      })
+      .then((stores) => {
+        const storesWithoutNull = stores.flatMap((s) => {
+          if (!s) return [];
+          return s;
+        });
+
+        setStores(storesWithoutNull);
+        setIsPending(false);
+        setError(null);
+      })
+      .catch((e) => {
+        setError(e);
+      });
+  }, [collectionId, refetchSwitch]);
+
+  return {
+    stores,
+    isPending,
+    error,
+    refetch,
+  };
+};
