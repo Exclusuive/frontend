@@ -12,7 +12,7 @@ import {
 import { CollectionData } from "@/types/collection";
 import { CollectionImg } from "@/page-components/admin/collection";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 interface Props {
   collection: CollectionData;
 }
@@ -20,6 +20,8 @@ interface Props {
 export default function ExploreCollectionModal({ collection }: Props) {
   const [selectedLayer, setSelectedLayer] = useState<string>("");
   const navigate = useNavigate();
+
+  console.log(collection);
 
   return (
     <DialogContent className="max-h-[90vh] overflow-y-auto p-6 sm:max-w-[600px]">
@@ -106,27 +108,53 @@ export default function ExploreCollectionModal({ collection }: Props) {
 
           <TabsContent value={selectedLayer}>
             <div className="space-y-4 overflow-auto">
-              {collection.objectData.content.fields.item_types.fields.contents
-                .filter((d) => d.fields.type.fields.type === selectedLayer)
-                .map((d, i) => {
-                  const item = d;
-                  console.log(collection.objectData.content.fields);
-                  return (
+              {(() => {
+                const mergedData = new Map();
+
+                // First pass: collect all configs
+                collection.dynamicFieldData
+                  .filter((d) => d.type.includes("ItemType") && d.type.includes("Config"))
+                  .forEach((d) => {
+                    const config = {
+                      item_type: d.content.fields.name.fields.type,
+                      img_url: d.content.fields.value.fields.content,
+                    };
+                    mergedData.set(config.item_type, { ...config });
+                  });
+
+                // Second pass: merge items with their configs
+                collection.dynamicFieldData
+                  .filter((d) => d.type.includes("ItemType") && !d.type.includes("Config"))
+                  .forEach((d) => {
+                    const item = {
+                      item_type: d.content.fields.value.fields.item_type,
+                      layer_type: d.content.fields.value.fields.type.fields.type,
+                    };
+
+                    const existingData = mergedData.get(item.item_type) || {};
+                    mergedData.set(item.item_type, {
+                      ...existingData,
+                      ...item,
+                    });
+                  });
+
+                return Array.from(mergedData.values())
+                  .filter((item) => item.layer_type === selectedLayer)
+                  .map((item, i) => (
                     <div key={i}>
                       <div
                         className={`flex cursor-pointer items-center gap-4 rounded-lg border border-gray-200 p-2 hover:bg-gray-100`}
                       >
                         <div className="h-16 w-16 overflow-hidden rounded-md">
-                          <CollectionImg
-                            collection={collection}
-                            className="h-full w-full object-cover"
-                          />
+                          <img src={item.img_url} alt="" />
                         </div>
-                        <h3 className="font-medium">{item.fields.item_type}</h3>
+                        <div>
+                          <h3 className="font-medium">{item.item_type}</h3>
+                        </div>
                       </div>
                     </div>
-                  );
-                })}
+                  ));
+              })()}
             </div>
           </TabsContent>
           <TabsContent value="combinations">
@@ -138,9 +166,7 @@ export default function ExploreCollectionModal({ collection }: Props) {
 
         <DialogFooter>
           <DialogClose>
-            <Button type="submit" onClick={() => navigate(`/member/store/${collection.id}`)}>
-              Go to Store
-            </Button>
+            <Link to={`/member/store/${collection.id}`}>Go to Store</Link>
           </DialogClose>
         </DialogFooter>
       </form>

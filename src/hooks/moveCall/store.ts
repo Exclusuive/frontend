@@ -235,25 +235,23 @@ export function useAddProductToSlot() {
             ],
           });
         }
-
         signAndExecuteTransaction(
           {
-            transaction: tx as any,
+            transaction: tx.serialize(),
           },
           {
             onSuccess: (data) => {
               console.log("Success! data:", data);
-              refetch();
               setToastState({
                 type: "success",
-                message: "Creating the product succeeded.",
+                message: "Adding base NFT to slot succeeded.",
               });
             },
             onError: (err) => {
               console.log("Error", err);
               setToastState({
                 type: "error",
-                message: "Something went wrong while creating the product. Please try again.",
+                message: "Something went wrong while adding base NFT to slot. Please try again.",
               });
             },
           }
