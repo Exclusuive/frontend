@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import {
   DialogClose,
   DialogContent,
@@ -12,14 +11,13 @@ import {
 import { CollectionData } from "@/types/collection";
 import { CollectionImg } from "@/page-components/admin/collection";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 interface Props {
   collection: CollectionData;
 }
 
 export default function ExploreCollectionModal({ collection }: Props) {
   const [selectedLayer, setSelectedLayer] = useState<string>("");
-  const navigate = useNavigate();
 
   console.log(collection);
 

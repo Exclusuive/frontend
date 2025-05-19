@@ -1,10 +1,9 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { CollectionData, ItemType } from "@/types/collection";
+import { CollectionData } from "@/types/collection";
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+
 import CollectionImg from "@/page-components/admin/collection/CollectionImg";
 
 interface Props {
@@ -12,8 +11,6 @@ interface Props {
 }
 export default function CollectionOverview({ collection }: Props) {
   const [selectedLayer, setSelectedLayer] = useState<string>("");
-  const [selectedItem, setSelectedItem] = useState<ItemType>();
-  const [recipient, setRecipient] = useState<string>("");
 
   // Sample data for the chart - replace with actual data
   const chartData = [

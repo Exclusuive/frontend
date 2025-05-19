@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { useCurrentAccount, ConnectButton } from "@mysten/dapp-kit";
-import { useBuyProduct } from "@/hooks/moveCall/store";
 
 const exampleCardContent = [
   {
@@ -37,8 +36,6 @@ export default function EventPage() {
   const [result, setResult] = useState<any>(null);
   const [_, setError] = useState<string | null>(null);
 
-  const { buyEventProduct } = useBuyProduct();
-
   const handleClaim = async () => {
     setIsLoading(true);
     setError(null);
@@ -57,7 +54,7 @@ export default function EventPage() {
       // const link = await ZkSendLink.fromUrl(claimLinkData);
       // const tx = await link.createClaimTransaction(account?.address!);
       // const result = await claimAssets(tx, account?.address!, link.keypair);
-      buyEventProduct({ collectionId: "0x1", storeId: "0x2", slotNumber: 1 });
+      // buyEventProduct({ collectionId: "0x1", storeId: "0x2", slotNumber: 1 });
       setResult(true);
     } catch (err: any) {
       console.error(err);
