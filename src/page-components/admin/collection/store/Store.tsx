@@ -105,7 +105,7 @@ export default function Store() {
                   .filter(
                     (data) => data.content.fields.name.fields.slot_number === slot.fields.number
                   )
-                  .map((data, i) => (
+                  .map((data, _i) => (
                     <div>
                       {!("type" in data.content.fields.value) && (
                         <div>
@@ -115,29 +115,24 @@ export default function Store() {
                               {data.content.fields.value.length}{" "}
                             </span>
                           </div>
-                          <div className="grid grid-cols-2">
-                            {data.content.fields.value.slice(0, 4).map((v) => {
+                          <div className="w-full">
+                            {data.content.fields.value.slice(0, 1).map((v) => {
                               const typeName = v.type.split("::")[2];
                               const product = v.fields;
 
                               if (typeName === "Base") {
-                                return (
-                                  <Card className="cursor-default">
-                                    <CardContent>
-                                      <p className="truncate">{product.id.id}</p>
-                                      <p>{product.type.fields.type}</p>
-                                      <img className="h-5 w-5" src={product.img_url} />
-                                    </CardContent>
-                                  </Card>
-                                );
+                                return <div></div>;
                               } else if (typeName === "Item") {
                                 return (
                                   <Card className="cursor-default">
                                     <CardContent>
-                                      <p className="truncate">{product.id.id}</p>
-                                      <p>Layer: {product.type.fields.type}</p>
-                                      <p>{product.item_type}</p>
-                                      <img className="h-5 w-5" src={product.img_url} />
+                                      <div className="flex items-center gap-2">
+                                        <img className="h-16 w-16" src={product.img_url} />
+                                        <div>
+                                          <p>Layer: {product.type.fields.type}</p>
+                                          <p>{product.item_type}</p>
+                                        </div>
+                                      </div>
                                     </CardContent>
                                   </Card>
                                 );

@@ -1,9 +1,10 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { useGetAllCollection } from "@/hooks/useGetData/collection";
 import CollectionImg from "@/page-components/admin/collection/CollectionImg";
-import ExploreCollectionModal from "./ExploreCollectionModal";
+
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import ExploreCollectionModal from "./ExploreCollectionModal";
 
 export default function ExploreCollections() {
   const { collections } = useGetAllCollection();

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -9,14 +9,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { CollectionContext } from "@/context/CollectionContext";
 import { StoreData } from "@/types/store";
-import {
-  AddNewSlotModal,
-  AddProductToSlotModal,
-  AddConditionToSlotModal,
-  SelectStoreModal,
-} from "@/page-components/admin/collection/store";
 import { useParams } from "react-router-dom";
 import { useGetStoresByCollectionId } from "@/hooks/useGetData/store";
 import clsx from "clsx";
@@ -24,7 +17,7 @@ export default function ViewStore() {
   const [currentStore, setCurrentStore] = useState<StoreData>();
   const { id } = useParams();
 
-  const { stores, isPending, error, refetch } = useGetStoresByCollectionId({
+  const { stores } = useGetStoresByCollectionId({
     collectionId: id || "",
   });
 
@@ -66,7 +59,7 @@ export default function ViewStore() {
                     (stores.length === 0 ? (
                       <p>nothing</p>
                     ) : (
-                      stores.map((store, i) => (
+                      stores.map((store, _i) => (
                         <DialogClose>
                           <Card
                             key={store.id}
@@ -104,7 +97,10 @@ export default function ViewStore() {
       {currentStore && (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {currentStore.objectData.content.fields.slots.map((slot) => (
-            <Card key={slot.fields.number} className="overflow-auto">
+            <Card
+              key={slot.fields.number}
+              className="flex flex-col place-content-between overflow-auto"
+            >
               <CardHeader>
                 <CardTitle>Slot {slot.fields.number}</CardTitle>
                 <CardDescription>
@@ -138,27 +134,20 @@ export default function ViewStore() {
                               {data.content.fields.value.length}{" "}
                             </span>
                           </div>
-                          <div className="grid grid-cols-1">
+                          <div className="w-full">
                             {data.content.fields.value.slice(0, 1).map((v) => {
                               const typeName = v.type.split("::")[2];
                               const product = v.fields;
 
                               if (typeName === "Base") {
-                                return (
-                                  <Card className="cursor-default">
-                                    <CardContent>
-                                      <p className="truncate">{product.id.id}</p>
-                                      <p>{product.type.fields.type}</p>
-                                    </CardContent>
-                                  </Card>
-                                );
+                                return <div></div>;
                               } else if (typeName === "Item") {
                                 return (
                                   <Card className="cursor-default">
                                     <CardContent>
                                       <div className="flex items-center gap-2">
-                                        <img className="h-20 w-20" src={product.img_url} />
-                                        <div className="flex flex-col gap-2">
+                                        <img className="h-16 w-16" src={product.img_url} />
+                                        <div>
                                           <p>Layer: {product.type.fields.type}</p>
                                           <p>{product.item_type}</p>
                                         </div>
@@ -170,6 +159,7 @@ export default function ViewStore() {
                                 return (
                                   <Card className="cursor-default">
                                     <CardContent>
+                                      <p className="truncate">{product.id.id}</p>
                                       <p>{product.type.fields.type}</p>
                                     </CardContent>
                                   </Card>
@@ -178,6 +168,7 @@ export default function ViewStore() {
                                 return (
                                   <Card className="cursor-default">
                                     <CardContent>
+                                      <p className="truncate">{product.id.id}</p>
                                       <p>{product.property.fields.type.fields.type}</p>
                                       <p>Value: {product.property.fields.value}</p>
                                     </CardContent>

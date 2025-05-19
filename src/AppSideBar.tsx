@@ -5,7 +5,6 @@ import {
   PackageOpen,
   HelpCircle,
   Store,
-  ShoppingCart,
 } from "lucide-react";
 import {
   Sidebar,
@@ -48,52 +47,52 @@ const ADMIN_MENUS = {
       icon: PackageOpen,
     },
   ],
-  MembershipPolicy: [
-    {
-      title: "Overview",
-      url: "/admin/membershippolicy",
-      icon: LayoutDashboard,
-    },
-    {
-      title: "Manage Membership Policy",
-      url: "/admin/membershippolicy/edit",
-      icon: FileEdit,
-    },
-    {
-      title: "Manage Vending Machine",
-      url: "/admin/membershippolicy/vendingmachine",
-      icon: Store,
-    },
-  ],
+  // MembershipPolicy: [
+  //   {
+  //     title: "Overview",
+  //     url: "/admin/membershippolicy",
+  //     icon: LayoutDashboard,
+  //   },
+  //   {
+  //     title: "Manage Membership Policy",
+  //     url: "/admin/membershippolicy/edit",
+  //     icon: FileEdit,
+  //   },
+  //   {
+  //     title: "Manage Vending Machine",
+  //     url: "/admin/membershippolicy/vendingmachine",
+  //     icon: Store,
+  //   },
+  // ],
 };
 
 const MEMBER_MENUS = {
   MyPage: [
     {
-      title: "Overview",
-      url: "/member",
-      icon: LayoutDashboard,
-    },
-    {
-      title: "My Collection Objects",
-      url: "/member/collection",
+      title: "My NFTs",
+      url: "/member/mynfts",
       icon: BadgeCheck,
     },
-    {
-      title: "Collection Store",
-      url: "/member/collection/store",
-      icon: Store,
-    },
-    {
-      title: "My Membership Objects",
-      url: "/member/membership",
-      icon: BadgeCheck,
-    },
-    {
-      title: "Member Vending Machine",
-      url: "/member/membership/vendingmachine",
-      icon: Store,
-    },
+    // {
+    //   title: "My Collection Objects",
+    //   url: "/member/collection",
+    //   icon: BadgeCheck,
+    // },
+    // {
+    //   title: "Collection Store",
+    //   url: "/member/collection/store",
+    //   icon: Store,
+    // },
+    // // {
+    // //   title: "My Membership Objects",
+    // //   url: "/member/membership",
+    // //   icon: BadgeCheck,
+    // // },
+    // // {
+    // //   title: "Member Vending Machine",
+    // //   url: "/member/membership/vendingmachine",
+    // //   icon: Store,
+    // // },
   ],
   Explore: [
     {
