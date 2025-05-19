@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -9,14 +9,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { CollectionContext } from "@/context/CollectionContext";
 import { StoreData } from "@/types/store";
-import {
-  AddNewSlotModal,
-  AddProductToSlotModal,
-  AddConditionToSlotModal,
-  SelectStoreModal,
-} from "@/page-components/admin/collection/store";
 import { useParams } from "react-router-dom";
 import { useGetStoresByCollectionId } from "@/hooks/useGetData/store";
 import clsx from "clsx";
@@ -24,7 +17,7 @@ export default function ViewStore() {
   const [currentStore, setCurrentStore] = useState<StoreData>();
   const { id } = useParams();
 
-  const { stores, isPending, error, refetch } = useGetStoresByCollectionId({
+  const { stores } = useGetStoresByCollectionId({
     collectionId: id || "",
   });
 
@@ -66,7 +59,7 @@ export default function ViewStore() {
                     (stores.length === 0 ? (
                       <p>nothing</p>
                     ) : (
-                      stores.map((store, i) => (
+                      stores.map((store, _i) => (
                         <DialogClose>
                           <Card
                             key={store.id}
@@ -138,8 +131,8 @@ export default function ViewStore() {
                               {data.content.fields.value.length}{" "}
                             </span>
                           </div>
-                          <div className="grid grid-cols-1">
-                            {data.content.fields.value.slice(0, 1).map((v) => {
+                          <div className="grid grid-cols-2">
+                            {data.content.fields.value.slice(0, 4).map((v) => {
                               const typeName = v.type.split("::")[2];
                               const product = v.fields;
 
@@ -149,6 +142,7 @@ export default function ViewStore() {
                                     <CardContent>
                                       <p className="truncate">{product.id.id}</p>
                                       <p>{product.type.fields.type}</p>
+                                      <img className="h-5 w-5" src={product.img_url} />
                                     </CardContent>
                                   </Card>
                                 );
@@ -156,13 +150,10 @@ export default function ViewStore() {
                                 return (
                                   <Card className="cursor-default">
                                     <CardContent>
-                                      <div className="flex items-center gap-2">
-                                        <img className="h-20 w-20" src={product.img_url} />
-                                        <div className="flex flex-col gap-2">
-                                          <p>Layer: {product.type.fields.type}</p>
-                                          <p>{product.item_type}</p>
-                                        </div>
-                                      </div>
+                                      <p className="truncate">{product.id.id}</p>
+                                      <p>Layer: {product.type.fields.type}</p>
+                                      <p>{product.item_type}</p>
+                                      <img className="h-5 w-5" src={product.img_url} />
                                     </CardContent>
                                   </Card>
                                 );
@@ -170,6 +161,7 @@ export default function ViewStore() {
                                 return (
                                   <Card className="cursor-default">
                                     <CardContent>
+                                      <p className="truncate">{product.id.id}</p>
                                       <p>{product.type.fields.type}</p>
                                     </CardContent>
                                   </Card>
@@ -178,6 +170,7 @@ export default function ViewStore() {
                                 return (
                                   <Card className="cursor-default">
                                     <CardContent>
+                                      <p className="truncate">{product.id.id}</p>
                                       <p>{product.property.fields.type.fields.type}</p>
                                       <p>Value: {product.property.fields.value}</p>
                                     </CardContent>

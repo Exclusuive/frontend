@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DialogClose,
@@ -117,9 +117,8 @@ export default function ExploreCollectionModal({ collection }: Props) {
                         className={`flex cursor-pointer items-center gap-4 rounded-lg border border-gray-200 p-2 hover:bg-gray-100`}
                       >
                         <div className="h-16 w-16 overflow-hidden rounded-md">
-                          <img
-                            src={item.fields.img_url}
-                            alt={item.fields.item_type}
+                          <CollectionImg
+                            collection={collection}
                             className="h-full w-full object-cover"
                           />
                         </div>

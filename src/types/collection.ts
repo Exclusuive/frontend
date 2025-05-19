@@ -9,6 +9,9 @@ interface CollectionElementType {
 export interface ItemType {
   type: string;
   fields: {
+    id: {
+      id: string;
+    };
     collection_id: string;
     img_url: string;
     item_type: string;
@@ -73,7 +76,18 @@ export interface CollectionData {
   id: string;
   cap: string;
   objectData: CollectionObjectData;
-  dynamicFieldData: DynamicFieldObjectData[]; // 실제 데이터 타입에 맞게 수정
+  dynamicFieldData: DynamicFieldObjectData[];
+  bases?: {
+    id: string;
+    data: {
+      dataType: string;
+      type: string;
+      hasPublicTransfer: boolean;
+      fields: any;
+    };
+    objectData?: CollectionObjectData;
+    dynamicFieldData?: DynamicFieldObjectData[];
+  }[];
 }
 
 export interface DynamicFieldObjectData {

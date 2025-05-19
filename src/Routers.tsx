@@ -17,6 +17,8 @@ import MembershipStorePage from "./pages/members/membership-store/MembershipStor
 import EventPage from "./pages/Event";
 import ExploreCollections from "./pages/members/explore/ExploreCollections";
 import ViewStore from "./pages/members/ViewStore";
+import MyNFTs from "./pages/members/myNFTs";
+
 export default function Routers() {
   return (
     <Router>
@@ -44,7 +46,7 @@ export default function Routers() {
 
           {/* Member Pages */}
           <Route path="member">
-            <Route path="mymembership" element={<MembershipPolicyPage />} />
+            <Route path="mynfts" element={<MyNFTs />} />
             <Route path="membershipstore" element={<MembershipStorePage />} />
             <Route path="store/:id" element={<ViewStore />} />
           </Route>

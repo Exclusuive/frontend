@@ -105,7 +105,7 @@ export default function Store() {
                   .filter(
                     (data) => data.content.fields.name.fields.slot_number === slot.fields.number
                   )
-                  .map((data, i) => (
+                  .map((data, _i) => (
                     <div>
                       {!("type" in data.content.fields.value) && (
                         <div>

@@ -17,7 +17,6 @@ import { useContext, useEffect, useState } from "react";
 export default function AddItemModal({ slotNumber }: { slotNumber: number }) {
   const [layerType, setLayerType] = useState("Select Layer Type");
   const [itemType, setItemType] = useState("");
-  const [imgURL, setImgURL] = useState("");
   const [count, setCount] = useState(0);
 
   const { addItemToSlot } = useAddProductToSlot();
@@ -101,10 +100,9 @@ export default function AddItemModal({ slotNumber }: { slotNumber: number }) {
       <DialogClose>
         <Button
           onClick={() => {
-            addItemToSlot({ slotNumber, layerType, itemType, imgURL, count });
+            addItemToSlot({ slotNumber, layerType, itemType, count });
             setLayerType("Select Layer Type");
             setItemType("");
-            setImgURL("");
             setCount(0);
           }}
         >

@@ -266,13 +266,11 @@ export function useAddProductToSlot() {
     slotNumber,
     layerType,
     itemType,
-    imgURL,
     count,
   }: {
     slotNumber: number;
     layerType: string;
     itemType: string;
-    imgURL: string;
     count: number;
   }) => {
     if (currentCollection && currentStore) {
