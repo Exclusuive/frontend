@@ -1,13 +1,24 @@
 import { Button } from "@/components/ui/button";
 import { SelectCollectionModal } from "@/page-components/admin/collection";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { MintBase, MintItem } from "@/page-components/admin/collection/mint";
+import { CollectionContext } from "@/context/CollectionContext";
 
 interface Props {}
 
 export default function MintAndTransferPage({}: Props) {
   const [isOpen, setIsOpen] = useState(false);
+
+  const {
+    collection: { collections, index },
+  } = useContext(CollectionContext);
+
+  useEffect(() => {
+    if (index === -1) {
+      setIsOpen(true);
+    }
+  }, [collections, index]);
 
   return (
     <div className="w-full space-y-8 p-6">

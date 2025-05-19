@@ -145,11 +145,7 @@ export default function CollectionOverview({ collection }: Props) {
                             onClick={() => setSelectedItem(item)}
                           >
                             <div className="h-16 w-16 overflow-hidden rounded-md">
-                              <img
-                                src={item.fields.img_url}
-                                alt={item.fields.item_type}
-                                className="h-full w-full object-cover"
-                              />
+                              <CollectionImg collection={collection} />
                             </div>
                             <h3 className="font-medium">{item.fields.item_type}</h3>
                           </div>
