@@ -3,7 +3,7 @@ import { CollectionContext } from "@/context/CollectionContext";
 import { useCurrentAccount, useSignAndExecuteTransaction } from "@mysten/dapp-kit";
 import { Transaction } from "@mysten/sui/transactions";
 import { useContext } from "react";
-import { useToast } from "../UI/useToast";
+import { toast } from "sonner";
 
 export function useCreateCollection() {
   const account = useCurrentAccount();
@@ -11,7 +11,6 @@ export function useCreateCollection() {
   const {
     collection: { refetch },
   } = useContext(CollectionContext);
-  const { setToastState } = useToast();
 
   const createCollection = ({
     collectionName,
@@ -25,10 +24,8 @@ export function useCreateCollection() {
     layers: string[];
   }) => {
     if (!account) return;
-    setToastState({
-      type: "loading",
-      message: "Collection is being created...",
-    });
+    toast.dismiss();
+    toast.loading("Loading...");
 
     const tx = new Transaction();
     const [col, cap] = tx.moveCall({
@@ -91,22 +88,16 @@ export function useCreateCollection() {
       },
       {
         onSuccess: (data) => {
-          console.log("Success! data:", data);
-          setToastState({
-            type: "success",
-            message: "Creating collection succeeded.",
-          });
+          toast.dismiss();
+          toast.success(`Success! digset: ${data.digest}`);
           setTimeout(() => {
             refetch();
             console.log("refetch");
           }, 1000);
         },
         onError: (err) => {
-          console.log("Error", err);
-          setToastState({
-            type: "error",
-            message: "Something went wrong while creating the collection. Please try again.",
-          });
+          toast.dismiss();
+          toast.error(`Success! Error: ${err}`);
         },
       }
     );
@@ -122,7 +113,6 @@ export function useUpdateCollection() {
   const {
     collection: { collections, index, refetch },
   } = useContext(CollectionContext);
-  const { setToastState } = useToast();
 
   const updateCollectionInfo = ({ description }: { description: string }) => {
     if (!account) return;
@@ -135,10 +125,8 @@ export function useUpdateCollection() {
 
     const collectionName = currentCollection.objectData.content.fields.base_type.fields.type;
 
-    setToastState({
-      type: "loading",
-      message: "Collection is being updated...",
-    });
+    toast.dismiss();
+    toast.loading("Loading...");
 
     const tx = new Transaction();
 
@@ -162,19 +150,15 @@ export function useUpdateCollection() {
       },
       {
         onSuccess: (data) => {
-          console.log("Success! data:", data);
+          toast.dismiss();
+          toast.loading("Loading...");
           refetch();
-          setToastState({
-            type: "success",
-            message: "Updating collection succeeded.",
-          });
+          toast.dismiss();
+          toast.success(`Success! digset: ${data.digest}`);
         },
         onError: (err) => {
-          console.log("Error", err);
-          setToastState({
-            type: "error",
-            message: "Something went wrong while updating the collection. Please try again.",
-          });
+          toast.dismiss();
+          toast.error(`Success! Error: ${err}`);
         },
       }
     );
@@ -190,15 +174,12 @@ export function useAddLayerType() {
   const {
     collection: { collections, index, refetch },
   } = useContext(CollectionContext);
-  const { setToastState } = useToast();
 
   const addLayerType = ({ typeName }: { typeName: string }) => {
     if (!account) return;
 
-    setToastState({
-      type: "loading",
-      message: "Layer type is being created...",
-    });
+    toast.dismiss();
+    toast.loading("Loading...");
 
     if (!collections) return;
 
@@ -225,19 +206,13 @@ export function useAddLayerType() {
       },
       {
         onSuccess: (data) => {
-          console.log("Success! data:", data);
           refetch();
-          setToastState({
-            type: "success",
-            message: "Creating the layer type succeeded.",
-          });
+          toast.dismiss();
+          toast.success(`Success! digset: ${data.digest}`);
         },
         onError: (err) => {
-          console.log("Error", err);
-          setToastState({
-            type: "error",
-            message: "Something went wrong while creating the layer type. Please try again.",
-          });
+          toast.dismiss();
+          toast.error(`Success! Error: ${err}`);
         },
       }
     );
@@ -253,15 +228,12 @@ export function useAddPropertyType() {
   const {
     collection: { collections, index, refetch },
   } = useContext(CollectionContext);
-  const { setToastState } = useToast();
 
   const addPropertyType = ({ typeName }: { typeName: string }) => {
     if (!account) return;
 
-    setToastState({
-      type: "loading",
-      message: "Property type is being created...",
-    });
+    toast.dismiss();
+    toast.loading("Loading...");
 
     if (!collections) return;
 
@@ -288,19 +260,12 @@ export function useAddPropertyType() {
       },
       {
         onSuccess: (data) => {
-          console.log("Success! data:", data);
-          refetch();
-          setToastState({
-            type: "success",
-            message: "Creating the property type succeeded.",
-          });
+          toast.dismiss();
+          toast.success(`Success! digset: ${data.digest}`);
         },
         onError: (err) => {
-          console.log("Error", err);
-          setToastState({
-            type: "error",
-            message: "Something went wrong while creating the property type. Please try again.",
-          });
+          toast.dismiss();
+          toast.error(`Success! Error: ${err}`);
         },
       }
     );
@@ -316,15 +281,12 @@ export function useAddTicketType() {
   const {
     collection: { collections, index, refetch },
   } = useContext(CollectionContext);
-  const { setToastState } = useToast();
 
   const addTicketType = ({ typeName }: { typeName: string }) => {
     if (!account) return;
 
-    setToastState({
-      type: "loading",
-      message: "Ticket type is being created...",
-    });
+    toast.dismiss();
+    toast.loading("Loading...");
 
     if (!collections) return;
 
@@ -351,19 +313,13 @@ export function useAddTicketType() {
       },
       {
         onSuccess: (data) => {
-          console.log("Success! data:", data);
           refetch();
-          setToastState({
-            type: "success",
-            message: "Creating the ticket type succeeded.",
-          });
+          toast.dismiss();
+          toast.success(`Success! digset: ${data.digest}`);
         },
         onError: (err) => {
-          console.log("Error", err);
-          setToastState({
-            type: "error",
-            message: "Something went wrong while creating the ticket type. Please try again.",
-          });
+          toast.dismiss();
+          toast.error(`Success! Error: ${err}`);
         },
       }
     );

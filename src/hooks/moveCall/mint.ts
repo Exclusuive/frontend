@@ -4,7 +4,7 @@ import { CollectionData } from "@/types/collection";
 import { useSignAndExecuteTransaction } from "@mysten/dapp-kit";
 import { Transaction } from "@mysten/sui/transactions";
 import { useContext, useEffect, useState } from "react";
-import { useToast } from "../UI/useToast";
+import { toast } from "sonner";
 
 export function useMint() {
   const [currentCollection, setCurrentCollection] = useState<CollectionData>();
@@ -15,8 +15,6 @@ export function useMint() {
     collection: { collections, index: cIndex, refetch },
   } = useContext(CollectionContext);
 
-  const { setToastState } = useToast();
-
   useEffect(() => {
     if (collections && cIndex !== -1) {
       setCurrentCollection(collections[cIndex]);
@@ -25,10 +23,8 @@ export function useMint() {
 
   const mintBase = ({ imgURL, recipient }: { imgURL: string; recipient: string }) => {
     if (currentCollection) {
-      setToastState({
-        type: "loading",
-        message: "Base NFT is being created...",
-      });
+      toast.dismiss();
+      toast.loading("Loading...");
 
       const tx = new Transaction();
       tx.moveCall({
@@ -49,18 +45,12 @@ export function useMint() {
         },
         {
           onSuccess: (data) => {
-            console.log("Success! data:", data);
-            setToastState({
-              type: "success",
-              message: "Creating base NFT succeeded.",
-            });
+            toast.dismiss();
+            toast.success(`Success! digset: ${data.digest}`);
           },
           onError: (err) => {
-            console.log("Error", err);
-            setToastState({
-              type: "error",
-              message: "Something went wrong while creating the base NFT. Please try again.",
-            });
+            toast.dismiss();
+            toast.error(`Success! Error: ${err}`);
           },
         }
       );
@@ -81,10 +71,8 @@ export function useMint() {
     recipient: string;
   }) => {
     if (currentCollection) {
-      setToastState({
-        type: "loading",
-        message: "Item NFT is being created...",
-      });
+      toast.dismiss();
+      toast.loading("Loading...");
 
       console.log(imgURL);
 
@@ -152,19 +140,13 @@ export function useMint() {
         },
         {
           onSuccess: (data) => {
-            console.log("Success! data:", data);
             refetch();
-            setToastState({
-              type: "success",
-              message: "Creating item NFT succeeded.",
-            });
+            toast.dismiss();
+            toast.success(`Success! digset: ${data.digest}`);
           },
           onError: (err) => {
-            console.log("Error", err);
-            setToastState({
-              type: "error",
-              message: "Something went wrong while creating the item NFT. Please try again.",
-            });
+            toast.dismiss();
+            toast.error(`Success! Error: ${err}`);
           },
         }
       );
@@ -183,10 +165,8 @@ export function useMint() {
     recipient: string;
   }) => {
     if (currentCollection) {
-      setToastState({
-        type: "loading",
-        message: "Item NFT is being created...",
-      });
+      toast.dismiss();
+      toast.loading("Loading...");
 
       const tx = new Transaction();
 
@@ -240,19 +220,13 @@ export function useMint() {
         },
         {
           onSuccess: (data) => {
-            console.log("Success! data:", data);
             refetch();
-            setToastState({
-              type: "success",
-              message: "Creating item NFT succeeded.",
-            });
+            toast.dismiss();
+            toast.success(`Success! digset: ${data.digest}`);
           },
           onError: (err) => {
-            console.log("Error", err);
-            setToastState({
-              type: "error",
-              message: "Something went wrong while creating the item NFT. Please try again.",
-            });
+            toast.dismiss();
+            toast.error(`Success! Error: ${err}`);
           },
         }
       );
