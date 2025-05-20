@@ -14,7 +14,6 @@ import MintAndTransferPage from "./pages/admin/collection/MintAndTransferPage";
 import MembershipPolicyPage from "./pages/admin/membership-policy/MembershipPolicyPage";
 
 import MembershipStorePage from "./pages/members/membership-store/MembershipStorePage";
-import EventPage from "./pages/Event";
 import ExploreCollections from "./pages/members/explore/ExploreCollections";
 import ViewStore from "./pages/members/ViewStore";
 import MyNFTs from "./pages/members/myNFTs";
@@ -59,7 +58,6 @@ export default function Routers() {
           {/* 임시 404 */}
           <Route path="*" element={<NotFound />} />
         </Route>
-        <Route path="event" element={<EventPage />} />
       </Routes>
     </Router>
   );

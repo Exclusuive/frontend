@@ -21,6 +21,8 @@ export default function ViewStore() {
     collectionId: id || "",
   });
 
+  console.log(currentStore);
+
   useEffect(() => {
     if (stores && stores.length > 0) {
       setCurrentStore(stores[0]);

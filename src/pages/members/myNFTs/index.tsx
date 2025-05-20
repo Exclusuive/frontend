@@ -38,11 +38,11 @@ export default function MyNFTs() {
                 <CardTitle>My NFT Information</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="aspect-video w-full overflow-hidden rounded-md">
+                <div className="w-full overflow-hidden rounded-md">
                   <img
                     src={`${selectedBase.data.fields.img_url}?refresh=${time}`}
                     alt={selectedBase.data.fields.name}
-                    className="aspect-video w-full rounded-md object-cover"
+                    className="w-full rounded-md object-cover"
                   />
                 </div>
                 <Button
