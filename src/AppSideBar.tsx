@@ -5,6 +5,7 @@ import {
   PackageOpen,
   HelpCircle,
   Store,
+  Image,
 } from "lucide-react";
 import {
   Sidebar,
@@ -73,6 +74,7 @@ const MEMBER_MENUS = {
       url: "/member/mynfts",
       icon: BadgeCheck,
     },
+
     // {
     //   title: "My Collection Objects",
     //   url: "/member/collection",
@@ -99,6 +101,11 @@ const MEMBER_MENUS = {
       title: "Explore Collections",
       url: "/explore/collections",
       icon: LayoutDashboard,
+    },
+    {
+      title: "Get Shocase NFTs",
+      url: "https://dokpami.onrender.com/",
+      icon: Image,
     },
   ],
 };

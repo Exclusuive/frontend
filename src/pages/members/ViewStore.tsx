@@ -13,13 +13,18 @@ import { StoreData } from "@/types/store";
 import { useParams } from "react-router-dom";
 import { useGetStoresByCollectionId } from "@/hooks/useGetData/store";
 import clsx from "clsx";
+import { useBuyProduct } from "@/hooks/moveCall/store";
+
 export default function ViewStore() {
   const [currentStore, setCurrentStore] = useState<StoreData>();
   const { id } = useParams();
+  const { buyProduct } = useBuyProduct();
 
   const { stores } = useGetStoresByCollectionId({
     collectionId: id || "",
   });
+
+  console.log(currentStore);
 
   useEffect(() => {
     if (stores && stores.length > 0) {
@@ -190,7 +195,18 @@ export default function ViewStore() {
                     </div>
                   ))}
               </CardContent>
-              <Button className="mx-5">Buy Product</Button>
+              <Button
+                className="mx-5"
+                onClick={() => {
+                  buyProduct({
+                    collectionId: currentStore.objectData.content.fields.collection_id,
+                    storeId: currentStore.id,
+                    slotNumber: slot.fields.number,
+                  });
+                }}
+              >
+                Buy Product
+              </Button>
             </Card>
           ))}
         </div>

@@ -33,7 +33,7 @@ export default function Store() {
       setCurrentStore(filterdStores[sIndex]);
     }
   }, [filterdStores, sIndex]);
-
+  console.log(currentStore);
   return (
     <div>
       {currentStore && (
