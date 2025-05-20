@@ -1,12 +1,11 @@
 import { UPGRADED_PACKAGE_ID } from "@/config/contants";
 import { useCurrentAccount, useSignAndExecuteTransaction } from "@mysten/dapp-kit";
 import { Transaction } from "@mysten/sui/transactions";
-import { useToast } from "../UI/useToast";
+import { toast } from "sonner";
 
 export function useEquipBase() {
   const account = useCurrentAccount();
   const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction();
-  const { setToastState } = useToast();
 
   const equipBase = ({
     collectionId,
@@ -22,10 +21,8 @@ export function useEquipBase() {
     if (!collectionId || !baseId || !itemId) return;
     console.log(collectionId, baseId, itemId);
 
-    setToastState({
-      type: "loading",
-      message: "Base is being equipped...",
-    });
+    toast.dismiss();
+    toast.loading("Loading...");
 
     const tx = new Transaction();
 
@@ -42,18 +39,12 @@ export function useEquipBase() {
       },
       {
         onSuccess: (data) => {
-          console.log("Success! data:", data);
-          setToastState({
-            type: "success",
-            message: "Base is being equipped...",
-          });
+          toast.dismiss();
+          toast.success(`Success! digset: ${data.digest}`);
         },
         onError: (err) => {
-          console.log("Error", err);
-          setToastState({
-            type: "error",
-            message: "Something went wrong while equipping the base. Please try again.",
-          });
+          toast.dismiss();
+          toast.error(`Success! Error: ${err}`);
         },
       }
     );
@@ -66,7 +57,6 @@ export function useEquipBase() {
 export function usePopFromItembag() {
   const account = useCurrentAccount();
   const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction();
-  const { setToastState } = useToast();
 
   const popFromItembag = ({ baseId, itemtype }: { baseId: string; itemtype: string }) => {
     if (!account) return;
@@ -74,10 +64,8 @@ export function usePopFromItembag() {
     if (!baseId || !itemtype) return;
     console.log(baseId, itemtype);
 
-    setToastState({
-      type: "loading",
-      message: "Item is being popped from itembag...",
-    });
+    toast.dismiss();
+    toast.loading("Loading...");
 
     const tx = new Transaction();
 
@@ -95,18 +83,12 @@ export function usePopFromItembag() {
       },
       {
         onSuccess: (data) => {
-          console.log("Success! data:", data);
-          setToastState({
-            type: "success",
-            message: "Item is popped from itembag successfully.",
-          });
+          toast.dismiss();
+          toast.success(`Success! digset: ${data.digest}`);
         },
         onError: (err) => {
-          console.log("Error", err);
-          setToastState({
-            type: "error",
-            message: "Something went wrong while popping the item from itembag. Please try again.",
-          });
+          toast.dismiss();
+          toast.error(`Success! Error: ${err}`);
         },
       }
     );
