@@ -10,23 +10,30 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ItemCard from "./ItemCard";
 import { syncImg } from "@/lib/utils";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import { useCurrentAccount, ConnectButton } from "@mysten/dapp-kit";
+
 export default function MyNFTs() {
   const [selectedCollection, setSelectedCollection] = useState<CollectionData | null>(null);
   const [selectedBase, setSelectedBase] = useState<any>();
   const [time, setTime] = useState(Date.now());
+  const account = useCurrentAccount();
 
   return (
     <div className="container mx-auto w-full space-y-6 p-4">
-      <Dialog>
-        <DialogTrigger asChild className="flex flex-col items-center justify-center">
-          <Button>Select Base NFTs</Button>
-        </DialogTrigger>
-        <SelectBaseModal
-          selectedCollection={selectedCollection}
-          setSelectedCollection={setSelectedCollection}
-          setSelectedBase={setSelectedBase}
-        />
-      </Dialog>
+      {!account ? (
+        <ConnectButton />
+      ) : (
+        <Dialog>
+          <DialogTrigger asChild className="flex flex-col items-center justify-center">
+            <Button>Select Base NFTs</Button>
+          </DialogTrigger>
+          <SelectBaseModal
+            selectedCollection={selectedCollection}
+            setSelectedCollection={setSelectedCollection}
+            setSelectedBase={setSelectedBase}
+          />
+        </Dialog>
+      )}
 
       {selectedBase && (
         <section className="grid grid-cols-1 gap-4 md:grid-cols-2">
