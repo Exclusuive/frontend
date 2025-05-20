@@ -1,7 +1,7 @@
 import { ORIGIN_PACKAGE_ID, UPGRADED_PACKAGE_ID } from "@/config/contants";
 import { CollectionContext } from "@/context/CollectionContext";
 import { CollectionData } from "@/types/collection";
-import { useSignAndExecuteTransaction } from "@mysten/dapp-kit";
+import { useCurrentAccount, useSignAndExecuteTransaction } from "@mysten/dapp-kit";
 import { Transaction } from "@mysten/sui/transactions";
 import { useContext, useEffect, useState } from "react";
 import { StoreData } from "@/types/store";
@@ -14,7 +14,6 @@ export function useCreateStore() {
   const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction();
   const {
     collection: { collections, index: cIndex },
-    store: { refetch },
   } = useContext(CollectionContext);
 
   useEffect(() => {
@@ -505,39 +504,11 @@ export function useAddConditionToSlot() {
 }
 
 export function useBuyProduct() {
-  const [currentCollection, setCurrentCollection] = useState<CollectionData>();
   const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction();
 
-  const [currentStore, setCurrentStore] = useState<StoreData>();
-  const [filterdStores, setFilteredStores] = useState<StoreData[]>();
-  const {
-    collection: { collections, index: cIndex },
-    store: { stores, index: sIndex, refetch },
-  } = useContext(CollectionContext);
+  const account = useCurrentAccount();
 
-  useEffect(() => {
-    if (stores && collections && collections.length > 0 && cIndex !== -1) {
-      setFilteredStores(
-        stores.filter(
-          (store) => store.objectData.content.fields.collection_id === collections[cIndex].id
-        )
-      );
-    }
-  }, [stores, cIndex]);
-
-  useEffect(() => {
-    if (filterdStores) {
-      setCurrentStore(filterdStores[sIndex]);
-    }
-  }, [filterdStores, sIndex]);
-
-  useEffect(() => {
-    if (collections && cIndex !== -1) {
-      setCurrentCollection(collections[cIndex]);
-    }
-  }, [collections, cIndex]);
-
-  const buyEventProduct = ({
+  const buyProduct = ({
     collectionId,
     storeId,
     slotNumber,
@@ -546,45 +517,44 @@ export function useBuyProduct() {
     storeId: string;
     slotNumber: number;
   }) => {
-    if (currentCollection && currentStore) {
-      toast.dismiss();
-      toast.loading("Loading...");
+    toast.dismiss();
+    toast.loading("Loading...");
 
-      const tx = new Transaction();
+    const tx = new Transaction();
 
-      const [request] = tx.moveCall({
-        package: UPGRADED_PACKAGE_ID,
-        module: "collection",
-        function: "new_request",
-        arguments: [tx.object(collectionId), tx.object(storeId), tx.pure.u64(slotNumber)],
-      });
+    const [request] = tx.moveCall({
+      package: UPGRADED_PACKAGE_ID,
+      module: "collection",
+      function: "new_request",
+      arguments: [tx.object(collectionId), tx.object(storeId), tx.pure.u64(slotNumber)],
+    });
 
-      tx.moveCall({
-        package: UPGRADED_PACKAGE_ID,
-        module: "collection",
-        function: "confirm_request",
-        arguments: [tx.object(collectionId), tx.object(storeId), tx.object(request)],
-      });
-      signAndExecuteTransaction(
-        {
-          transaction: tx.serialize(),
+    const [product] = tx.moveCall({
+      package: UPGRADED_PACKAGE_ID,
+      module: "collection",
+      function: "confirm_request",
+      typeArguments: [`${ORIGIN_PACKAGE_ID}::collection::Item`],
+      arguments: [tx.object(collectionId), tx.object(storeId), tx.object(request)],
+    });
+    tx.transferObjects([tx.object(product)], tx.pure.address(account?.address || ""));
+    signAndExecuteTransaction(
+      {
+        transaction: tx.serialize(),
+      },
+      {
+        onSuccess: (data) => {
+          toast.dismiss();
+          toast.success(`Success! digset: ${data.digest}`);
         },
-        {
-          onSuccess: (data) => {
-            refetch();
-            toast.dismiss();
-            toast.success(`Success! digset: ${data.digest}`);
-          },
-          onError: (err) => {
-            toast.dismiss();
-            toast.error(`Success! Error: ${err}`);
-          },
-        }
-      );
-    }
+        onError: (err) => {
+          toast.dismiss();
+          toast.error(`Success! Error: ${err}`);
+        },
+      }
+    );
   };
 
   return {
-    buyEventProduct,
+    buyProduct,
   };
 }

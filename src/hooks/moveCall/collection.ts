@@ -226,7 +226,7 @@ export function useAddPropertyType() {
   const account = useCurrentAccount();
   const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction();
   const {
-    collection: { collections, index, refetch },
+    collection: { collections, index },
   } = useContext(CollectionContext);
 
   const addPropertyType = ({ typeName }: { typeName: string }) => {
