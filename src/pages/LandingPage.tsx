@@ -1,52 +1,32 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 export default function LandingPage() {
   return (
     <div className="container w-full space-y-6 p-4">
       <h1 className="text-2xl font-bold">Welcome to Exclusuive</h1>
 
-      <p className="text-lg">Explore our features and offerings below:</p>
+      <p className="text-lg">Currently we are in the beta phase.</p>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {/* Feature 1 */}
         <Card>
           <CardHeader>
-            <CardTitle>Feature One</CardTitle>
+            <CardTitle>Did you participate in our event?</CardTitle>
           </CardHeader>
           <CardContent>
-            <CardDescription>
-              Discover how our first feature can help you streamline your workflow and enhance
-              productivity.
+            <CardDescription className="mb-4">
+              Follow the link below to check out the event page.
             </CardDescription>
-            <Button className="mt-4">Learn More</Button>
-          </CardContent>
-        </Card>
+            <div className="flex justify-between">
+              <Link to="https://dokpami.onrender.com" className="mt-4">
+                <Button>Go to Event Page</Button>
+              </Link>
 
-        {/* Feature 2 */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Feature Two</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <CardDescription>
-              Explore the benefits of our second feature, designed to improve your experience and
-              efficiency.
-            </CardDescription>
-            <Button className="mt-4">Learn More</Button>
-          </CardContent>
-        </Card>
-
-        {/* Feature 3 */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Feature Three</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <CardDescription>
-              Learn about our third feature that offers unique solutions tailored to your needs.
-            </CardDescription>
-            <Button className="mt-4">Learn More</Button>
+              <Link to="/member/mynfts" className="mt-4">
+                <Button>Go to my page</Button>
+              </Link>
+            </div>
           </CardContent>
         </Card>
       </div>
