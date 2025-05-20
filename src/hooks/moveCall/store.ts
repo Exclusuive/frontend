@@ -4,10 +4,10 @@ import { CollectionData } from "@/types/collection";
 import { useSignAndExecuteTransaction } from "@mysten/dapp-kit";
 import { Transaction } from "@mysten/sui/transactions";
 import { useContext, useEffect, useState } from "react";
-import { useToast } from "../UI/useToast";
 import { StoreData } from "@/types/store";
 import { uploadToS3 } from "@/lib/utils";
 import { v4 as uuidv4 } from "uuid";
+import { toast } from "sonner";
 
 export function useCreateStore() {
   const [currentCollection, setCurrentCollection] = useState<CollectionData>();
@@ -16,7 +16,6 @@ export function useCreateStore() {
     collection: { collections, index: cIndex },
     store: { refetch },
   } = useContext(CollectionContext);
-  const { setToastState } = useToast();
 
   useEffect(() => {
     if (collections && cIndex !== -1) {
@@ -26,10 +25,8 @@ export function useCreateStore() {
 
   const createStore = ({ storeName }: { storeName: string }) => {
     if (currentCollection) {
-      setToastState({
-        type: "loading",
-        message: "Store is being created...",
-      });
+      toast.dismiss();
+      toast.loading("Loading...");
 
       const tx = new Transaction();
       tx.moveCall({
@@ -48,19 +45,12 @@ export function useCreateStore() {
         },
         {
           onSuccess: (data) => {
-            console.log("Success! data:", data);
-            refetch();
-            setToastState({
-              type: "success",
-              message: "Creating store succeeded.",
-            });
+            toast.dismiss();
+            toast.success(`Success! digset: ${data.digest}`);
           },
           onError: (err) => {
-            console.log("Error", err);
-            setToastState({
-              type: "error",
-              message: "Something went wrong while creating the store. Please try again.",
-            });
+            toast.dismiss();
+            toast.error(`Success! Error: ${err}`);
           },
         }
       );
@@ -82,8 +72,6 @@ export function useAddSlot() {
     collection: { collections, index: cIndex },
     store: { stores, index: sIndex, refetch },
   } = useContext(CollectionContext);
-
-  const { setToastState } = useToast();
 
   useEffect(() => {
     if (stores && collections && collections.length > 0 && cIndex !== -1) {
@@ -109,10 +97,8 @@ export function useAddSlot() {
 
   const addSlotToStore = ({ productType, price }: { productType: string; price: number }) => {
     if (currentCollection && currentStore) {
-      setToastState({
-        type: "loading",
-        message: "Slot is being created...",
-      });
+      toast.dismiss();
+      toast.loading("Loading...");
 
       const tx = new Transaction();
       tx.moveCall({
@@ -134,19 +120,13 @@ export function useAddSlot() {
         },
         {
           onSuccess: (data) => {
-            console.log("Success! data:", data);
+            toast.dismiss();
+            toast.success(`Success! digset: ${data.digest}`);
             refetch();
-            setToastState({
-              type: "success",
-              message: "Creating slot succeeded.",
-            });
           },
           onError: (err) => {
-            console.log("Error", err);
-            setToastState({
-              type: "error",
-              message: "Something went wrong while creating the slot. Please try again.",
-            });
+            toast.dismiss();
+            toast.error(`Success! Error: ${err}`);
           },
         }
       );
@@ -168,8 +148,6 @@ export function useAddProductToSlot() {
     collection: { collections, index: cIndex },
     store: { stores, index: sIndex, refetch },
   } = useContext(CollectionContext);
-
-  const { setToastState } = useToast();
 
   useEffect(() => {
     if (stores && collections && collections.length > 0 && cIndex !== -1) {
@@ -195,10 +173,8 @@ export function useAddProductToSlot() {
 
   const addBaseToSlot = ({ slotNumber, count }: { slotNumber: number; count: number }) => {
     if (currentCollection && currentStore) {
-      setToastState({
-        type: "loading",
-        message: "Product is being created and added to slot...",
-      });
+      toast.dismiss();
+      toast.loading("Loading...");
 
       const tx = new Transaction();
       const baseId = uuidv4();
@@ -207,7 +183,7 @@ export function useAddProductToSlot() {
       uploadToS3({
         type: "bases",
         id: baseId,
-        file: new File(["White"], "White.png", { type: "image/png" }),
+        file: new File(["White"], "WhiteBackground.png", { type: "image/png" }),
       }).then(({ fileUrl }) => {
         for (let i = 0; i < count; i++) {
           const [product] = tx.moveCall({
@@ -241,18 +217,12 @@ export function useAddProductToSlot() {
           },
           {
             onSuccess: (data) => {
-              console.log("Success! data:", data);
-              setToastState({
-                type: "success",
-                message: "Adding base NFT to slot succeeded.",
-              });
+              toast.dismiss();
+              toast.success(`Success! digset: ${data.digest}`);
             },
             onError: (err) => {
-              console.log("Error", err);
-              setToastState({
-                type: "error",
-                message: "Something went wrong while adding base NFT to slot. Please try again.",
-              });
+              toast.dismiss();
+              toast.error(`Success! Error: ${err}`);
             },
           }
         );
@@ -272,10 +242,8 @@ export function useAddProductToSlot() {
     count: number;
   }) => {
     if (currentCollection && currentStore) {
-      setToastState({
-        type: "loading",
-        message: "Product is being created and added to slot...",
-      });
+      toast.dismiss();
+      toast.loading("Loading...");
 
       const tx = new Transaction();
 
@@ -313,19 +281,13 @@ export function useAddProductToSlot() {
         },
         {
           onSuccess: (data) => {
-            console.log("Success! data:", data);
-            setToastState({
-              type: "success",
-              message: "Creating the product succeeded.",
-            });
+            toast.dismiss();
+            toast.success(`Success! digset: ${data.digest}`);
             refetch();
           },
           onError: (err) => {
-            console.log("Error", err);
-            setToastState({
-              type: "error",
-              message: "Something went wrong while creating the product. Please try again.",
-            });
+            toast.dismiss();
+            toast.error(`Success! Error: ${err}`);
           },
         }
       );
@@ -340,10 +302,8 @@ export function useAddProductToSlot() {
     ticketType: string;
   }) => {
     if (currentCollection && currentStore) {
-      setToastState({
-        type: "loading",
-        message: "Product is being created and added to slot...",
-      });
+      toast.dismiss();
+      toast.loading("Loading...");
 
       const tx = new Transaction();
 
@@ -378,19 +338,13 @@ export function useAddProductToSlot() {
         },
         {
           onSuccess: (data) => {
-            console.log("Success! data:", data);
             refetch();
-            setToastState({
-              type: "success",
-              message: "Creating the product succeeded.",
-            });
+            toast.dismiss();
+            toast.success(`Success! digset: ${data.digest}`);
           },
           onError: (err) => {
-            console.log("Error", err);
-            setToastState({
-              type: "error",
-              message: "Something went wrong while creating the product. Please try again.",
-            });
+            toast.dismiss();
+            toast.error(`Success! Error: ${err}`);
           },
         }
       );
@@ -407,10 +361,8 @@ export function useAddProductToSlot() {
     propertyValue: number;
   }) => {
     if (currentCollection && currentStore) {
-      setToastState({
-        type: "loading",
-        message: "Product is being created and added to slot...",
-      });
+      toast.dismiss();
+      toast.loading("Loading...");
 
       const tx = new Transaction();
 
@@ -446,19 +398,13 @@ export function useAddProductToSlot() {
         },
         {
           onSuccess: (data) => {
-            console.log("Success! data:", data);
             refetch();
-            setToastState({
-              type: "success",
-              message: "Creating the product succeeded.",
-            });
+            toast.dismiss();
+            toast.success(`Success! digset: ${data.digest}`);
           },
           onError: (err) => {
-            console.log("Error", err);
-            setToastState({
-              type: "error",
-              message: "Something went wrong while creating the product. Please try again.",
-            });
+            toast.dismiss();
+            toast.error(`Success! Error: ${err}`);
           },
         }
       );
@@ -482,8 +428,6 @@ export function useAddConditionToSlot() {
     collection: { collections, index: cIndex },
     store: { stores, index: sIndex, refetch },
   } = useContext(CollectionContext);
-
-  const { setToastState } = useToast();
 
   useEffect(() => {
     if (stores && collections && collections.length > 0 && cIndex !== -1) {
@@ -517,10 +461,8 @@ export function useAddConditionToSlot() {
     requirement: number;
   }) => {
     if (currentCollection && currentStore) {
-      setToastState({
-        type: "loading",
-        message: "Condition is being created and added to slot...",
-      });
+      toast.dismiss();
+      toast.loading("Loading...");
 
       const tx = new Transaction();
 
@@ -544,19 +486,13 @@ export function useAddConditionToSlot() {
         },
         {
           onSuccess: (data) => {
-            console.log("Success! data:", data);
             refetch();
-            setToastState({
-              type: "success",
-              message: "Creating the condition succeeded.",
-            });
+            toast.dismiss();
+            toast.success(`Success! digset: ${data.digest}`);
           },
           onError: (err) => {
-            console.log("Error", err);
-            setToastState({
-              type: "error",
-              message: "Something went wrong while creating the condition. Please try again.",
-            });
+            toast.dismiss();
+            toast.error(`Success! Error: ${err}`);
           },
         }
       );
@@ -578,8 +514,6 @@ export function useBuyProduct() {
     collection: { collections, index: cIndex },
     store: { stores, index: sIndex, refetch },
   } = useContext(CollectionContext);
-
-  const { setToastState } = useToast();
 
   useEffect(() => {
     if (stores && collections && collections.length > 0 && cIndex !== -1) {
@@ -613,10 +547,8 @@ export function useBuyProduct() {
     slotNumber: number;
   }) => {
     if (currentCollection && currentStore) {
-      setToastState({
-        type: "loading",
-        message: "Request is being created...",
-      });
+      toast.dismiss();
+      toast.loading("Loading...");
 
       const tx = new Transaction();
 
@@ -639,19 +571,13 @@ export function useBuyProduct() {
         },
         {
           onSuccess: (data) => {
-            console.log("Success! data:", data);
             refetch();
-            setToastState({
-              type: "success",
-              message: "Buying product succeeded.",
-            });
+            toast.dismiss();
+            toast.success(`Success! digset: ${data.digest}`);
           },
           onError: (err) => {
-            console.log("Error", err);
-            setToastState({
-              type: "error",
-              message: "Something went wrong while buying the product. Please try again.",
-            });
+            toast.dismiss();
+            toast.error(`Success! Error: ${err}`);
           },
         }
       );

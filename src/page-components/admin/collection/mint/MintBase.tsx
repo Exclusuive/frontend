@@ -52,9 +52,13 @@ export default function MintBase() {
               const { fileUrl } = await uploadToS3({
                 type: "bases",
                 id: baseId,
-                file: new File([await fetch("/White.png").then((r) => r.blob())], "White.png", {
-                  type: "image/png",
-                }),
+                file: new File(
+                  [await fetch("/WhiteBackground.png").then((r) => r.blob())],
+                  "WhiteBackground.png",
+                  {
+                    type: "image/png",
+                  }
+                ),
               });
 
               mintBase({ imgURL: fileUrl, recipient });
