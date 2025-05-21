@@ -9,11 +9,13 @@ type Props = {
 export default function CollectionImg({ collection, className, ...props }: Props) {
   const [imgURL, setImgURL] = useState();
   useEffect(() => {
-    collection.dynamicFieldData.forEach((d) => {
-      if (d.content.fields.value.fields.name === "img_url") {
-        setImgURL(d.content.fields.value.fields.content);
-      }
-    });
+    collection.dynamicFieldData
+      .filter((d) => d.content.fields.name.type.includes("BaseType"))
+      .forEach((d) => {
+        if (d.content.fields.value.fields.name === "img_url") {
+          setImgURL(d.content.fields.value.fields.content);
+        }
+      });
   }, [collection]);
   return (
     <img
