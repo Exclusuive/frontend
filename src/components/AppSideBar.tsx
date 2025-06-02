@@ -23,28 +23,29 @@ import {
 import { Link, useLocation } from "react-router-dom";
 import { navigateWithQuery } from "@/lib/utils";
 import { useState } from "react";
-import { ConnectButton } from "@mysten/dapp-kit";
-
+import { Tabs, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
+import { Button } from "@/components/ui/button";
+import { useDisconnectWallet, useCurrentAccount } from "@mysten/dapp-kit";
 const ADMIN_MENUS = {
   Collection: [
     {
       title: "Overview",
-      url: "/admin/collections",
+      url: "/admin",
       icon: LayoutDashboard,
     },
     {
       title: "Edit Collection",
-      url: "/admin/collections/edit",
+      url: "/admin/edit",
       icon: FileEdit,
     },
     {
       title: "Manage Store",
-      url: "/admin/collections/store",
+      url: "/admin/store",
       icon: Store,
     },
     {
       title: "Mint & Transfer",
-      url: "/admin/collections/mint",
+      url: "/admin/mint",
       icon: PackageOpen,
     },
   ],
@@ -111,6 +112,10 @@ const MEMBER_MENUS = {
 };
 export default function AppSidebar() {
   const [isAdmin, setIsAdmin] = useState(true);
+  const account = useCurrentAccount();
+  const { mutate: disconnect } = useDisconnectWallet();
+
+  console.log(account);
 
   const location = useLocation();
 
@@ -119,35 +124,45 @@ export default function AppSidebar() {
       <SidebarHeader>
         <Link to={navigateWithQuery("/", location.search)}>
           <div className="text-center text-lg font-extrabold"> Exclusuive Dashboard</div>
-          <div className="flex h-48 w-full flex-col-reverse overflow-y-hidden">
-            <img className="w-full" src="/DOKPAMI.png" alt="character loading..." />
-          </div>
         </Link>
       </SidebarHeader>
 
       <SidebarContent>
         <SidebarGroup>
-          <ConnectButton />
-          {/* {account ? (
-            <div className="mx-auto w-5/6">
-              <p className="text-center text-lg font-bold">{account.label}</p>
+          <Tabs
+            defaultValue="admin"
+            className="w-full"
+            onValueChange={(value) => setIsAdmin(value === "admin")}
+          >
+            <TabsList className="grid w-full grid-cols-2 rounded-md bg-gray-200 p-1 text-gray-700">
+              <TabsTrigger
+                value="admin"
+                className="rounded-md px-4 py-2 text-gray-600 data-[state=active]:bg-blue-500 data-[state=active]:text-white"
+              >
+                Admin
+              </TabsTrigger>
+              <TabsTrigger
+                value="member"
+                className="rounded-md px-4 py-2 text-gray-600 data-[state=active]:bg-blue-500 data-[state=active]:text-white"
+              >
+                Member
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+
+          {account && (
+            <div className="mx-auto my-4 w-full">
+              <p className="text-md py-2 text-center font-bold">
+                {account.address.slice(0, 8)}...{account.address.slice(-8)}
+              </p>
               <Button
-                className="w-full bg-black text-white hover:bg-white hover:text-black"
+                className="w-full bg-gray-400 text-white hover:bg-white hover:text-black"
                 onClick={() => disconnect()}
               >
                 Disconnect
               </Button>
             </div>
-          ) : (
-            <div className="mx-auto w-5/6">
-              <Button
-                className="w-full bg-white text-black hover:text-white"
-                onClick={() => connect({ wallet: wallets[0] })}
-              >
-                Connect wallet
-              </Button>
-            </div>
-          )} */}
+          )}
         </SidebarGroup>
 
         <div className="scrollbar-hide overflow-y-auto whitespace-nowrap">
@@ -221,33 +236,19 @@ export default function AppSidebar() {
         </div>
       </SidebarContent>
       <SidebarFooter className="relative">
-        <button
-          type="button"
-          onClick={() => setIsAdmin(!isAdmin)}
-          className="absolute top-4 right-4 z-10 flex w-12 cursor-pointer flex-col items-center justify-center"
-        >
-          <SidebarGroupLabel>{isAdmin ? "admin" : "member"}</SidebarGroupLabel>
-          <span
-            className={`relative inline-flex cursor-pointer items-center rounded-full transition-colors duration-200 ease-in-out ${
-              isAdmin ? "bg-gray-300" : "bg-pink-500"
-            } h-5 w-10`}
-          >
-            <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-200 ease-in-out ${
-                isAdmin ? "translate-x-0.5" : "translate-x-5.5"
-              }`}
-            />
-          </span>
-        </button>
-
         <div className="rounded-lg bg-white p-4">
-          <div className="flex items-center">
+          <div className="flex items-center pb-3">
             <HelpCircle size={24} className="text-blue-500" />
             <p className="ml-3 text-sm text-gray-700">Need Help?</p>
           </div>
-          <button className="mt-1 cursor-pointer text-xs text-gray-500">
-            Please check our docs
-          </button>
+          <Link to="/docs">
+            <Button
+              variant="link"
+              className="h-auto w-full bg-blue-500 px-4 py-2 text-xs text-white hover:bg-blue-600"
+            >
+              Please check our docs
+            </Button>
+          </Link>
         </div>
       </SidebarFooter>
     </Sidebar>
