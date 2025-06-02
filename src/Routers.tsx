@@ -18,17 +18,19 @@ import ExploreCollections from "./pages/members/explore/ExploreCollections";
 import ViewStore from "./pages/members/ViewStore";
 import MyNFTs from "./pages/members/myNFTs";
 
+import DocsPage from "./pages/docs/main";
+
 export default function Routers() {
   return (
     <Router>
       <Routes>
-        <Route element={<Layout />}>
-          <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={<LandingPage />} />
 
+        <Route element={<Layout />}>
           {/* Admin Pages */}
           <Route path="admin">
             <Route
-              path="collections"
+              path=""
               element={
                 <CollectionProvider>
                   <Outlet />
@@ -42,22 +44,21 @@ export default function Routers() {
             </Route>
             <Route path="membershippolicy" element={<MembershipPolicyPage />} />
           </Route>
-
           {/* Member Pages */}
           <Route path="member">
             <Route path="mynfts" element={<MyNFTs />} />
             <Route path="membershipstore" element={<MembershipStorePage />} />
             <Route path="store/:id" element={<ViewStore />} />
           </Route>
-
           {/* Explorer Pages */}
           <Route path="explore">
             <Route path="collections" element={<ExploreCollections />} />
           </Route>
-
+          {/* Docs Pages */}
           {/* 임시 404 */}
           <Route path="*" element={<NotFound />} />
         </Route>
+        <Route path="docs" element={<DocsPage />} />
       </Routes>
     </Router>
   );

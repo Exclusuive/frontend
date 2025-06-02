@@ -116,15 +116,17 @@ export default function CollectionOverview({ collection }: Props) {
 
           <CardContent>
             <Tabs defaultValue={"layers"} className="w-full" onValueChange={setSelectedLayer}>
-              <TabsList className="w-full">
+              <TabsList className="h-auto w-full overflow-x-scroll whitespace-nowrap">
                 {collection.objectData.content.fields.layer_types.fields.contents.length > 0 ? (
                   collection.objectData.content.fields.layer_types.fields.contents.map((l) => (
-                    <TabsTrigger key={l.fields.type} value={l.fields.type}>
+                    <TabsTrigger key={l.fields.type} value={l.fields.type} className="px-2 py-1">
                       {l.fields.type}
                     </TabsTrigger>
                   ))
                 ) : (
-                  <TabsTrigger value="no-layers">No Layers</TabsTrigger>
+                  <TabsTrigger value="no-layers" className="px-2 py-1">
+                    No Layers
+                  </TabsTrigger>
                 )}
               </TabsList>
 
