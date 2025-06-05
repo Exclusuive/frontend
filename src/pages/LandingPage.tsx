@@ -69,7 +69,7 @@ export default function LandingPage() {
               variant="outline"
               className="border-gray-400 bg-white text-black hover:bg-gray-400 hover:text-white"
             >
-              API Docs
+              Documentation
             </Button>
           </Link>
         </div>
