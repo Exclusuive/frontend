@@ -129,9 +129,23 @@ export default function AppSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
+          {account && (
+            <div className="mx-auto w-full">
+              <p className="text-md py-2 text-center font-bold">
+                {account.address.slice(0, 8)}...{account.address.slice(-8)}
+              </p>
+              <Button
+                className="w-full bg-gray-400 text-white hover:bg-white hover:text-black"
+                onClick={() => disconnect()}
+              >
+                Disconnect
+              </Button>
+            </div>
+          )}
+
           <Tabs
             defaultValue="admin"
-            className="w-full"
+            className="mt-4 w-full"
             onValueChange={(value) => setIsAdmin(value === "admin")}
           >
             <TabsList className="grid w-full grid-cols-2 rounded-md bg-gray-200 p-1 text-gray-700">
@@ -149,20 +163,6 @@ export default function AppSidebar() {
               </TabsTrigger>
             </TabsList>
           </Tabs>
-
-          {account && (
-            <div className="mx-auto my-4 w-full">
-              <p className="text-md py-2 text-center font-bold">
-                {account.address.slice(0, 8)}...{account.address.slice(-8)}
-              </p>
-              <Button
-                className="w-full bg-gray-400 text-white hover:bg-white hover:text-black"
-                onClick={() => disconnect()}
-              >
-                Disconnect
-              </Button>
-            </div>
-          )}
         </SidebarGroup>
 
         <div className="scrollbar-hide overflow-y-auto whitespace-nowrap">
