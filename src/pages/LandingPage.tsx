@@ -64,9 +64,11 @@ export default function LandingPage() {
               Exclusuive is the ultimate customization tool for NFTs.
             </p>
             <div className="flex flex-col gap-4 sm:flex-row">
-              <button className="rounded-md bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700 sm:px-6 sm:py-3 sm:text-base">
-                Try it out
-              </button>
+              <Link to="/admin">
+                <button className="rounded-md bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700 sm:px-6 sm:py-3 sm:text-base">
+                  Try it out
+                </button>
+              </Link>
               <Link to="/docs">
                 <button className="rounded-md border border-gray-300 px-4 py-2 text-sm text-gray-800 hover:bg-gray-200 sm:px-6 sm:py-3 sm:text-base">
                   See how it works
