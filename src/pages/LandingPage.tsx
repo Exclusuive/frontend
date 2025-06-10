@@ -9,7 +9,7 @@ const BouncingText = ({ text }: { text: string }) => {
   const parts = text.split(/(SUI)/i); // Split by SUI, case-insensitive
 
   return (
-    <div className="flex justify-center">
+    <div className="flex">
       {parts.map((part, index) => {
         const isSui = part.toUpperCase() === "SUI";
         // Calculate the starting index for animation delay based on previous parts' lengths
@@ -49,29 +49,43 @@ export default function LandingPage() {
   return (
     <div className="w-full bg-white text-black">
       {/* Hero */}
-      <section className="flex min-h-screen flex-col items-center justify-center bg-gray-900 px-6 py-24 text-center text-white">
-        <h1 className="mb-6 max-w-3xl text-5xl font-extrabold">
-          <BouncingText text="Exclusuive" />
-        </h1>
-        <p className="mb-8 max-w-2xl text-lg text-gray-300">
-          Everything you need to launch, manage, and scale your NFT ecosystem <br />
-          all in one modular, no-code platform.
-        </p>
-        <div className="flex gap-4">
-          <Link to="/admin">
-            <Button size="lg" className="bg-blue-400 text-white hover:bg-blue-600">
-              Get Started
-            </Button>
-          </Link>
-          <Link to="/docs">
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-gray-400 bg-white text-black hover:bg-gray-400 hover:text-white"
-            >
-              Documentation
-            </Button>
-          </Link>
+      <section>
+        <div className="flex min-h-screen flex-col items-center justify-between bg-gray-100 px-4 md:flex-row md:px-16">
+          <div className="max-w-2xl">
+            <h1 className="my-10 text-3xl leading-tight font-extrabold text-gray-900 md:text-4xl lg:text-5xl">
+              <BouncingText text="Exclusuive" />
+            </h1>
+
+            <h1 className="mb-4 text-3xl leading-tight font-extrabold text-gray-900 md:text-4xl lg:text-5xl">
+              Make your own ecosystems without any limitations. <br />
+            </h1>
+            <p className="mb-8 text-xl font-bold text-gray-800 md:text-2xl">
+              Everything you imagined comes true in Exclusuive. <br />
+              Exclusuive is the ultimate customization tool for NFTs.
+            </p>
+            <div className="flex flex-col gap-4 sm:flex-row">
+              <button className="rounded-md bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700 sm:px-6 sm:py-3 sm:text-base">
+                Try it out
+              </button>
+              <Link to="/docs">
+                <button className="rounded-md border border-gray-300 px-4 py-2 text-sm text-gray-800 hover:bg-gray-200 sm:px-6 sm:py-3 sm:text-base">
+                  See how it works
+                </button>
+              </Link>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-center">
+            <img
+              src="/landing_item.png"
+              alt="3D Illustration"
+              className="w-full max-w-4xl opacity-0 transition-all duration-700 ease-in-out hover:opacity-100"
+              onLoad={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.style.opacity = "1";
+              }}
+            />
+          </div>
         </div>
       </section>
 
