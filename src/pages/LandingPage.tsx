@@ -50,7 +50,7 @@ export default function LandingPage() {
     <div className="w-full bg-white text-black">
       {/* Hero */}
       <section>
-        <div className="flex min-h-screen flex-col items-center justify-between bg-gray-100 px-4 md:flex-row md:px-16">
+        <div className="flex min-h-screen flex-col items-center justify-center bg-gray-100 px-4 md:flex-row md:px-16">
           <div className="max-w-2xl">
             <h1 className="my-10 text-3xl leading-tight font-extrabold text-gray-900 md:text-4xl lg:text-5xl">
               <BouncingText text="Exclusuive" />
@@ -60,17 +60,16 @@ export default function LandingPage() {
               Make your own ecosystems without any limitations. <br />
             </h1>
             <p className="mb-8 text-xl font-bold text-gray-800 md:text-2xl">
-              Everything you imagined comes true in Exclusuive. <br />
               Exclusuive is the ultimate customization tool for NFTs.
             </p>
             <div className="flex flex-col gap-4 sm:flex-row">
               <Link to="/admin">
-                <button className="rounded-md bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700 sm:px-6 sm:py-3 sm:text-base">
+                <button className="cursor-pointer rounded-md bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700 sm:px-6 sm:py-3 sm:text-base">
                   Try it out
                 </button>
               </Link>
               <Link to="/docs">
-                <button className="rounded-md border border-gray-300 px-4 py-2 text-sm text-gray-800 hover:bg-gray-200 sm:px-6 sm:py-3 sm:text-base">
+                <button className="cursor-pointer rounded-md border border-gray-300 px-4 py-2 text-sm text-gray-800 hover:bg-gray-200 sm:px-6 sm:py-3 sm:text-base">
                   See how it works
                 </button>
               </Link>
