@@ -63,7 +63,7 @@ export default function LandingPage() {
               Exclusuive is the ultimate customization tool for NFTs.
             </p>
             <div className="flex flex-col gap-4 sm:flex-row">
-              <Link to="/admin">
+              <Link to="/introduction">
                 <button className="cursor-pointer rounded-md bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700 sm:px-6 sm:py-3 sm:text-base">
                   Try it out
                 </button>
@@ -189,7 +189,7 @@ export default function LandingPage() {
         <p className="mb-8 text-lg text-gray-300">
           Join 1,000+ users customizing NFTs with Exclusuive today.
         </p>
-        <Link to="/admin">
+        <Link to="/introduction">
           <Button size="lg" className="bg-black px-8 py-6 text-lg text-white hover:bg-gray-900">
             Launch App
           </Button>

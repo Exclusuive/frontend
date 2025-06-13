@@ -5,6 +5,7 @@ import Layout from "./Layout";
 import NotFound from "./NotFound";
 
 import LandingPage from "./pages/LandingPage";
+import IntroPage from "./pages/IntroPage";
 
 import CollectionPage from "./pages/admin/collection/CollectionPage";
 import EditCollectionPage from "./pages/admin/collection/EditCollectionPage";
@@ -27,6 +28,7 @@ export default function Routers() {
         <Route path="/" element={<LandingPage />} />
 
         <Route element={<Layout />}>
+          <Route path="introduction" element={<IntroPage />}></Route>
           {/* Admin Pages */}
           <Route path="admin">
             <Route
