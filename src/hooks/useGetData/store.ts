@@ -192,8 +192,6 @@ export const useGetStoresByCollectionId = ({ collectionId }: { collectionId: str
           ),
         ]);
 
-        console.log(objectDataArray);
-
         return storeIds.map((id, i) => {
           if (!objectDataArray[i].data) return;
 
@@ -227,7 +225,11 @@ export const useGetStoresByCollectionId = ({ collectionId }: { collectionId: str
           return s;
         });
 
-        setStores(storesWithoutNull);
+        setStores(
+          storesWithoutNull.filter(
+            (s) => s.objectData.content.fields.collection_id === collectionId
+          )
+        );
         setIsPending(false);
         setError(null);
       })
