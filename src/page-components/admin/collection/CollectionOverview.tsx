@@ -204,7 +204,7 @@ export default function CollectionOverview({ collection }: Props) {
                   <XAxis dataKey="name" />
                   <YAxis />
                   <Tooltip />
-                  <Bar dataKey="value" fill="#8884d8" />
+                  <Bar dataKey="value" fill="#51a2ff" />
                 </BarChart>
               </ResponsiveContainer>
             </div>

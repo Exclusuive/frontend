@@ -188,6 +188,22 @@ export default function AppSidebar() {
             );
           })} */}
 
+          <SidebarGroup>
+            <SidebarGroupLabel>Introduction</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <Link to={navigateWithQuery("/introduction", location.search)}>
+                      <HelpCircle />
+                      <span>Introduction</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+
           {isAdmin &&
             Object.entries(ADMIN_MENUS).map(([headding, menus]) => {
               return (
