@@ -9,7 +9,7 @@ export default function LandingPage() {
     <div className="flex min-h-screen w-full min-w-[320px] flex-col">
       <section className="flex h-screen flex-col justify-center bg-gradient-to-b from-[#EDF6FF] via-[#F8F8FF] to-[#EDF6FF] bg-no-repeat px-4 font-[montserrat] md:px-16">
         <div className="text-[#474747]">
-          <h1 className="text-[75px] font-bold">
+          <h1 className="text-[40px] font-bold md:text-[75px]">
             Create your <span className="font-extrabold text-[#4CA3FF]">Dynamic NFT</span> <br />
             No code, no hassle.
           </h1>
@@ -17,7 +17,7 @@ export default function LandingPage() {
             A robust, modular system engineered for scalable deployment and real-world NFT use cases
             that drive lasting value
           </p>
-          <div className="my-8 flex flex-col gap-x-16 sm:flex-row">
+          <div className="md:gap-y-none my-8 flex flex-col gap-y-6 md:flex-row md:gap-x-16">
             <Link to="/introduction">
               <Button className="h-full bg-gradient-to-r from-[#5656F2] to-[#4CA3FF] leading-[normal] font-bold">
                 <div className="flex items-center px-10 py-2 text-xl">
@@ -26,8 +26,12 @@ export default function LandingPage() {
                 </div>
               </Button>
             </Link>
-            <Link to="/docs" className="flex items-center justify-center gap-2 text-xl">
-              <div className="flex items-center justify-center gap-2 text-[#4CA3FF]">
+            <Link
+              to="https://www.youtube.com/live/W0eBDO3raEI?si=AvaVP5f-v4ViY9wm&t=5600"
+              className="flex flex-col justify-center text-xl"
+              target="_blank"
+            >
+              <div className="flex gap-2 text-[#4CA3FF]">
                 <CirclePlay className="h-8 w-8 rounded-2xl shadow-[0px_15px_20px_#4ca3ff33]" />
                 <span className="font-bold">See how it works</span>
               </div>
@@ -38,11 +42,14 @@ export default function LandingPage() {
 
       <section className="flex flex-col items-center bg-gradient-to-b from-[#EDF6FF] via-[#F8F8FF] to-[#EDF6FF] bg-no-repeat px-4 py-16 md:px-16">
         <div className="text-center text-[#474747]">
-          <h1 className="font-[logo] text-[110px] font-bold">
+          <h1 className="font-[logo] text-[40px] font-bold md:text-[110px]">
             Exclu
-            <span className="inline-block -translate-y-5 font-extrabold text-[#4DA2FF]">Sui</span>ve
+            <span className="inline-block -translate-y-2 font-extrabold text-[#4DA2FF] md:-translate-y-5">
+              Sui
+            </span>
+            ve
           </h1>
-          <p className="font-regular font-[pretendard] text-[40px] text-[#212124]">
+          <p className="font-regular font-[pretendard] text-[20px] text-[#212124] md:text-[40px]">
             The easiest NFT creation{" "}
             <span className="font-semibold text-[#237DDB]">no coding skills</span> required
           </p>
