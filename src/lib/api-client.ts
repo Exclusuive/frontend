@@ -31,9 +31,7 @@ api.interceptors.response.use(
     console.error("API Error:", typeof message === "string" ? message : "An error occurred");
 
     if (error.response?.status === 401) {
-      const searchParams = new URLSearchParams(window.location.search);
-      const redirectTo = searchParams.get("redirectTo") || window.location.pathname;
-      window.location.href = paths.auth.login.getHref(redirectTo);
+      window.location.href = paths.landingPage.getHref();
     }
 
     return Promise.reject(error);

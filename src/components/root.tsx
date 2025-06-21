@@ -1,4 +1,3 @@
-import { ProtectedWebViewLayout } from "@/layouts/ProtectedWebViewLayout";
 import { Outlet } from "react-router";
 
 export const ErrorBoundary = () => {
@@ -6,9 +5,5 @@ export const ErrorBoundary = () => {
 };
 
 export default function AppRoot() {
-  return (
-    <ProtectedWebViewLayout>
-      <Outlet />
-    </ProtectedWebViewLayout>
-  );
+  return <Outlet />;
 }
