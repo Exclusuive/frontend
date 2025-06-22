@@ -3,4 +3,8 @@ export const paths = {
     path: "/",
     getHref: () => "/",
   },
+  setCollectionPage: {
+    path: "/setCollection",
+    getHref: () => "/setCollection",
+  },
 };
