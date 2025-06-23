@@ -15,10 +15,10 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="flex min-h-screen w-full min-w-[320px] flex-col">
-      <section className="flex h-screen flex-col justify-center bg-gradient-to-b from-[#EDF6FF] to-[#F8F8FF] bg-no-repeat px-4 font-[montserrat] md:px-16">
+    <div className="flex min-h-screen w-full min-w-[320px] flex-col bg-gradient-to-b from-[#EDF6FF] to-[#F8F8FF] bg-no-repeat">
+      <section className="flex h-screen flex-col justify-center px-4 font-[montserrat] md:px-16">
         <div className="text-[#474747]">
-          <h1 className="text-[25px] font-bold sm:text-[40px] lg:text-[60px] xl:text-[75px]">
+          <h1 className="text-[22px] font-bold sm:text-[40px] lg:text-[60px] xl:text-[75px]">
             Create your <span className="font-extrabold text-[#4CA3FF]">Dynamic NFT</span> <br />
             No code, no hassle.
           </h1>
@@ -53,9 +53,9 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="flex flex-col items-center bg-gradient-to-b from-[#EDF6FF] via-[#F8F8FF] to-[#EDF6FF] bg-no-repeat px-4 py-16 md:px-16">
+      <section className="flex flex-col items-center px-4 py-16 md:px-16">
         <div className="text-center text-[#474747]">
-          <h1 className="font-[logo] text-[40px] font-bold md:text-[110px]">
+          <h1 className="text-[40px] font-bold tracking-wider md:text-[100px]">
             Exclu
             <span className="inline-block -translate-y-2 font-extrabold text-[#4DA2FF] md:-translate-y-5">
               Sui
