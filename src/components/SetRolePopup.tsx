@@ -56,17 +56,21 @@ const SetRolePopup = ({ onOpenChange }: SetRolePopupProps) => {
       onOpenChange(false);
       navigate("/setCollection");
     } else {
-      connect({
-        wallet: wallets[0],
-        onSuccess: () => {
-          login(account.address, selectedRole.id);
-          onOpenChange(false);
-          navigate("/setCollection");
+      connect(
+        { wallet: wallets[0] },
+        {
+          onSuccess: (wallet: any) => {
+            if (wallet.accounts[0].address) {
+              login(wallet.accounts[0].address, selectedRole.id);
+              onOpenChange(false);
+              navigate("/setCollection");
+            }
+          },
+          onError: () => {
+            window.alert("Failed to connect wallet");
+          },
         },
-        onError: (error: any) => {
-          window.alert(error.message);
-        },
-      });
+      );
     }
   };
 

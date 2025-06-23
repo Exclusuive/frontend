@@ -55,7 +55,7 @@ export default function LandingPage() {
 
       <section className="flex flex-col items-center px-4 py-16 md:px-16">
         <div className="text-center text-[#474747]">
-          <h1 className="text-[40px] font-bold tracking-wider md:text-[100px]">
+          <h1 className="font-Exclusuive text-[40px] font-bold tracking-wider md:text-[100px]">
             Exclu
             <span className="inline-block -translate-y-2 font-extrabold text-[#4DA2FF] md:-translate-y-5">
               Sui
