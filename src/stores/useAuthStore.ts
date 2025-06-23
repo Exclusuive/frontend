@@ -4,6 +4,12 @@ import { persist, createJSONStorage } from "zustand/middleware";
 interface User {
   address: string;
   role: string;
+  profile: {
+    name: string;
+    avatar: string;
+    age: number;
+    sex: string;
+  };
 }
 
 interface AuthState {
@@ -20,6 +26,12 @@ export const useAuthStore = create<AuthState>()(
         set({
           user: {
             address: address,
+            profile: {
+              name: "John Doe",
+              avatar: "https://github.com/twbs.png",
+              age: 20,
+              sex: "male",
+            },
             role: role,
           },
         });
@@ -29,6 +41,9 @@ export const useAuthStore = create<AuthState>()(
         set({
           user: null,
         });
+      },
+      setRole: (role: string) => {
+        set((state) => (state.user ? { user: { ...state.user, role } } : state));
       },
     }),
     {

@@ -8,19 +8,11 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useAuthStore } from "@/stores/useAuthStore";
-import { useConnectWallet, useWallets, useCurrentAccount } from "@mysten/dapp-kit";
-import { useNavigate } from "react-router-dom";
-
-interface Role {
-  id: string;
-  name: string;
-  description: string;
-  icon?: string;
-}
+import { Role } from "@/types/User";
 
 interface SetRolePopupProps {
   onOpenChange: (open: boolean) => void;
+  onConfirm: (role: Role) => void;
 }
 
 const defaultRoles: Role[] = [
@@ -38,40 +30,17 @@ const defaultRoles: Role[] = [
   },
 ];
 
-const SetRolePopup = ({ onOpenChange }: SetRolePopupProps) => {
-  const wallets = useWallets();
-  const { mutate: connect } = useConnectWallet();
-  const account = useCurrentAccount();
+const SetRolePopup = ({ onOpenChange, onConfirm }: SetRolePopupProps) => {
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
-  const { login } = useAuthStore();
   const handleRoleSelect = (role: Role) => {
     setSelectedRole(role);
   };
-  const navigate = useNavigate();
 
   const handleConfirm = () => {
     if (!selectedRole) return;
-    if (account) {
-      login(account.address, selectedRole.id);
-      onOpenChange(false);
-      navigate("/setCollection");
-    } else {
-      connect(
-        { wallet: wallets[0] },
-        {
-          onSuccess: (wallet: any) => {
-            if (wallet.accounts[0].address) {
-              login(wallet.accounts[0].address, selectedRole.id);
-              onOpenChange(false);
-              navigate("/setCollection");
-            }
-          },
-          onError: () => {
-            window.alert("Failed to connect wallet");
-          },
-        },
-      );
-    }
+    window.alert("구현 예정");
+    onConfirm(selectedRole);
+    onOpenChange(false);
   };
 
   return (

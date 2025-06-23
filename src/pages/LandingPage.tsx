@@ -1,11 +1,45 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CirclePlay } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import SetRolePopup from "@/components/SetRolePopup";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { useCurrentAccount, useWallets } from "@mysten/dapp-kit";
+import { useConnectWallet } from "@mysten/dapp-kit";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { Role } from "@/types/User";
+
+export const onLogin = (selectedRole: Role, handleOpenChange: (open: boolean) => void) => {
+  const wallets = useWallets();
+  const { mutate: connect } = useConnectWallet();
+  const account = useCurrentAccount();
+  const { login } = useAuthStore();
+  const navigate = useNavigate();
+  if (!selectedRole) return;
+  if (account) {
+    login(account.address, selectedRole.id);
+    handleOpenChange(false);
+    navigate("/setCollection");
+  } else {
+    connect(
+      { wallet: wallets[0] },
+      {
+        onSuccess: (wallet: any) => {
+          if (wallet.accounts[0].address) {
+            login(wallet.accounts[0].address, selectedRole.id);
+            handleOpenChange(false);
+            navigate("/setCollection");
+          }
+        },
+        onError: () => {
+          window.alert("Failed to connect wallet");
+        },
+      },
+    );
+  }
+};
 
 export default function LandingPage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,7 +50,7 @@ export default function LandingPage() {
 
   return (
     <div className="flex min-h-screen w-full min-w-[320px] flex-col bg-gradient-to-b from-[#EDF6FF] to-[#F8F8FF] bg-no-repeat">
-      <section className="flex h-screen flex-col justify-center px-4 font-[montserrat] md:px-16">
+      <section className="flex h-screen flex-col justify-center px-4 font-[montserrat] md:px-20">
         <div className="text-[#474747]">
           <h1 className="text-[22px] font-bold sm:text-[40px] lg:text-[60px] xl:text-[75px]">
             Create your <span className="font-extrabold text-[#4CA3FF]">Dynamic NFT</span> <br />
@@ -29,14 +63,17 @@ export default function LandingPage() {
           <div className="my-8 flex flex-col gap-y-6 sm:flex-row sm:gap-x-16">
             <Dialog open={isOpen} onOpenChange={handleOpenChange}>
               <DialogTrigger asChild>
-                <Button className="h-full w-fit bg-gradient-to-r from-[#5656F2] to-[#4CA3FF] leading-[normal] font-bold">
+                <Button className="h-full w-fit bg-gradient-to-r from-[#5656F2] to-[#4CA3FF] leading-[normal] font-bold transition-transform duration-200 ease-in-out hover:scale-105 focus:scale-105 active:scale-100">
                   <div className="flex items-center px-10 py-2 text-xl">
                     <span className="pr-2">Try it out</span>
                     <ArrowRightIcon className="h-4 w-4 font-bold" />
                   </div>
                 </Button>
               </DialogTrigger>
-              <SetRolePopup onOpenChange={handleOpenChange} />
+              <SetRolePopup
+                onOpenChange={handleOpenChange}
+                onConfirm={(role) => onLogin(role, handleOpenChange)}
+              />
             </Dialog>
 
             <Link
@@ -44,7 +81,7 @@ export default function LandingPage() {
               className="flex flex-col justify-center text-xl"
               target="_blank"
             >
-              <div className="flex gap-2 text-[#4CA3FF]">
+              <div className="flex gap-2 text-[#4CA3FF] transition-transform duration-200 ease-in-out hover:scale-105">
                 <CirclePlay className="h-8 w-8 rounded-2xl shadow-[0px_15px_20px_#4ca3ff33]" />
                 <span className="font-bold">See how it works</span>
               </div>
