@@ -5,6 +5,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { useState } from "react";
 import { createNetworkConfig, SuiClientProvider, WalletProvider } from "@mysten/dapp-kit";
 import { getFullnodeUrl } from "@mysten/sui/client";
+import { registerSlushWallet } from "@mysten/slush-wallet";
 
 interface AppProviderProps {
   children: React.ReactNode;
@@ -16,6 +17,8 @@ const { networkConfig } = createNetworkConfig({
   localnet: { url: getFullnodeUrl("localnet") },
   mainnet: { url: getFullnodeUrl("mainnet") },
 });
+
+registerSlushWallet("Exclusuive");
 
 export const AppProvider = ({ children }: AppProviderProps) => {
   const [queryClient] = useState(
