@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Role } from "@/types/user";
+import { CheckIcon } from "lucide-react";
 
 interface SetRolePopupProps {
   onOpenChange: (open: boolean) => void;
@@ -45,7 +46,7 @@ const SetRolePopup = ({ onOpenChange, onConfirm }: SetRolePopupProps) => {
   return (
     <DialogContent className="sm:max-w-md">
       <DialogHeader>
-        <DialogTitle>Select Your Role</DialogTitle>
+        <DialogTitle className="text-[#474747]">Select Your Role</DialogTitle>
         <DialogDescription>Choose the appropriate role for your account.</DialogDescription>
       </DialogHeader>
 
@@ -54,12 +55,9 @@ const SetRolePopup = ({ onOpenChange, onConfirm }: SetRolePopupProps) => {
           <div
             key={role.id}
             className={cn(
-              "flex cursor-pointer items-center gap-3 rounded-lg border p-3 transition-all",
-              "hover:bg-accent hover:border-accent-foreground/20",
-              "focus:ring-ring focus:ring-2 focus:ring-offset-2 focus:outline-none",
-              selectedRole?.id === role.id
-                ? "bg-primary/10 border-primary/50 ring-primary/20 ring-2"
-                : "bg-background border-border",
+              "flex cursor-pointer items-center gap-3 rounded-lg border p-3",
+              "hover:border-[#4CA3FF] hover:bg-[#4CA3FF]/10",
+              selectedRole?.id === role.id ? "border-[#4CA3FF] bg-[#4CA3FF]/10" : "border-border",
             )}
             onClick={() => handleRoleSelect(role)}
             tabIndex={0}
@@ -69,10 +67,10 @@ const SetRolePopup = ({ onOpenChange, onConfirm }: SetRolePopupProps) => {
           >
             <div className="text-2xl">{role.icon}</div>
             <div className="min-w-0 flex-1">
-              <h4 className="text-sm leading-none font-medium">{role.name}</h4>
+              <h4 className="text-sm leading-none font-medium text-[#474747]">{role.name}</h4>
               <p className="text-muted-foreground mt-1 text-xs">{role.description}</p>
             </div>
-            {selectedRole?.id === role.id && <div className="bg-primary h-2 w-2 rounded-full" />}
+            {selectedRole?.id === role.id && <CheckIcon className="h-4 w-4 text-[#4CA3FF]" />}
           </div>
         ))}
       </div>
@@ -81,7 +79,11 @@ const SetRolePopup = ({ onOpenChange, onConfirm }: SetRolePopupProps) => {
         <Button variant="outline" onClick={() => onOpenChange(false)} className="w-full sm:w-auto">
           Cancel
         </Button>
-        <Button onClick={handleConfirm} disabled={!selectedRole} className="w-full sm:w-auto">
+        <Button
+          onClick={handleConfirm}
+          disabled={!selectedRole}
+          className="w-full bg-gradient-to-r from-[#5656F2] to-[#4CA3FF] text-white sm:w-auto"
+        >
           Confirm
         </Button>
       </DialogFooter>
