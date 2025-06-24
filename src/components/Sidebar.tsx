@@ -116,7 +116,9 @@ export default function Sidebar() {
   // 모바일 오버레이 메뉴
   const MobileSidebar = () => (
     <div
-      className={`${open ? "block" : "hidden"} absolute top-0 right-0 z-30 h-screen w-2/3 bg-gray-300 p-6 backdrop-blur-sm`}
+      className={`fixed top-0 right-0 z-30 h-screen w-2/3 bg-gray-300 p-6 transition-transform duration-300 ease-in-out sm:hidden ${
+        open ? "translate-x-0" : "translate-x-full"
+      }`}
       aria-label="Sidebar menu"
     >
       <X
