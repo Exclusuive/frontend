@@ -31,7 +31,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   return (
     <QueryClientProvider client={queryClient}>
       <SuiClientProvider networks={networkConfig} defaultNetwork="testnet">
-        <WalletProvider>
+        <WalletProvider autoConnect={true}>
           {children}
           <ReactQueryDevtools initialIsOpen={false} />
         </WalletProvider>

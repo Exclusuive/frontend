@@ -29,20 +29,26 @@ export default function LandingPage() {
       login(account.address, selectedRole.id);
       navigate("/setCollection");
     } else {
-      connect(
-        { wallet: wallets[0] },
-        {
-          onSuccess: (wallet: any) => {
-            if (wallet.accounts[0].address) {
-              login(wallet.accounts[0].address, selectedRole.id);
-              navigate("/setCollection");
-            }
+      const wallet = wallets.find((w) => w.name.includes("Slush"))
+        ? wallets.find((w) => w.name.includes("Slush"))
+        : wallets[0];
+
+      if (wallet) {
+        connect(
+          { wallet },
+          {
+            onSuccess: (wallet: any) => {
+              if (wallet.accounts[0].address) {
+                login(wallet.accounts[0].address, selectedRole.id);
+                navigate("/setCollection");
+              }
+            },
+            onError: () => {
+              window.alert("Failed to connect wallet");
+            },
           },
-          onError: () => {
-            window.alert("Failed to connect wallet");
-          },
-        },
-      );
+        );
+      }
     }
   };
 
