@@ -8,23 +8,24 @@ import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { CirclePlusIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useCollectionStore } from "@/stores/useCollectionStore";
+import { Collection } from "@/types/collection";
 
 const collections = [
   {
     name: "Art Collection",
-    address: "0x1234567890123456789012345678901234567890",
+    address: "0x123456789012345678901234567890123456781ascdasdcsaㅇ90",
     description: "Art Collection",
     imgUrl: "https://picsum.photos/200/300",
   },
   {
     name: "Music Collection",
-    address: "0x1234567890123456789012345678901234567890",
+    address: "0x1234567890123456789012345678901asdcsdc2345617890",
     description: "Music Collection",
     imgUrl: "https://picsum.photos/200/300",
   },
   {
     name: "Sports Collection",
-    address: "0x1234567890123456789012345678901234567890",
+    address: "0x12345678901234567890123456789012acaccas34567890",
     description: "Sports Collection",
     imgUrl: "https://picsum.photos/200/300",
   },
@@ -32,7 +33,7 @@ const collections = [
 
 const SetCollectionPage = () => {
   const { user, setRole } = useAuthStore();
-  const { setCollectionAddress } = useCollectionStore();
+  const { setCollection } = useCollectionStore();
   const [changeRoleOpen, setChangeRoleOpen] = useState(false);
   const navigate = useNavigate();
   const handleChangeRole = (selectedRole: Role) => {
@@ -63,8 +64,8 @@ const SetCollectionPage = () => {
     alert("추후 구현 예정입니다.");
   };
 
-  const handleSelectCollection = (address: string) => {
-    setCollectionAddress(address);
+  const handleSelectCollection = (collection: Collection) => {
+    setCollection(collection);
     navigate(`/${user.role}`);
   };
 
@@ -108,7 +109,7 @@ const SetCollectionPage = () => {
               <button
                 type="button"
                 className={`w-full cursor-pointer rounded-lg border px-4 py-3 text-left transition-colors focus:ring-2 focus:ring-blue-500 focus:outline-none`}
-                onClick={() => handleSelectCollection(col.address)}
+                onClick={() => handleSelectCollection(col)}
               >
                 <div className="flex items-center gap-2">
                   <img src={col.imgUrl} alt="collection" className="h-10 w-10 rounded-full" />

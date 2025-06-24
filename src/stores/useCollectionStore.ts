@@ -5,7 +5,6 @@ import { Collection } from "@/types/collection";
 interface CollectionState {
   collection: Collection | null;
   setCollection: (collection: Collection) => void;
-  setCollectionAddress: (address: string) => void;
 }
 
 export const useCollectionStore = create<CollectionState>()(
@@ -14,9 +13,6 @@ export const useCollectionStore = create<CollectionState>()(
       collection: null,
       setCollection: (collection: Collection) => {
         set({ collection });
-      },
-      setCollectionAddress: (address: string) => {
-        set({ collection: { address, imgUrl: "", name: "", description: "" } });
       },
     }),
     {
