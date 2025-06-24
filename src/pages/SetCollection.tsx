@@ -70,7 +70,7 @@ const SetCollectionPage = () => {
   };
 
   return (
-    <div className="mx-auto mt-16 w-full max-w-2xl rounded-lg bg-white p-6 px-10 shadow-md sm:w-1/2">
+    <div className="mx-auto mt-16 w-full max-w-2xl rounded-lg bg-white p-6 px-10 sm:w-1/2 sm:shadow-md">
       <h1 className="mb-6 text-center text-2xl font-bold text-[#474747]">컬렉션 선택</h1>
 
       <div className="mt-8 rounded-lg border bg-gray-50 p-4 text-gray-800">

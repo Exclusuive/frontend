@@ -1,8 +1,6 @@
-// import { useState } from "react";
-
 import { Badge } from "@/components/ui/badge";
 
-// import { Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useCollectionStore } from "@/stores/useCollectionStore";
@@ -18,19 +16,23 @@ const menuItems = [
 ];
 
 export default function Sidebar() {
-  //   const [open, setOpen] = useState(false);
   const { user } = useAuthStore();
   const { collection } = useCollectionStore();
 
-  //   const mobileMenu = (
-  //     <div className="p-2 md:hidden">
-  //       <Menu size={24} onClick={() => setOpen(true)} />
-  //     </div>
-  //   );
-
   return (
     <div>
-      {/* <div className="sm:hidden">{mobileMenu}</div> */}
+      <div className="flex border-b bg-gray-100 p-4 sm:hidden">
+        <Link
+          to="/"
+          className="font-Exclusuive flex-1 text-center text-[24px] font-bold tracking-wider"
+        >
+          Exclu
+          <span className="inline-block -translate-y-1 font-extrabold text-[#4DA2FF]">Sui</span>
+          ve
+        </Link>
+        <Menu size={24} className="my-auto ml-auto" />
+      </div>
+
       <div className="hidden h-screen w-64 flex-col border-r bg-white p-4 shadow-sm sm:flex">
         <Link to="/" className="font-Exclusuive text-center text-[32px] font-bold tracking-wider">
           Exclu
@@ -83,7 +85,18 @@ export default function Sidebar() {
                 <AccordionContent>
                   <div className="flex flex-col gap-y-2 pl-4">
                     {item.subMenu.map((sub, subIdx) => (
-                      <div key={subIdx} className="cursor-pointer text-sm text-[#636363]">
+                      <div
+                        key={subIdx}
+                        className="cursor-pointer text-sm text-[#636363] transition-transform duration-150 ease-in-out hover:scale-105 focus:scale-105 active:scale-100"
+                        tabIndex={0}
+                        role="button"
+                        aria-label={typeof sub === "string" ? sub : undefined}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            (e.target as HTMLElement).click();
+                          }
+                        }}
+                      >
                         {sub}
                       </div>
                     ))}
