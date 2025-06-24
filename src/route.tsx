@@ -3,6 +3,7 @@ import { lazy } from "react";
 import { paths } from "@/config/paths";
 import { default as AppRoot, ErrorBoundary as AppRootErrorBoundary } from "@/components/root";
 import { AdminLayout } from "@/layouts/AdminLayout";
+import AdminProtectedRouter from "./components/provider/AdminProtectedRouter";
 
 const LandingPage = lazy(() => import("@/pages/LandingPage"));
 const SetCollectionPage = lazy(() => import("@/pages/SetCollection"));
@@ -21,9 +22,11 @@ const router = createBrowserRouter([
   {
     path: paths.adminPage.path,
     element: (
-      <AdminLayout>
-        <AppRoot />
-      </AdminLayout>
+      <AdminProtectedRouter>
+        <AdminLayout>
+          <AppRoot />
+        </AdminLayout>
+      </AdminProtectedRouter>
     ),
     ErrorBoundary: AppRootErrorBoundary,
     children: [

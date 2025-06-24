@@ -10,9 +10,24 @@ import { useNavigate } from "react-router-dom";
 import { useCollectionStore } from "@/stores/useCollectionStore";
 
 const collections = [
-  { id: "1", name: "Art Collection", address: "0x1234567890123456789012345678901234567890" },
-  { id: "2", name: "Music Collection", address: "0x1234567890123456789012345678901234567890" },
-  { id: "3", name: "Sports Collection", address: "0x1234567890123456789012345678901234567890" },
+  {
+    name: "Art Collection",
+    address: "0x1234567890123456789012345678901234567890",
+    description: "Art Collection",
+    imgUrl: "https://picsum.photos/200/300",
+  },
+  {
+    name: "Music Collection",
+    address: "0x1234567890123456789012345678901234567890",
+    description: "Music Collection",
+    imgUrl: "https://picsum.photos/200/300",
+  },
+  {
+    name: "Sports Collection",
+    address: "0x1234567890123456789012345678901234567890",
+    description: "Sports Collection",
+    imgUrl: "https://picsum.photos/200/300",
+  },
 ];
 
 const SetCollectionPage = () => {
@@ -54,53 +69,65 @@ const SetCollectionPage = () => {
   };
 
   return (
-    <div className="mx-auto mt-16 w-1/2 max-w-2xl rounded-lg bg-white p-6 shadow-md">
-      <h1 className="mb-6 text-center text-2xl font-bold">컬렉션 선택</h1>
+    <div className="mx-auto mt-16 w-full max-w-2xl rounded-lg bg-white p-6 px-10 shadow-md sm:w-1/2">
+      <h1 className="mb-6 text-center text-2xl font-bold text-[#474747]">컬렉션 선택</h1>
 
       <div className="mt-8 rounded-lg border bg-gray-50 p-4 text-gray-800">
-        <div className="mb-2 font-semibold">내 프로필</div>
-        <div className="flex items-center gap-2">
-          <img src={user.profile.avatar} alt="profile" className="h-10 w-10 rounded-full" />
+        <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
           <div>
-            <div className="text-sm font-bold">{user.profile.name}</div>
-            <div className="text-sm">
-              <span className="font-medium">지갑 주소:</span> {user.address.slice(0, 6)}...
-              {user.address.slice(-4)}
-            </div>
-            <div className="text-sm">
-              <span className="font-medium">역할:</span> {user.role}
+            <div className="mb-2 font-semibold text-[#474747]">내 프로필</div>
+            <div className="flex items-center gap-2">
+              <img src={user.profile.avatar} alt="profile" className="h-10 w-10 rounded-full" />
+              <div>
+                <div className="text-sm font-bold text-[#474747]">{user.profile.name}</div>
+                <div className="text-sm text-[#636363]">
+                  <span className="font-medium">지갑 주소:</span> {user.address.slice(0, 6)}...
+                  {user.address.slice(-4)}
+                </div>
+                <div className="text-sm text-[#636363]">
+                  <span className="font-medium">역할:</span> {user.role}
+                </div>
+              </div>
             </div>
           </div>
+          <Dialog open={changeRoleOpen} onOpenChange={setChangeRoleOpen}>
+            <DialogTrigger>
+              <Button className="mt-8 w-full bg-[#4CA3FF] text-white hover:bg-[#4CA3FF]/90">
+                역할 변경하기
+              </Button>
+            </DialogTrigger>
+            <SetRolePopup onOpenChange={setChangeRoleOpen} onConfirm={handleChangeRole} />
+          </Dialog>
         </div>
-
-        <Dialog open={changeRoleOpen} onOpenChange={setChangeRoleOpen}>
-          <DialogTrigger>
-            <Button className="mt-8 w-full">역할 변경하기</Button>
-          </DialogTrigger>
-          <SetRolePopup onOpenChange={setChangeRoleOpen} onConfirm={handleChangeRole} />
-        </Dialog>
       </div>
 
       <ul className="mt-8 space-y-3">
         {collections.map((col) => {
           return (
-            <li key={col.id}>
+            <li key={col.address}>
               <button
                 type="button"
                 className={`w-full cursor-pointer rounded-lg border px-4 py-3 text-left transition-colors focus:ring-2 focus:ring-blue-500 focus:outline-none`}
                 onClick={() => handleSelectCollection(col.address)}
               >
-                {col.name}
+                <div className="flex items-center gap-2">
+                  <img src={col.imgUrl} alt="collection" className="h-10 w-10 rounded-full" />
+                  <div>
+                    <div className="text-sm font-bold text-[#474747]">{col.name}</div>
+                    <div className="text-sm text-[#636363]">{col.description}</div>
+                  </div>
+                </div>
               </button>
             </li>
           );
         })}
       </ul>
-
-      <CirclePlusIcon
-        className="mx-auto my-6 h-10 w-10 cursor-pointer transition-transform duration-200 ease-in-out hover:scale-110"
-        onClick={handleAddCollection}
-      />
+      {user.role === "admin" && (
+        <CirclePlusIcon
+          className="mx-auto my-6 h-10 w-10 cursor-pointer transition-transform duration-200 ease-in-out hover:scale-110"
+          onClick={handleAddCollection}
+        />
+      )}
     </div>
   );
 };
