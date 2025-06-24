@@ -124,10 +124,15 @@ const SetCollectionPage = () => {
         })}
       </ul>
       {user.role === "admin" && (
-        <CirclePlusIcon
-          className="mx-auto my-6 h-10 w-10 cursor-pointer transition-transform duration-200 ease-in-out hover:scale-110"
+        <button
+          type="button"
+          className="my-6 flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-dashed border-[#4CA3FF] py-3 transition-colors hover:bg-blue-50 focus:ring-2 focus:ring-blue-500 focus:outline-none active:bg-blue-100"
           onClick={handleAddCollection}
-        />
+          aria-label="컬렉션 추가"
+        >
+          <CirclePlusIcon className="h-8 w-8 text-[#4CA3FF]" aria-hidden="true" />
+          <span className="text-md font-bold text-[#474747]">Add Collection</span>
+        </button>
       )}
     </div>
   );

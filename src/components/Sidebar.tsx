@@ -61,7 +61,7 @@ function CollectionSection({ collection }: { collection: any }) {
       </div>
       <Link to="/setCollection" className="w-full">
         <Button variant="secondary" className="w-full">
-          Change Collection
+          Change Collection/Role
         </Button>
       </Link>
     </div>
