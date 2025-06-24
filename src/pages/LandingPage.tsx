@@ -9,43 +9,41 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { useCurrentAccount, useWallets } from "@mysten/dapp-kit";
 import { useConnectWallet } from "@mysten/dapp-kit";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { Role } from "@/types/User";
+import { Role } from "@/types/user";
 
-export const onLogin = (selectedRole: Role, handleOpenChange: (open: boolean) => void) => {
+export default function LandingPage() {
   const wallets = useWallets();
   const { mutate: connect } = useConnectWallet();
   const account = useCurrentAccount();
   const { login } = useAuthStore();
   const navigate = useNavigate();
-  if (!selectedRole) return;
-  if (account) {
-    login(account.address, selectedRole.id);
-    handleOpenChange(false);
-    navigate("/setCollection");
-  } else {
-    connect(
-      { wallet: wallets[0] },
-      {
-        onSuccess: (wallet: any) => {
-          if (wallet.accounts[0].address) {
-            login(wallet.accounts[0].address, selectedRole.id);
-            handleOpenChange(false);
-            navigate("/setCollection");
-          }
-        },
-        onError: () => {
-          window.alert("Failed to connect wallet");
-        },
-      },
-    );
-  }
-};
-
-export default function LandingPage() {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOpenChange = (newOpen: boolean) => {
     setIsOpen(newOpen);
+  };
+
+  const handleLogin = (selectedRole: Role) => {
+    if (!selectedRole) return;
+    if (account) {
+      login(account.address, selectedRole.id);
+      navigate("/setCollection");
+    } else {
+      connect(
+        { wallet: wallets[0] },
+        {
+          onSuccess: (wallet: any) => {
+            if (wallet.accounts[0].address) {
+              login(wallet.accounts[0].address, selectedRole.id);
+              navigate("/setCollection");
+            }
+          },
+          onError: () => {
+            window.alert("Failed to connect wallet");
+          },
+        },
+      );
+    }
   };
 
   return (
@@ -70,10 +68,7 @@ export default function LandingPage() {
                   </div>
                 </Button>
               </DialogTrigger>
-              <SetRolePopup
-                onOpenChange={handleOpenChange}
-                onConfirm={(role) => onLogin(role, handleOpenChange)}
-              />
+              <SetRolePopup onOpenChange={handleOpenChange} onConfirm={handleLogin} />
             </Dialog>
 
             <Link

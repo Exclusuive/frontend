@@ -1,3 +1,4 @@
+import { Role } from "@/types/user";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
@@ -16,6 +17,7 @@ interface AuthState {
   user: User | null;
   login: (address: string, role: string) => boolean;
   logout: () => void;
+  setRole: (role: Role) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -42,8 +44,8 @@ export const useAuthStore = create<AuthState>()(
           user: null,
         });
       },
-      setRole: (role: string) => {
-        set((state) => (state.user ? { user: { ...state.user, role } } : state));
+      setRole: (role: Role) => {
+        set((state) => (state.user ? { user: { ...state.user, role: role.id } } : state));
       },
     }),
     {

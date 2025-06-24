@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Role } from "@/types/User";
+import { Role } from "@/types/user";
 
 interface SetRolePopupProps {
   onOpenChange: (open: boolean) => void;
@@ -23,8 +23,8 @@ const defaultRoles: Role[] = [
     icon: "👨‍💼",
   },
   {
-    id: "user",
-    name: "User",
+    id: "member",
+    name: "Member",
     description: "View and interact with NFT collections and characters",
     icon: "👤",
   },
@@ -38,7 +38,6 @@ const SetRolePopup = ({ onOpenChange, onConfirm }: SetRolePopupProps) => {
 
   const handleConfirm = () => {
     if (!selectedRole) return;
-    window.alert("구현 예정");
     onConfirm(selectedRole);
     onOpenChange(false);
   };

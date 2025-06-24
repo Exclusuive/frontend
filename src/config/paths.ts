@@ -7,4 +7,12 @@ export const paths = {
     path: "/setCollection",
     getHref: () => "/setCollection",
   },
+  adminPage: {
+    path: "/admin",
+    getHref: () => "/admin",
+  },
+  memberPage: {
+    path: "/member",
+    getHref: () => "/member",
+  },
 };

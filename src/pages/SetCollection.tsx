@@ -3,20 +3,28 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useState } from "react";
-import { Role } from "@/types/User";
+import { Role } from "@/types/user";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
-import { onLogin } from "./LandingPage";
+import { CirclePlusIcon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useCollectionStore } from "@/stores/useCollectionStore";
 
 const collections = [
-  { id: "1", name: "Art Collection" },
-  { id: "2", name: "Music Collection" },
-  { id: "3", name: "Sports Collection" },
+  { id: "1", name: "Art Collection", address: "0x1234567890123456789012345678901234567890" },
+  { id: "2", name: "Music Collection", address: "0x1234567890123456789012345678901234567890" },
+  { id: "3", name: "Sports Collection", address: "0x1234567890123456789012345678901234567890" },
 ];
 
 const SetCollectionPage = () => {
-  const { user } = useAuthStore();
+  const { user, setRole } = useAuthStore();
+  const { setCollectionAddress } = useCollectionStore();
   const [changeRoleOpen, setChangeRoleOpen] = useState(false);
-  const [selectedCollection, setSelectedCollection] = useState<string | undefined>(undefined);
+  const navigate = useNavigate();
+  const handleChangeRole = (selectedRole: Role) => {
+    if (!selectedRole) return;
+    setRole(selectedRole);
+    setChangeRoleOpen(false);
+  };
 
   if (!user) {
     return (
@@ -31,10 +39,7 @@ const SetCollectionPage = () => {
             </Button>
           </div>
         </DialogTrigger>
-        <SetRolePopup
-          onOpenChange={setChangeRoleOpen}
-          onConfirm={(role) => onLogin(role, setChangeRoleOpen)}
-        />
+        <SetRolePopup onOpenChange={setChangeRoleOpen} onConfirm={handleChangeRole} />
       </Dialog>
     );
   }
@@ -43,9 +48,9 @@ const SetCollectionPage = () => {
     alert("추후 구현 예정입니다.");
   };
 
-  const onRoleConfirm = (selectedRole: Role) => {
-    if (!selectedRole) return;
-    setChangeRoleOpen(false);
+  const handleSelectCollection = (address: string) => {
+    setCollectionAddress(address);
+    navigate(`/${user.role}`);
   };
 
   return (
@@ -72,30 +77,18 @@ const SetCollectionPage = () => {
           <DialogTrigger>
             <Button className="mt-8 w-full">역할 변경하기</Button>
           </DialogTrigger>
-          <SetRolePopup onOpenChange={setChangeRoleOpen} onConfirm={onRoleConfirm} />
+          <SetRolePopup onOpenChange={setChangeRoleOpen} onConfirm={handleChangeRole} />
         </Dialog>
       </div>
 
       <ul className="mt-8 space-y-3">
         {collections.map((col) => {
-          const isSelected = selectedCollection === col.id;
           return (
             <li key={col.id}>
               <button
                 type="button"
-                className={`w-full rounded-lg border px-4 py-3 text-left transition-colors focus:ring-2 focus:ring-blue-500 focus:outline-none ${
-                  isSelected
-                    ? "border-blue-600 bg-blue-600 text-white"
-                    : "border-gray-300 bg-gray-50 hover:bg-blue-50"
-                }`}
-                aria-pressed={isSelected}
-                tabIndex={0}
-                onClick={() => setSelectedCollection(col.id)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    setSelectedCollection(col.id);
-                  }
-                }}
+                className={`w-full cursor-pointer rounded-lg border px-4 py-3 text-left transition-colors focus:ring-2 focus:ring-blue-500 focus:outline-none`}
+                onClick={() => handleSelectCollection(col.address)}
               >
                 {col.name}
               </button>
@@ -103,16 +96,11 @@ const SetCollectionPage = () => {
           );
         })}
       </ul>
-      {selectedCollection && (
-        <div className="mt-6 text-center text-lg text-green-600">
-          선택된 컬렉션: {collections.find((c) => c.id === selectedCollection)?.name}
-          <p>삭제예정입니닷!</p>
-        </div>
-      )}
 
-      <Button onClick={handleAddCollection} className="mt-8 w-full">
-        컬렉션 추가하기!
-      </Button>
+      <CirclePlusIcon
+        className="mx-auto my-6 h-10 w-10 cursor-pointer transition-transform duration-200 ease-in-out hover:scale-110"
+        onClick={handleAddCollection}
+      />
     </div>
   );
 };
