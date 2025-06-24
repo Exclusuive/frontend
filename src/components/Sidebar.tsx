@@ -7,12 +7,25 @@ import { Button } from "./ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion";
 import { useState } from "react";
 
-const menuItems = [
+interface MenuItem {
+  label: string;
+  subMenu?: string[];
+}
+
+const AdminMenuItems = [
   {
     label: "My Collection",
     subMenu: ["Overview", "Collection", "Membership & Items", "Market", "Mission"],
   },
   { label: "My Page", subMenu: ["Profile", "Billing"] },
+];
+
+const UserMenuItems = [
+  {
+    label: "My Collection",
+    subMenu: ["My Character", "Market", "Mission"],
+  },
+  { label: "My Page", subMenu: ["Profile", "Explore Collections"] },
 ];
 
 function ProfileSection({ user }: { user: any }) {
@@ -55,14 +68,14 @@ function CollectionSection({ collection }: { collection: any }) {
   );
 }
 
-function MenuSection() {
+function MenuSection({ menuItems }: { menuItems: MenuItem[] }) {
   return (
     <Accordion
       type="multiple"
       className="flex w-full flex-col gap-2"
-      defaultValue={menuItems.map((item) => item.label)}
+      defaultValue={menuItems.map((item: MenuItem) => item.label)}
     >
-      {menuItems.map((item) => (
+      {menuItems.map((item: MenuItem) => (
         <AccordionItem key={item.label} value={item.label}>
           <AccordionTrigger className="text-md text-left font-semibold text-[#474747]">
             {item.label}
@@ -70,7 +83,7 @@ function MenuSection() {
           {item.subMenu && (
             <AccordionContent>
               <div className="flex flex-col gap-y-2 pl-4">
-                {item.subMenu.map((sub, subIdx) => (
+                {item.subMenu.map((sub: string, subIdx: number) => (
                   <div
                     key={subIdx}
                     className="cursor-pointer text-sm text-[#636363] transition-transform duration-150 ease-in-out hover:scale-105 focus:scale-105 active:scale-100"
@@ -114,7 +127,7 @@ export default function Sidebar() {
       <div className="mt-8 flex flex-col">
         <ProfileSection user={user} />
         <CollectionSection collection={collection} />
-        <MenuSection />
+        <MenuSection menuItems={user?.role === "admin" ? AdminMenuItems : UserMenuItems} />
       </div>
     </div>
   );
@@ -130,7 +143,7 @@ export default function Sidebar() {
       <div className="mt-8" />
       <ProfileSection user={user} />
       <CollectionSection collection={collection} />
-      <MenuSection />
+      <MenuSection menuItems={user?.role === "admin" ? AdminMenuItems : UserMenuItems} />
     </div>
   );
 

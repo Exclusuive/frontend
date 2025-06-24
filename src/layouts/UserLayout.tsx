@@ -1,5 +1,11 @@
 import React from "react";
+import Sidebar from "@/components/Sidebar";
 
 export function UserLayout({ children }: { children: React.ReactNode }) {
-  return children;
+  return (
+    <div className="flex min-h-screen w-full flex-col sm:flex-row">
+      <Sidebar />
+      <div className="flex-1">{children}</div>
+    </div>
+  );
 }

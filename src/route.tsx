@@ -4,6 +4,8 @@ import { paths } from "@/config/paths";
 import { default as AppRoot, ErrorBoundary as AppRootErrorBoundary } from "@/components/root";
 import { AdminLayout } from "@/layouts/AdminLayout";
 import AdminProtectedRouter from "./components/provider/AdminProtectedRouter";
+import UserProtectedRouter from "./components/provider/UserProtectedRouter";
+import { UserLayout } from "./layouts/UserLayout";
 
 const LandingPage = lazy(() => import("@/pages/LandingPage"));
 const SetCollectionPage = lazy(() => import("@/pages/SetCollection"));
@@ -38,7 +40,13 @@ const router = createBrowserRouter([
   },
   {
     path: paths.memberPage.path,
-    element: <MemberPage />,
+    element: (
+      <UserProtectedRouter>
+        <UserLayout>
+          <MemberPage />
+        </UserLayout>
+      </UserProtectedRouter>
+    ),
   },
 
   {
