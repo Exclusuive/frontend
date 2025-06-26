@@ -335,8 +335,11 @@ export const useGetAllCollection = () => {
     client
       .queryEvents({
         query: { MoveEventType: `${ORIGIN_PACKAGE_ID}::collection::CollectionCreated` },
+        order: "ascending",
+        limit: 20,
       })
       .then(async (data) => {
+        console.log(data.data);
         const collectionIds = data.data.map((event: any) => {
           return event.parsedJson.id;
         });

@@ -8,6 +8,7 @@ import ExploreCollectionModal from "./ExploreCollectionModal";
 
 export default function ExploreCollections() {
   const { collections } = useGetAllCollection();
+  console.log(collections);
 
   return (
     <div className="container w-full space-y-6 p-4">
