@@ -21,7 +21,7 @@ const AdminMenuItems = [
       { label: "Dashboard", path: paths.adminDashboard.path },
       { label: "Collection", path: paths.adminCollection.path },
       { label: "Items", path: paths.adminItems.path },
-      // { label: "Market", path: paths.adminMarket.path },
+      { label: "Market", path: paths.adminMarket.path },
       // { label: "Mission", path: paths.adminMission.path },
     ],
   },

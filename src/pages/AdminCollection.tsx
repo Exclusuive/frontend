@@ -24,7 +24,7 @@ const collectionSchema = z.object({
   tickets: z.array(z.string()).optional(),
 });
 
-type CollectionFormData = z.infer<typeof collectionSchema>;
+export type CollectionFormData = z.infer<typeof collectionSchema>;
 
 const AdminCollection = () => {
   const { collection, setCollection } = useCollectionStore();
@@ -39,7 +39,7 @@ const AdminCollection = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isDirty, dirtyFields },
+    formState: { errors, isDirty },
     reset,
     setValue,
     trigger,
@@ -171,9 +171,9 @@ const AdminCollection = () => {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(handleSave)} className="space-y-4">
-              <div className="flex flex-col gap-2 transition-all duration-300 ease-in-out lg:flex-row">
+              <div className="flex flex-col gap-2 transition-all duration-300 ease-in-out xl:flex-row">
                 {/* Image Section */}
-                <div className="w-full lg:w-1/2">
+                <div className="w-full xl:w-1/2">
                   <ImageUpload
                     currentImageUrl={collection.imgUrl}
                     onImageChange={handleImageChange}
@@ -182,7 +182,7 @@ const AdminCollection = () => {
                 </div>
 
                 {/* Details Section */}
-                <div className="flex w-full flex-col gap-y-4 p-4 lg:w-1/2">
+                <div className="flex w-full flex-col gap-y-4 p-4 xl:w-1/2">
                   {/* Collection Name */}
                   <div>
                     <label htmlFor="name" className="mb-1 block text-sm font-medium text-gray-700">

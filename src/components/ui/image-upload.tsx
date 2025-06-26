@@ -9,6 +9,7 @@ interface ImageUploadProps {
   onImageChange: (imageUrl: string, file?: File) => void;
   isEditing: boolean;
   className?: string;
+  showUrl?: boolean;
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({
@@ -16,6 +17,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   onImageChange,
   isEditing,
   className,
+  showUrl = true,
 }) => {
   const [imagePreview, setImagePreview] = useState<string>(currentImageUrl);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
@@ -165,19 +167,21 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       </div>
 
       {/* URL Input as fallback */}
-      <div className="space-y-2">
-        <label htmlFor="imgUrl" className="block text-sm font-medium text-gray-700">
-          Or enter image URL
-        </label>
-        <Input
-          id="imgUrl"
-          value={imagePreview}
-          onChange={(e) => handleUrlChange(e.target.value)}
-          className="w-full"
-          placeholder="Enter image URL"
-          disabled={!!uploadedFile}
-        />
-      </div>
+      {showUrl && (
+        <div className="space-y-2">
+          <label htmlFor="imgUrl" className="block text-sm font-medium text-gray-700">
+            Or enter image URL
+          </label>
+          <Input
+            id="imgUrl"
+            value={imagePreview}
+            onChange={(e) => handleUrlChange(e.target.value)}
+            className="w-full"
+            placeholder="Enter image URL"
+            disabled={!!uploadedFile}
+          />
+        </div>
+      )}
     </div>
   );
 };

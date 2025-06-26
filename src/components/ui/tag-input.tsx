@@ -11,12 +11,7 @@ interface TagInputProps {
   isEditing: boolean;
   placeholder?: string;
   className?: string;
-  setValue?: (
-    name: any,
-    value: any,
-    options?: { shouldDirty?: boolean; shouldTouch?: boolean },
-  ) => void;
-  fieldName?: string;
+
   onTagsChange?: (tags: string[]) => void;
 }
 
@@ -26,8 +21,7 @@ const TagInput: React.FC<TagInputProps> = ({
   isEditing,
   placeholder = "Enter tag name",
   className,
-  setValue,
-  fieldName,
+
   onTagsChange,
 }) => {
   const [tagInputs, setTagInputs] = useState<string[]>([]);

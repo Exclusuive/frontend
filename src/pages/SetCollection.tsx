@@ -10,11 +10,13 @@ import { useNavigate } from "react-router-dom";
 import { useCollectionStore } from "@/stores/useCollectionStore";
 import { Collection } from "@/types/collection";
 import { collections } from "@/data/collections";
+// import CreateCollection from "@/components/CreateCollection";
 
 const SetCollectionPage = () => {
   const { user, setRole } = useAuthStore();
   const { setCollection } = useCollectionStore();
   const [changeRoleOpen, setChangeRoleOpen] = useState(false);
+  const [createCollectionOpen, setCreateCollectionOpen] = useState(false);
   const navigate = useNavigate();
   const handleChangeRole = (selectedRole: Role) => {
     if (!selectedRole) return;
@@ -39,10 +41,6 @@ const SetCollectionPage = () => {
       </Dialog>
     );
   }
-
-  const handleAddCollection = () => {
-    alert("추후 구현 예정입니다.");
-  };
 
   const handleSelectCollection = (collection: Collection) => {
     setCollection(collection);
@@ -104,15 +102,19 @@ const SetCollectionPage = () => {
         })}
       </ul>
       {user.role === "admin" && (
-        <button
-          type="button"
-          className="my-6 flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-dashed border-[#4CA3FF] py-3 transition-colors hover:bg-blue-50 focus:ring-2 focus:ring-blue-500 focus:outline-none active:bg-blue-100"
-          onClick={handleAddCollection}
-          aria-label="컬렉션 추가"
-        >
-          <CirclePlusIcon className="h-8 w-8 text-[#4CA3FF]" aria-hidden="true" />
-          <span className="text-md font-bold text-[#474747]">Add Collection</span>
-        </button>
+        <Dialog open={createCollectionOpen} onOpenChange={setCreateCollectionOpen}>
+          <DialogTrigger asChild>
+            <button
+              type="button"
+              className="my-6 flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-dashed border-[#4CA3FF] py-3 transition-colors hover:bg-blue-50 focus:ring-2 focus:ring-blue-500 focus:outline-none active:bg-blue-100"
+              aria-label="컬렉션 추가"
+            >
+              <CirclePlusIcon className="h-8 w-8 text-[#4CA3FF]" aria-hidden="true" />
+              <span className="text-md font-bold text-[#474747]">Add Collection</span>
+            </button>
+          </DialogTrigger>
+          {/* <CreateCollection /> */}
+        </Dialog>
       )}
     </div>
   );
