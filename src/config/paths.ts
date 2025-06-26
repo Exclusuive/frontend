@@ -11,6 +11,18 @@ export const paths = {
     path: "/admin",
     getHref: () => "/admin",
   },
+  adminDashboard: {
+    path: "",
+    getHref: () => "/admin",
+  },
+  adminCollection: {
+    path: "collection",
+    getHref: () => "/admin/collection",
+  },
+  adminItems: {
+    path: "items",
+    getHref: () => "/admin/items",
+  },
   memberPage: {
     path: "/member",
     getHref: () => "/member",

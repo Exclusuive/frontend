@@ -6,10 +6,12 @@ import { AdminLayout } from "@/layouts/AdminLayout";
 import AdminProtectedRouter from "./components/provider/AdminProtectedRouter";
 import UserProtectedRouter from "./components/provider/UserProtectedRouter";
 import { UserLayout } from "./layouts/UserLayout";
+import AdminItems from "./pages/AdminItems";
 
 const LandingPage = lazy(() => import("@/pages/LandingPage"));
 const SetCollectionPage = lazy(() => import("@/pages/SetCollection"));
-const AdminPage = lazy(() => import("@/pages/Admin"));
+const AdminDashboard = lazy(() => import("@/pages/AdminDashboard"));
+const AdminCollection = lazy(() => import("@/pages/AdminCollection"));
 const MemberPage = lazy(() => import("@/pages/Member"));
 
 const router = createBrowserRouter([
@@ -33,8 +35,16 @@ const router = createBrowserRouter([
     ErrorBoundary: AppRootErrorBoundary,
     children: [
       {
-        path: "",
-        element: <AdminPage />,
+        path: paths.adminDashboard.path,
+        element: <AdminDashboard />,
+      },
+      {
+        path: paths.adminCollection.path,
+        element: <AdminCollection />,
+      },
+      {
+        path: paths.adminItems.path,
+        element: <AdminItems />,
       },
     ],
   },

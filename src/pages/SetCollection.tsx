@@ -9,27 +9,7 @@ import { CirclePlusIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useCollectionStore } from "@/stores/useCollectionStore";
 import { Collection } from "@/types/collection";
-
-const collections = [
-  {
-    name: "Art Collection",
-    address: "0x123456789012345678901234567890123456781ascdasdcsaㅇ90",
-    description: "Art Collection",
-    imgUrl: "https://picsum.photos/200/300",
-  },
-  {
-    name: "Music Collection",
-    address: "0x1234567890123456789012345678901asdcsdc2345617890",
-    description: "Music Collection",
-    imgUrl: "https://picsum.photos/200/300",
-  },
-  {
-    name: "Sports Collection",
-    address: "0x12345678901234567890123456789012acaccas34567890",
-    description: "Sports Collection",
-    imgUrl: "https://picsum.photos/200/300",
-  },
-];
+import { collections } from "@/data/collections";
 
 const SetCollectionPage = () => {
   const { user, setRole } = useAuthStore();

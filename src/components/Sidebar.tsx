@@ -1,31 +1,55 @@
 import { Badge } from "@/components/ui/badge";
 import { Menu, X } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useCollectionStore } from "@/stores/useCollectionStore";
 import { Button } from "./ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion";
 import { useState } from "react";
+import { paths } from "@/config/paths";
+import { cn } from "@/lib/utils";
 
 interface MenuItem {
   label: string;
-  subMenu?: string[];
+  subMenu?: { label: string; path: string }[];
 }
 
 const AdminMenuItems = [
   {
     label: "My Collection",
-    subMenu: ["Overview", "Collection", "Membership & Items", "Market", "Mission"],
+    subMenu: [
+      { label: "Dashboard", path: paths.adminDashboard.path },
+      { label: "Collection", path: paths.adminCollection.path },
+      { label: "Items", path: paths.adminItems.path },
+      // { label: "Market", path: paths.adminMarket.path },
+      // { label: "Mission", path: paths.adminMission.path },
+    ],
   },
-  { label: "My Page", subMenu: ["Profile", "Billing"] },
+  {
+    label: "My Page",
+    subMenu: [
+      { label: "Profile", path: paths.memberPage.path },
+      { label: "Billing", path: paths.memberPage.path },
+    ],
+  },
 ];
 
 const UserMenuItems = [
   {
     label: "My Collection",
-    subMenu: ["My Character", "Market", "Mission"],
+    subMenu: [
+      { label: "My Membership", path: paths.memberPage.path },
+      // { label: "Market", path: paths.userMarket.path },
+      // { label: "Mission", path: paths.userMission.path },
+    ],
   },
-  { label: "My Page", subMenu: ["Profile", "Explore Collections"] },
+  {
+    label: "My Page",
+    subMenu: [
+      { label: "Profile", path: paths.memberPage.path },
+      { label: "Explore Collections", path: paths.memberPage.path },
+    ],
+  },
 ];
 
 function ProfileSection({ user }: { user: any }) {
@@ -56,7 +80,13 @@ function CollectionSection({ collection }: { collection: any }) {
         <img src={collection.imgUrl} alt="collection" className="h-10 w-10 rounded-full" />
         <div>
           <div className="text-sm font-bold text-[#474747]">{collection.name}</div>
-          <div className="text-sm text-[#636363]">{collection.description}</div>
+          <a
+            href={`https://suiscan.xyz/address/${collection.address}`}
+            target="_blank"
+            className="text-sm text-blue-500 underline"
+          >
+            view on Explorer
+          </a>
         </div>
       </div>
       <Link to="/setCollection" className="w-full">
@@ -69,6 +99,17 @@ function CollectionSection({ collection }: { collection: any }) {
 }
 
 function MenuSection({ menuItems }: { menuItems: MenuItem[] }) {
+  const location = useLocation();
+
+  const isActivePath = (path: string) => {
+    // Handle root admin path
+    if (path === "" && location.pathname === "/admin") {
+      return true;
+    }
+    // Handle other paths
+    return location.pathname === `/admin/${path}`;
+  };
+
   return (
     <Accordion
       type="multiple"
@@ -83,22 +124,27 @@ function MenuSection({ menuItems }: { menuItems: MenuItem[] }) {
           {item.subMenu && (
             <AccordionContent>
               <div className="flex flex-col gap-y-2 pl-4">
-                {item.subMenu.map((sub: string, subIdx: number) => (
-                  <div
-                    key={subIdx}
-                    className="cursor-pointer text-sm text-[#636363] transition-transform duration-150 ease-in-out hover:scale-105 focus:scale-105 active:scale-100"
-                    tabIndex={0}
-                    role="button"
-                    aria-label={typeof sub === "string" ? sub : undefined}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        (e.target as HTMLElement).click();
-                      }
-                    }}
-                  >
-                    {sub}
-                  </div>
-                ))}
+                {item.subMenu.map((sub: { label: string; path: string }, subIdx: number) => {
+                  const isActive = isActivePath(sub.path);
+                  return (
+                    <div
+                      key={subIdx}
+                      className="cursor-pointer text-sm transition-transform duration-150 ease-in-out hover:scale-105 focus:scale-105 active:scale-100"
+                      tabIndex={0}
+                      role="button"
+                    >
+                      <Link
+                        to={sub.path}
+                        className={cn(
+                          "block w-full",
+                          isActive ? "font-medium text-[#4DA2FF]" : "text-[#636363]",
+                        )}
+                      >
+                        {sub.label}
+                      </Link>
+                    </div>
+                  );
+                })}
               </div>
             </AccordionContent>
           )}
@@ -112,7 +158,6 @@ export default function Sidebar() {
   const [open, setOpen] = useState(false);
   const { user } = useAuthStore();
   const { collection } = useCollectionStore();
-
   // 모바일 오버레이 메뉴
   const MobileSidebar = () => (
     <div
