@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { useCollectionStore } from "@/stores/useCollectionStore";
 import { Collection } from "@/types/collection";
 import { collections } from "@/data/collections";
-// import CreateCollection from "@/components/CreateCollection";
+import CreateCollection from "@/components/CreateCollection";
 
 const SetCollectionPage = () => {
   const { user, setRole } = useAuthStore();
@@ -113,7 +113,7 @@ const SetCollectionPage = () => {
               <span className="text-md font-bold text-[#474747]">Add Collection</span>
             </button>
           </DialogTrigger>
-          {/* <CreateCollection /> */}
+          <CreateCollection onOpenChange={setCreateCollectionOpen} />
         </Dialog>
       )}
     </div>

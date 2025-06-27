@@ -13,18 +13,33 @@ export const collections = [
         address: "0x123456789012345678901234567890123456781ascdasdcsaㅇ90",
         imgUrl: "https://picsum.photos/200/300",
         layer: "Layer 1",
+        description: "Item 1 Description",
+        properties: [
+          { name: "Property 1", value: "Value 1" },
+          { name: "Property 2", value: "Value 2" },
+        ],
       },
       {
         name: "Item 2",
         address: "0x123456789012345678901234567890123456781ascdasdcsaㅇ90",
         imgUrl: "https://picsum.photos/200/300",
         layer: "Layer 2",
+        description: "Item 2 Description",
+        properties: [
+          { name: "Property 1", value: "Value 1" },
+          { name: "Property 2", value: "Value 2" },
+        ],
       },
       {
         name: "Item 3",
         address: "0x123456789012345678901234567890123456781ascdasdcsaㅇ90",
         imgUrl: "https://picsum.photos/200/300",
         layer: "Layer 3",
+        description: "Item 3 Description",
+        properties: [
+          { name: "Property 1", value: "Value 1" },
+          { name: "Property 2", value: "Value 2" },
+        ],
       },
     ],
   },

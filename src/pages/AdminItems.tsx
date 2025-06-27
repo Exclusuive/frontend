@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import AddItem from "@/components/AddItem";
 
 const AdminItems = () => {
   const { collection } = useCollectionStore();
@@ -42,7 +43,7 @@ const AdminItems = () => {
   };
 
   const [mintAddress, setMintAddress] = useState("");
-
+  const [open, setOpen] = useState(false);
   const onMintAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMintAddress(e.target.value);
   };
@@ -71,10 +72,23 @@ const AdminItems = () => {
                 />
               </div>
               <h4 className="mb-1 text-sm font-medium">{item.name}</h4>
-              <p className="truncate text-xs text-gray-500">
-                {item.address.slice(0, 6)}...{item.address.slice(-4)}
+              <p className="mb-1 truncate text-xs text-gray-500">{item.description}</p>
+              <p className="flex flex-wrap gap-2">
+                {item.properties?.map((property) => (
+                  <Badge key={property.name} variant="secondary">
+                    {property.name}: {property.value}
+                  </Badge>
+                ))}
               </p>
-              <div className="mt-4 flex flex-col items-center justify-center gap-2 md:flex-row">
+              <a
+                href={`https://suiscan.xyz/address/${item.address}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-blue-500 hover:text-blue-600"
+              >
+                view on Explorer
+              </a>
+              <div className="mt-auto flex items-center justify-center gap-2 md:flex-row">
                 <Input
                   onChange={onMintAddressChange}
                   placeholder="Enter Member address"
@@ -92,7 +106,7 @@ const AdminItems = () => {
           ))}
 
         {/* Add New Item Button */}
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <div className="flex min-h-[300px] cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-blue-300 p-4 transition-colors hover:border-blue-400 hover:bg-blue-50">
               <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-blue-600 hover:text-blue-800">
@@ -103,6 +117,7 @@ const AdminItems = () => {
               </div>
             </div>
           </DialogTrigger>
+          <AddItem layer={layer} onOpenChange={setOpen} />
         </Dialog>
       </div>
     </div>
