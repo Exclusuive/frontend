@@ -3,9 +3,8 @@ import { DialogContent, DialogFooter, DialogHeader, DialogTitle } from "./ui/dia
 import ImageUpload from "./ui/image-upload";
 import { Input } from "./ui/input";
 import { z } from "zod";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Textarea } from "./ui/textarea";
-import TagInput from "./ui/tag-input";
 import PropertyInput from "./ui/property-input";
 import { Button } from "./ui/button";
 import { useCollectionStore } from "@/stores/useCollectionStore";
@@ -32,7 +31,7 @@ export type ItemCreateFormData = z.infer<typeof itemSchema>;
 
 const AddItem = ({ layer, onOpenChange }: AddItemProps) => {
   const { collection, setCollection } = useCollectionStore();
-  const { register, handleSubmit, setValue, watch, control } = useForm<ItemCreateFormData>({
+  const { register, handleSubmit, setValue, watch } = useForm<ItemCreateFormData>({
     resolver: zodResolver(itemSchema),
     defaultValues: {
       name: "",

@@ -175,7 +175,7 @@ const AdminCollection = () => {
                 {/* Image Section */}
                 <div className="w-full xl:w-1/2">
                   <ImageUpload
-                    currentImageUrl={collection.imgUrl}
+                    currentImageUrl={collection.imgUrl || ""}
                     onImageChange={handleImageChange}
                     isEditing={isEditing}
                   />
