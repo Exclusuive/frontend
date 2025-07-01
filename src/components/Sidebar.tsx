@@ -158,10 +158,11 @@ export default function Sidebar() {
   const [open, setOpen] = useState(false);
   const { user } = useAuthStore();
   const { collection } = useCollectionStore();
+
   // 모바일 오버레이 메뉴
   const MobileSidebar = () => (
     <div
-      className={`fixed top-0 right-0 z-30 h-screen w-2/3 bg-gray-300 p-6 transition-transform duration-300 ease-in-out sm:hidden ${
+      className={`fixed top-0 right-0 z-30 h-screen w-2/3 bg-white p-4 shadow-lg transition-transform duration-300 ease-in-out sm:hidden ${
         open ? "translate-x-0" : "translate-x-full"
       }`}
       aria-label="Sidebar menu"
@@ -182,7 +183,7 @@ export default function Sidebar() {
   // 데스크탑 고정 사이드바
   const DesktopSidebar = () => (
     <div className="hidden h-screen w-64 flex-col border-r bg-white p-4 shadow-sm sm:flex">
-      <Link to="/" className="font-Exclusuive text-center text-[32px] font-bold tracking-wider">
+      <Link to="/" className="font-Exclusuive text-center text-[28px] font-bold tracking-wider">
         Exclu
         <span className="inline-block -translate-y-2 font-extrabold text-[#4DA2FF]">Sui</span>
         ve
@@ -197,23 +198,23 @@ export default function Sidebar() {
   return (
     <div>
       {/* 모바일 헤더 */}
-      <div className="flex border-b bg-gray-100 p-4 sm:hidden">
-        <Link
-          to="/"
-          className="font-Exclusuive flex-1 text-center text-[24px] font-bold tracking-wider"
-        >
-          Exclu
-          <span className="inline-block -translate-y-1 font-extrabold text-[#4DA2FF]">Sui</span>
-          ve
-        </Link>
-        <Menu
+      <div className="flex items-center justify-between border-b bg-white p-4 shadow-sm sm:hidden">
+        <div className="font-Exclusuive flex-1 text-center text-[24px] font-bold tracking-wider">
+          <Link to="/" className="transition-opacity hover:opacity-80">
+            Exclu
+            <span className="inline-block -translate-y-1 font-extrabold text-[#4DA2FF]">Sui</span>
+            ve
+          </Link>
+        </div>
+        <button
+          className="flex items-center justify-center p-2 text-[#474747] transition-colors hover:text-[#4DA2FF]"
           onClick={() => setOpen((v) => !v)}
-          size={24}
-          className="absolute top-5 right-4 cursor-pointer"
           aria-label="Open sidebar"
-        />
-        <MobileSidebar />
+        >
+          <Menu size={24} />
+        </button>
       </div>
+      <MobileSidebar />
       {/* 데스크탑 사이드바 */}
       <DesktopSidebar />
     </div>

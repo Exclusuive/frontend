@@ -1,11 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+
 import { useCollectionStore } from "@/stores/useCollectionStore";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -13,6 +7,9 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import AddItem from "@/components/AddItem";
+import ItemsbyLayer from "@/components/ItemsbyLayer";
+import { getItemsByLayer } from "@/lib/items";
+import { Item } from "@/types/collection";
 
 const AdminItems = () => {
   const { collection } = useCollectionStore();
@@ -35,12 +32,7 @@ const AdminItems = () => {
   }
 
   const layers = collection.layers || [];
-  const items = collection.items || [];
-
-  // Filter items by layer
-  const getItemsByLayer = (layerName: string) => {
-    return items.filter((item) => item.layer === layerName);
-  };
+  const items: Item[] = collection.items || [];
 
   const [mintAddress, setMintAddress] = useState("");
   const [open, setOpen] = useState(false);
@@ -53,16 +45,16 @@ const AdminItems = () => {
   };
 
   // Render items grid component
-  const renderItemsGrid = (layer: string) => (
+  const renderItemsGrid = (layer: string, items: Item[]) => (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold">{layer}</h3>
-        <Badge variant="secondary">{getItemsByLayer(layer).length} items</Badge>
+        <Badge variant="secondary"> {getItemsByLayer(items, layer).length} items</Badge>
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 2xl:grid-cols-3">
-        {getItemsByLayer(layer).length > 0 &&
-          getItemsByLayer(layer).map((item, index) => (
+        {getItemsByLayer(items, layer).length > 0 &&
+          getItemsByLayer(items, layer).map((item: Item, index: number) => (
             <div key={`${item.name}-${index}`} className="rounded-lg border p-4">
               <div className="mb-3 aspect-square">
                 <img
@@ -71,23 +63,26 @@ const AdminItems = () => {
                   className="h-full w-full rounded-md object-cover"
                 />
               </div>
-              <h4 className="mb-1 text-sm font-medium">{item.name}</h4>
+              <h4 className="mb-1 text-sm font-medium">
+                {item.name}{" "}
+                <a
+                  href={`https://suiscan.xyz/address/${item.address}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-blue-500 hover:text-blue-600"
+                >
+                  view on Explorer
+                </a>
+              </h4>
               <p className="mb-1 truncate text-xs text-gray-500">{item.description}</p>
-              <p className="flex flex-wrap gap-2">
+              <p className="my-2 flex flex-wrap gap-2">
                 {item.properties?.map((property) => (
                   <Badge key={property.name} variant="secondary">
                     {property.name}: {property.value}
                   </Badge>
                 ))}
               </p>
-              <a
-                href={`https://suiscan.xyz/address/${item.address}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-blue-500 hover:text-blue-600"
-              >
-                view on Explorer
-              </a>
+
               <div className="mt-auto flex items-center justify-center gap-2 md:flex-row">
                 <Input
                   onChange={onMintAddressChange}
@@ -130,49 +125,7 @@ const AdminItems = () => {
           <CardTitle className="text-xl font-bold">Items by Layer</CardTitle>
           <p className="text-sm text-gray-600">Collection: {collection.name}</p>
         </CardHeader>
-        <CardContent>
-          {layers.length === 0 ? (
-            <div className="py-8 text-center">
-              <p className="text-gray-500">No layers defined for this collection.</p>
-            </div>
-          ) : (
-            <>
-              <div className="block xl:hidden">
-                <Accordion type="single" collapsible defaultValue={layers[0]}>
-                  {layers.map((layer) => (
-                    <AccordionItem key={layer} value={layer}>
-                      <AccordionTrigger className="cursor-pointer px-4 py-3 text-left">
-                        <div className="flex w-full items-center justify-between">
-                          <span className="font-medium">{layer}</span>
-                          <Badge variant="secondary">{getItemsByLayer(layer).length}</Badge>
-                        </div>
-                      </AccordionTrigger>
-                      <AccordionContent className="px-4">{renderItemsGrid(layer)}</AccordionContent>
-                    </AccordionItem>
-                  ))}
-                </Accordion>
-              </div>
-
-              <div className="hidden xl:block">
-                <Tabs defaultValue={layers[0]} className="w-full">
-                  <TabsList className="grid w-full grid-cols-2 lg:grid-cols-3">
-                    {layers.map((layer) => (
-                      <TabsTrigger key={layer} value={layer} className="text-sm">
-                        {layer}
-                      </TabsTrigger>
-                    ))}
-                  </TabsList>
-
-                  {layers.map((layer) => (
-                    <TabsContent key={layer} value={layer} className="mt-6">
-                      {renderItemsGrid(layer)}
-                    </TabsContent>
-                  ))}
-                </Tabs>
-              </div>
-            </>
-          )}
-        </CardContent>
+        <ItemsbyLayer layers={layers} items={items} renderItemsGrid={renderItemsGrid} />
       </Card>
     </div>
   );
