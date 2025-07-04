@@ -4,7 +4,24 @@ export interface Item {
   imgUrl: string;
   layer: string;
   description?: string;
-  properties?: { name: string; value: string }[];
+  attributes?: Attribute[];
+}
+
+export interface Attribute {
+  name: string;
+  value: number;
+}
+
+export interface Market {
+  address: string;
+  name: string;
+  slots: Slot[];
+}
+
+export interface Slot {
+  items: Item[];
+  price: number;
+  conditions?: { name: string; value: number }[];
 }
 
 export interface Collection {
@@ -13,7 +30,8 @@ export interface Collection {
   name: string;
   description?: string;
   layers?: string[];
-  properties?: string[];
+  attributes?: string[];
   tickets?: string[];
   items?: Item[];
+  market?: Market[];
 }

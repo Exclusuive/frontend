@@ -12,32 +12,32 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
-interface Property {
+interface Attribute {
   name: string;
-  value: string;
+  value: number;
 }
 
-interface PropertyInputProps {
+interface AttributeInputProps {
   label: string;
-  properties: Property[];
-  propertyNameOptions: string[];
+  attributes: Attribute[];
+  attributeNameOptions: string[];
   isEditing: boolean;
   valuePlaceholder?: string;
   className?: string;
-  onPropertiesChange?: (properties: Property[]) => void;
+  onAttributesChange?: (attributes: Attribute[]) => void;
 }
 
-const PropertyInput: React.FC<PropertyInputProps> = ({
+const AttributeInput: React.FC<AttributeInputProps> = ({
   label,
-  properties,
-  propertyNameOptions,
+  attributes,
+  attributeNameOptions,
   isEditing,
   valuePlaceholder = "Property value",
   className,
-  onPropertiesChange,
+  onAttributesChange,
 }) => {
-  const [localProperties, setLocalProperties] = useState<Property[]>(properties);
-  const [newProperty, setNewProperty] = useState<Property>({ name: "", value: "" });
+  const [localAttributes, setLocalAttributes] = useState<Attribute[]>(attributes);
+  const [newAttribute, setNewAttribute] = useState<Attribute>({ name: "", value: 0 });
 
   const colors = [
     "bg-blue-100 text-blue-800",
@@ -52,28 +52,40 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
 
   // Update local properties when props change
   useEffect(() => {
-    setLocalProperties(properties);
-  }, [properties]);
+    setLocalAttributes(attributes);
+  }, [attributes]);
 
   const handleAddProperty = () => {
-    if (newProperty.name.trim() && newProperty.value.trim()) {
-      const updatedProperties = [...localProperties, { ...newProperty }];
-      setLocalProperties(updatedProperties);
+    if (newAttribute.name.trim() && newAttribute.value) {
+      const existingIndex = localAttributes.findIndex((attr) => attr.name === newAttribute.name);
 
-      if (onPropertiesChange) {
-        onPropertiesChange(updatedProperties);
+      let updatedAttributes;
+      if (existingIndex !== -1) {
+        // Update existing attribute value
+        updatedAttributes = localAttributes.map((attr, index) =>
+          index === existingIndex ? { ...attr, value: newAttribute.value } : attr,
+        );
+      } else {
+        // Add new attribute
+        updatedAttributes = [...localAttributes, { ...newAttribute }];
       }
 
-      setNewProperty({ name: "", value: "" });
+      setLocalAttributes(updatedAttributes);
+
+      if (onAttributesChange) {
+        onAttributesChange(updatedAttributes);
+      }
+
+      setNewAttribute({ name: "", value: 0 });
     }
   };
 
   const handleRemoveProperty = (index: number) => {
-    const updatedProperties = localProperties.filter((_, i) => i !== index);
-    setLocalProperties(updatedProperties);
+    const updatedAttributes = localAttributes.filter((_, i) => i !== index);
+    setLocalAttributes(updatedAttributes);
 
-    if (onPropertiesChange) {
-      onPropertiesChange(updatedProperties);
+    if (onAttributesChange) {
+      onAttributesChange(updatedAttributes);
     }
   };
 
@@ -90,13 +102,13 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
 
       {/* Display existing properties */}
       <div className="flex flex-wrap gap-2">
-        {localProperties.map((property, index) => (
+        {localAttributes?.map((attribute, index) => (
           <Badge
-            key={`${property.name}-${index}`}
+            key={`${attribute.name}-${index}`}
             className={cn("flex items-center gap-1 text-sm", colors[index % colors.length])}
           >
-            <span className="font-medium">{property.name}:</span>
-            <span>{property.value}</span>
+            <span className="font-medium">{attribute.name}:</span>
+            <span>{attribute.value}</span>
             {isEditing && (
               <button
                 type="button"
@@ -115,14 +127,14 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
         <div className="space-y-2">
           <div className="flex gap-2">
             <Select
-              value={newProperty.name}
-              onValueChange={(value) => setNewProperty({ ...newProperty, name: value })}
+              value={newAttribute.name}
+              onValueChange={(value) => setNewAttribute({ ...newAttribute, name: value })}
             >
               <SelectTrigger className="flex-1">
                 <SelectValue placeholder="Select property name" />
               </SelectTrigger>
               <SelectContent>
-                {propertyNameOptions.map((option) => (
+                {attributeNameOptions.map((option) => (
                   <SelectItem key={option} value={option}>
                     {option}
                   </SelectItem>
@@ -132,8 +144,8 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
             <Input
               type="number"
               placeholder={valuePlaceholder}
-              value={newProperty.value}
-              onChange={(e) => setNewProperty({ ...newProperty, value: e.target.value })}
+              value={newAttribute.value}
+              onChange={(e) => setNewAttribute({ ...newAttribute, value: Number(e.target.value) })}
               onKeyDown={handleKeyDown}
               className="flex-1"
             />
@@ -142,7 +154,7 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
               variant="outline"
               size="sm"
               onClick={handleAddProperty}
-              disabled={!newProperty.name.trim() || !newProperty.value.trim()}
+              disabled={!newAttribute.name.trim() || newAttribute.value === 0}
               className="flex items-center gap-1"
             >
               <Plus className="h-3 w-3" />
@@ -155,4 +167,4 @@ const PropertyInput: React.FC<PropertyInputProps> = ({
   );
 };
 
-export default PropertyInput;
+export default AttributeInput;

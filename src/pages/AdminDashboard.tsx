@@ -1,13 +1,12 @@
-import { Card, CardTitle, CardHeader, CardDescription, CardContent } from "@/components/ui/card";
-import { ArrowUpRight, CirclePlusIcon } from "lucide-react";
+import { Card, CardTitle, CardHeader, CardContent } from "@/components/ui/card";
+import { ArrowUpRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import DashboardCard, { DashboardCardProps } from "@/components/DashboardCard";
-import ItemsbyLayer from "@/components/ItemsbyLayer";
+import ItemsbyCategory from "@/components/ItemsbyCategory";
 import { useCollectionStore } from "@/stores/useCollectionStore";
 import { Item } from "@/types/collection";
 import { getItemsByLayer } from "@/lib/items";
-import { Tabs } from "@/components/ui/tabs";
-import { TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+
 import { Button } from "@/components/ui/button";
 
 // 카드 데이터 배열
@@ -80,15 +79,15 @@ const renderItemsGrid = (layer: string, items: Item[]) => {
                 {item.description && (
                   <p className="truncate text-xs text-gray-500">{item.description}</p>
                 )}
-                {item.properties && item.properties.length > 0 && (
+                {item.attributes && item.attributes.length > 0 && (
                   <div className="flex flex-wrap gap-1">
-                    {item.properties.map((property) => (
+                    {item.attributes.map((attribute) => (
                       <Badge
-                        key={property.name}
+                        key={attribute.name}
                         variant="secondary"
                         className="px-1.5 py-0.5 text-[11px]"
                       >
-                        {property.name}: {property.value}
+                        {attribute.name}: {attribute.value}
                       </Badge>
                     ))}
                   </div>
@@ -141,20 +140,79 @@ const AdminDashboard = () => {
 
   return (
     <div className="flex h-full flex-col p-10">
-      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <section className="grid hidden grid-cols-1 gap-4 sm:grid sm:grid-cols-2 lg:grid-cols-4">
         {dashboardCards.map((card, idx) => (
           <DashboardCard key={card.title + idx} {...card} />
         ))}
       </section>
 
-      <div className="my-10 grid min-h-0 flex-1 grid-cols-1 gap-4 xl:grid-cols-2">
+      <div className="my-4 grid min-h-0 flex-1 grid-cols-1 gap-4 xl:grid-cols-3">
         <section className="flex min-h-0 flex-1 flex-col">
           <Card className="flex min-h-0 flex-1 flex-col">
             <CardHeader>
               <CardTitle>Item Analysis by Layer</CardTitle>
             </CardHeader>
             <CardContent>
-              <ItemsbyLayer layers={layers} items={items} renderItemsGrid={renderItemsGrid} />
+              <ItemsbyCategory
+                categories={layers}
+                items={items}
+                getItemsByCategory={getItemsByLayer}
+                renderItemsGrid={renderItemsGrid}
+              />
+            </CardContent>
+          </Card>
+        </section>
+        <section className="flex min-h-0 min-h-full flex-1 flex-col">
+          <Card className="flex min-h-0 flex-1 flex-col">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle>Current Missions</CardTitle>
+              <div className="my-4 flex flex-col gap-2">
+                <Button className="w-fit bg-blue-500 px-10">미션 추가</Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {/* 미션 탭 UI */}
+              <div className="w-full">
+                {/* shadcn Tabs 컴포넌트 사용 */}
+                <div className="w-full overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead>
+                      <tr>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">
+                          미션명
+                        </th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">
+                          설명
+                        </th>
+                        <th className="px-4 py-2 text-center text-xs font-medium text-gray-500">
+                          참여자 수
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {mockMissions.map((mission) => (
+                        <tr key={mission.id} className="hover:bg-gray-50">
+                          <td className="px-4 py-2 text-sm font-medium text-gray-900">
+                            {mission.name}
+                          </td>
+                          <td className="px-4 py-2 text-sm text-gray-700">{mission.description}</td>
+                          <td className="px-4 py-2 text-center text-sm text-gray-900">
+                            {mission.participants}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+
+                  {mockMissions.length === 0 && (
+                    <div>
+                      <div className="py-8 text-center text-sm text-gray-400">
+                        등록된 미션이 없습니다.
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
             </CardContent>
           </Card>
         </section>

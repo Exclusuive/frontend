@@ -6,13 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import AddItem from "@/components/AddItem";
-import ItemsbyLayer from "@/components/ItemsbyLayer";
+import AddItem, { ItemCreateFormData } from "@/components/AddItem";
+import ItemsbyCategory from "@/components/ItemsbyCategory";
 import { getItemsByLayer } from "@/lib/items";
 import { Item } from "@/types/collection";
 
 const AdminItems = () => {
-  const { collection } = useCollectionStore();
+  const { collection, setCollection } = useCollectionStore();
 
   if (!collection) {
     return (
@@ -43,7 +43,21 @@ const AdminItems = () => {
   const onMint = () => {
     console.log(mintAddress);
   };
-
+  const onSubmit = (data: ItemCreateFormData) => {
+    if (collection) {
+      setCollection({
+        ...collection,
+        items: [
+          ...(collection.items || []),
+          {
+            ...data,
+            address: `0x${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`,
+          },
+        ],
+      });
+    }
+    setOpen(false);
+  };
   // Render items grid component
   const renderItemsGrid = (layer: string, items: Item[]) => (
     <div className="space-y-4">
@@ -76,9 +90,9 @@ const AdminItems = () => {
               </h4>
               <p className="mb-1 truncate text-xs text-gray-500">{item.description}</p>
               <p className="my-2 flex flex-wrap gap-2">
-                {item.properties?.map((property) => (
-                  <Badge key={property.name} variant="secondary">
-                    {property.name}: {property.value}
+                {item.attributes?.map((attribute) => (
+                  <Badge key={attribute.name} variant="secondary">
+                    {attribute.name}: {attribute.value}
                   </Badge>
                 ))}
               </p>
@@ -112,7 +126,7 @@ const AdminItems = () => {
               </div>
             </div>
           </DialogTrigger>
-          <AddItem layer={layer} onOpenChange={setOpen} />
+          <AddItem category={layer} onSubmit={onSubmit} collection={collection} />
         </Dialog>
       </div>
     </div>
@@ -125,7 +139,12 @@ const AdminItems = () => {
           <CardTitle className="text-xl font-bold">Items by Layer</CardTitle>
           <p className="text-sm text-gray-600">Collection: {collection.name}</p>
         </CardHeader>
-        <ItemsbyLayer layers={layers} items={items} renderItemsGrid={renderItemsGrid} />
+        <ItemsbyCategory
+          categories={layers}
+          items={items}
+          getItemsByCategory={getItemsByLayer}
+          renderItemsGrid={renderItemsGrid}
+        />
       </Card>
     </div>
   );

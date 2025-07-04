@@ -5,7 +5,7 @@ export const collections = [
     description: "Art Collection",
     imgUrl: "https://picsum.photos/200/300",
     layers: ["Layer 1", "Layer 2", "Layer 3"],
-    properties: ["Property 1", "Property 2", "Property 3"],
+    attributes: ["Property 1", "Property 2", "Property 3"],
     tickets: ["Ticket 1", "Ticket 2", "Ticket 3"],
     items: [
       {
@@ -14,9 +14,9 @@ export const collections = [
         imgUrl: "https://picsum.photos/200/300",
         layer: "Layer 1",
         description: "Item 1 Description",
-        properties: [
-          { name: "Property 1", value: "Value 1" },
-          { name: "Property 2", value: "Value 2" },
+        attributes: [
+          { name: "Property 1", value: 1 },
+          { name: "Property 2", value: 2 },
         ],
       },
       {
@@ -25,9 +25,9 @@ export const collections = [
         imgUrl: "https://picsum.photos/200/300",
         layer: "Layer 2",
         description: "Item 2 Description",
-        properties: [
-          { name: "Property 1", value: "Value 1" },
-          { name: "Property 2", value: "Value 2" },
+        attributes: [
+          { name: "Property 1", value: 1 },
+          { name: "Property 2", value: 2 },
         ],
       },
       {
@@ -36,9 +36,34 @@ export const collections = [
         imgUrl: "https://picsum.photos/200/300",
         layer: "Layer 3",
         description: "Item 3 Description",
-        properties: [
-          { name: "Property 1", value: "Value 1" },
-          { name: "Property 2", value: "Value 2" },
+        attributes: [
+          { name: "Property 1", value: 1 },
+          { name: "Property 2", value: 2 },
+        ],
+      },
+    ],
+    market: [
+      {
+        address: "0x123456789012345678901234567890123456781ascdasdcsaㅇ90",
+        name: "Market 1",
+        slots: [
+          {
+            items: [
+              {
+                name: "Item 1",
+                address: "0x123456789012345678901234567890123456781ascdasdcsaㅇ90",
+                imgUrl: "https://picsum.photos/200/300",
+                layer: "Layer 1",
+                description: "Item 1 Description",
+                attributes: [
+                  { name: "Property 1", value: 1 },
+                  { name: "Property 2", value: 2 },
+                ],
+              },
+            ],
+            price: 100,
+            conditions: [{ name: "Ticket 1", value: 1 }],
+          },
         ],
       },
     ],
@@ -49,7 +74,7 @@ export const collections = [
     description: "Music Collection",
     imgUrl: "https://picsum.photos/200/300",
     layers: ["Layer 1", "Layer 2", "Layer 3"],
-    properties: ["Property 1", "Property 2", "Property 3"],
+    attributes: ["Property 1", "Property 2", "Property 3"],
     tickets: ["Ticket 1", "Ticket 2", "Ticket 3"],
   },
   {
@@ -58,7 +83,7 @@ export const collections = [
     description: "Sports Collection",
     imgUrl: "https://picsum.photos/200/300",
     layers: ["Layer 1", "Layer 2", "Layer 3"],
-    properties: ["Property 1", "Property 2", "Property 3"],
+    attributes: ["Property 1", "Property 2", "Property 3"],
     tickets: ["Ticket 1", "Ticket 2", "Ticket 3"],
   },
 ];

@@ -8,37 +8,44 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import React from "react";
-import { getItemsByLayer } from "@/lib/items";
-import { Item } from "@/types/collection";
+import { Item, Slot } from "@/types/collection";
 
 // 타입은 필요에 따라 조정하세요.
 type ItemsbyLayerProps = {
-  layers: string[];
+  categories: string[];
   items: any[];
-  renderItemsGrid: (layer: string, items: Item[]) => React.ReactNode;
+  getItemsByCategory: (items: Item[], category: string) => Item[] | Slot[];
+  renderItemsGrid: (category: string, items: Item[]) => React.ReactNode;
 };
 
-const ItemsbyLayer: React.FC<ItemsbyLayerProps> = ({ layers, items, renderItemsGrid }) => {
+const ItemsbyLayer: React.FC<ItemsbyLayerProps> = ({
+  categories,
+  items,
+  getItemsByCategory,
+  renderItemsGrid,
+}) => {
   return (
     <CardContent>
-      {layers.length === 0 ? (
+      {categories.length === 0 ? (
         <div className="py-8 text-center">
-          <p className="text-gray-500">No layers defined for this collection.</p>
+          <p className="text-gray-500">No categories defined for this collection.</p>
         </div>
       ) : (
         <>
           <div className="block xl:hidden">
-            <Accordion type="single" collapsible defaultValue={layers[0]}>
-              {layers.map((layer) => (
-                <AccordionItem key={layer} value={layer}>
+            <Accordion type="single" collapsible defaultValue={categories[0]}>
+              {categories.map((category) => (
+                <AccordionItem key={category} value={category}>
                   <AccordionTrigger className="cursor-pointer px-4 py-3 text-left">
                     <div className="flex w-full items-center justify-between">
-                      <span className="font-medium">{layer}</span>
-                      <Badge variant="secondary">{getItemsByLayer(items, layer).length}</Badge>
+                      <span className="font-medium">{category}</span>
+                      <Badge variant="secondary">
+                        {getItemsByCategory(items, category).length}
+                      </Badge>
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="px-4">
-                    {renderItemsGrid(layer, items)}
+                    {renderItemsGrid(category, items)}
                   </AccordionContent>
                 </AccordionItem>
               ))}
@@ -46,22 +53,22 @@ const ItemsbyLayer: React.FC<ItemsbyLayerProps> = ({ layers, items, renderItemsG
           </div>
 
           <div className="hidden xl:block">
-            <Tabs defaultValue={layers[0]} className="w-full">
+            <Tabs defaultValue={categories[0]} className="w-full">
               <TabsList className="flex h-fit w-full flex-wrap justify-start gap-1 bg-white px-2 pb-1">
-                {layers.map((layer) => (
+                {categories.map((category) => (
                   <TabsTrigger
-                    key={layer}
-                    value={layer}
+                    key={category}
+                    value={category}
                     className="max-w-[120px] min-w-[100px] bg-gray-100 px-4 py-2 text-sm whitespace-nowrap data-[state=active]:bg-blue-400 data-[state=active]:text-white"
                   >
-                    {layer}
+                    {category}
                   </TabsTrigger>
                 ))}
               </TabsList>
 
-              {layers.map((layer) => (
-                <TabsContent key={layer} value={layer} className="mt-6">
-                  {renderItemsGrid(layer, items)}
+              {categories.map((category) => (
+                <TabsContent key={category} value={category} className="mt-6">
+                  {renderItemsGrid(category, items)}
                 </TabsContent>
               ))}
             </Tabs>

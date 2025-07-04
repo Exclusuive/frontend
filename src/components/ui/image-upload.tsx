@@ -129,7 +129,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
               <img
                 src={imagePreview}
                 alt="Uploaded preview"
-                className="h-full w-full object-cover"
+                className="h-full w-full rounded-lg object-cover"
                 onError={handleImageError}
               />
             </div>

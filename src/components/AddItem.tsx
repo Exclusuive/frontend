@@ -5,13 +5,14 @@ import { Input } from "./ui/input";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { Textarea } from "./ui/textarea";
-import PropertyInput from "./ui/property-input";
+import AttributeInput from "./ui/attribute-input";
 import { Button } from "./ui/button";
-import { useCollectionStore } from "@/stores/useCollectionStore";
+import { Collection } from "@/types/collection";
 
 interface AddItemProps {
-  layer: string;
-  onOpenChange: (open: boolean) => void;
+  category: string;
+  onSubmit: (data: ItemCreateFormData) => void;
+  collection: Collection;
 }
 
 const itemSchema = z.object({
@@ -19,44 +20,32 @@ const itemSchema = z.object({
   imgUrl: z.string(),
   layer: z.string(),
   description: z.string().optional(),
-  properties: z.array(
+  attributes: z.array(
     z.object({
       name: z.string(),
-      value: z.string(),
+      value: z.number(),
     }),
   ),
 });
 
 export type ItemCreateFormData = z.infer<typeof itemSchema>;
 
-const AddItem = ({ layer, onOpenChange }: AddItemProps) => {
-  const { collection, setCollection } = useCollectionStore();
+const AddItem = ({ category, onSubmit, collection }: AddItemProps) => {
   const { register, handleSubmit, setValue, watch } = useForm<ItemCreateFormData>({
     resolver: zodResolver(itemSchema),
     defaultValues: {
       name: "",
       imgUrl: "",
-      layer: layer,
+      layer: category,
       description: "",
-      properties: [],
+      attributes: [],
     },
   });
   const imageUrl = watch("imgUrl");
-  const properties = watch("properties");
+  const attributes = watch("attributes");
 
-  const onSubmit = (data: ItemCreateFormData) => {
-    onOpenChange(false);
-    if (collection) {
-      setCollection({
-        ...collection,
-        items: [...(collection.items || []), { ...data, address: "" }],
-      });
-    }
-    console.log(data);
-  };
-
-  const handlePropertiesChange = (newProperties: Array<{ name: string; value: string }>) => {
-    setValue("properties", newProperties);
+  const handleAttributesChange = (newAttributes: Array<{ name: string; value: number }>) => {
+    setValue("attributes", newAttributes);
   };
 
   return (
@@ -88,13 +77,13 @@ const AddItem = ({ layer, onOpenChange }: AddItemProps) => {
           {...register("description")}
         />
 
-        <PropertyInput
-          label="Item Properties"
-          properties={properties || []}
-          propertyNameOptions={collection?.properties || []}
+        <AttributeInput
+          label="Item Attributes"
+          attributes={attributes || []}
+          attributeNameOptions={collection?.attributes || []}
           isEditing={true}
-          valuePlaceholder="Property value"
-          onPropertiesChange={handlePropertiesChange}
+          valuePlaceholder="Attribute value"
+          onAttributesChange={handleAttributesChange}
         />
 
         <DialogFooter className="flex-col gap-2 sm:flex-row">

@@ -20,8 +20,9 @@ const collectionSchema = z.object({
     .max(500, "Description must be less than 500 characters"),
   imgUrl: z.string().optional(),
   layers: z.array(z.string()).optional(),
-  properties: z.array(z.string()).optional(),
+  attributes: z.array(z.string()).optional(),
   tickets: z.array(z.string()).optional(),
+  markets: z.array(z.string()).optional(),
 });
 
 export type CollectionFormData = z.infer<typeof collectionSchema>;
@@ -33,8 +34,9 @@ const AdminCollection = () => {
   const [mintAddress, setMintAddress] = useState<string>("");
   // Temporary state for tags
   const [tempLayers, setTempLayers] = useState<string[]>([]);
-  const [tempProperties, setTempProperties] = useState<string[]>([]);
+  const [tempAttributes, setTempAttributes] = useState<string[]>([]);
   const [tempTickets, setTempTickets] = useState<string[]>([]);
+  const [tempMarkets, setTempMarkets] = useState<string[]>([]);
 
   const {
     register,
@@ -49,8 +51,9 @@ const AdminCollection = () => {
       description: collection?.description || "",
       imgUrl: collection?.imgUrl || "",
       layers: collection?.layers || [],
-      properties: collection?.properties || [],
+      attributes: collection?.attributes || [],
       tickets: collection?.tickets || [],
+      markets: collection?.market?.map((market) => market.name) || [],
     },
   });
 
@@ -61,13 +64,15 @@ const AdminCollection = () => {
         description: collection.description,
         imgUrl: collection.imgUrl,
         layers: collection.layers || [],
-        properties: collection.properties || [],
+        attributes: collection.attributes || [],
         tickets: collection.tickets || [],
+        markets: collection.market?.map((market) => market.name) || [],
       });
       // Reset temporary states
       setTempLayers(collection.layers || []);
-      setTempProperties(collection.properties || []);
+      setTempAttributes(collection.attributes || []);
       setTempTickets(collection.tickets || []);
+      setTempMarkets(collection.market?.map((market) => market.name) || []);
     }
   }, [collection, reset]);
 
@@ -82,8 +87,9 @@ const AdminCollection = () => {
     // Reset temporary states to original values
     if (collection) {
       setTempLayers(collection.layers || []);
-      setTempProperties(collection.properties || []);
+      setTempAttributes(collection.attributes || []);
       setTempTickets(collection.tickets || []);
+      setTempMarkets(collection.market?.map((market) => market.name) || []);
     }
   };
 
@@ -93,8 +99,13 @@ const AdminCollection = () => {
         ...collection,
         ...data,
         layers: tempLayers,
-        properties: tempProperties,
+        attributes: tempAttributes,
         tickets: tempTickets,
+        market: tempMarkets.map((market) => ({
+          name: market,
+          address: collection.market?.find((m) => m.name === market)?.address || "",
+          slots: collection.market?.find((m) => m.name === market)?.slots || [],
+        })),
       };
       setCollection(updatedCollection);
       setIsEditing(false);
@@ -113,12 +124,16 @@ const AdminCollection = () => {
     setTempLayers(layers);
   };
 
-  const handleTempPropertiesChange = (properties: string[]) => {
-    setTempProperties(properties);
+  const handleTempAttributesChange = (attributes: string[]) => {
+    setTempAttributes(attributes);
   };
 
   const handleTempTicketsChange = (tickets: string[]) => {
     setTempTickets(tickets);
+  };
+
+  const handleTempMarketsChange = (markets: string[]) => {
+    setTempMarkets(markets);
   };
 
   const onMintAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -229,8 +244,8 @@ const AdminCollection = () => {
                   {/* Properties */}
                   <TagInput
                     label="Properties"
-                    tags={tempProperties}
-                    onTagsChange={handleTempPropertiesChange}
+                    tags={tempAttributes}
+                    onTagsChange={handleTempAttributesChange}
                     isEditing={isEditing}
                     placeholder="Property name"
                   />
@@ -242,6 +257,15 @@ const AdminCollection = () => {
                     onTagsChange={handleTempTicketsChange}
                     isEditing={isEditing}
                     placeholder="Ticket name"
+                  />
+
+                  {/* Markets */}
+                  <TagInput
+                    label="Markets"
+                    tags={tempMarkets}
+                    onTagsChange={handleTempMarketsChange}
+                    isEditing={isEditing}
+                    placeholder="Market name"
                   />
                 </div>
               </div>
@@ -255,9 +279,11 @@ const AdminCollection = () => {
                       !isDirty &&
                       !uploadedFile &&
                       JSON.stringify(tempLayers) === JSON.stringify(collection?.layers || []) &&
-                      JSON.stringify(tempProperties) ===
-                        JSON.stringify(collection?.properties || []) &&
-                      JSON.stringify(tempTickets) === JSON.stringify(collection?.tickets || [])
+                      JSON.stringify(tempAttributes) ===
+                        JSON.stringify(collection?.attributes || []) &&
+                      JSON.stringify(tempTickets) === JSON.stringify(collection?.tickets || []) &&
+                      JSON.stringify(tempMarkets) ===
+                        JSON.stringify(collection?.market?.map((market) => market.name) || [])
                     }
                     className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700"
                   >

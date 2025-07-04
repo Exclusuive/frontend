@@ -81,7 +81,7 @@ const SetCollectionPage = () => {
       </div>
 
       <ul className="mt-8 space-y-3">
-        {collections.map((col) => {
+        {collections.map((col: Collection) => {
           return (
             <li key={col.address}>
               <button
