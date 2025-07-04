@@ -28,8 +28,8 @@ const AdminMenuItems = [
   {
     label: "My Page",
     subMenu: [
-      { label: "Profile", path: paths.memberPage.path },
-      { label: "Billing", path: paths.memberPage.path },
+      { label: "Profile", path: paths.adminProfile.path },
+      { label: "Billing", path: paths.adminBilling.path },
     ],
   },
 ];
@@ -56,7 +56,7 @@ function ProfileSection({ user }: { user: any }) {
   if (!user) return null;
   return (
     <div className="flex items-center gap-2">
-      <img src={user.profile.avatar} alt="profile" className="h-10 w-10 rounded-full" />
+      <img src={user.profile.imgUrl} alt="profile" className="h-10 w-10 rounded-full" />
       <div>
         <div className="flex items-center gap-2 text-sm font-bold text-[#474747]">
           {user.profile.name}
@@ -182,7 +182,7 @@ export default function Sidebar() {
 
   // 데스크탑 고정 사이드바
   const DesktopSidebar = () => (
-    <div className="hidden h-screen w-64 flex-col border-r bg-white p-4 shadow-sm sm:flex">
+    <div className="hidden h-full min-h-screen w-64 flex-col border-r bg-white p-4 shadow-sm sm:flex">
       <Link to="/" className="font-Exclusuive text-center text-[28px] font-bold tracking-wider">
         Exclu
         <span className="inline-block -translate-y-2 font-extrabold text-[#4DA2FF]">Sui</span>

@@ -42,9 +42,6 @@ const AdminMarket = () => {
   const [conditionOpen, setConditionOpen] = useState(false);
   const [productOpen, setProductOpen] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
-  const [selectedMarket, setSelectedMarket] = useState<string>("");
-
-  console.log(collection);
 
   const getSlotsByMarket = (_items: Item[], marketName: string) => {
     const market = (collection.market || []).find((m) => m.name === marketName);
@@ -82,13 +79,13 @@ const AdminMarket = () => {
     setConditionOpen(false);
   };
 
-  const onAddProduct = (data: ProductFormData, targetSlot: Slot | null) => {
+  const onAddProduct = (data: ProductFormData, marketName: string, targetSlot: Slot | null) => {
     if (!collection) return;
 
     const updatedMarket = collection.market ? [...collection.market] : [];
 
     // Find the target market using selectedMarket instead of markets[0]
-    const targetMarketIndex = updatedMarket.findIndex((market) => market.name === selectedMarket);
+    const targetMarketIndex = updatedMarket.findIndex((market) => market.name === marketName);
 
     if (targetMarketIndex === -1) {
       console.error("Target market not found");
@@ -133,7 +130,6 @@ const AdminMarket = () => {
 
   // Render items grid component
   const renderItemsGrid = (marketName: string, items: Item[]) => {
-    setSelectedMarket(marketName);
     return (
       <div className="space-y-4">
         <div className="flex items-center justify-between">
@@ -228,14 +224,13 @@ const AdminMarket = () => {
                       items={collection.items || []}
                       layers={collection.layers || []}
                       isNew={slot.items.length === 0}
-                      onSubmit={(data) => onAddProduct(data, selectedSlot)}
+                      onSubmit={(data) => onAddProduct(data, marketName, selectedSlot)}
                     />
                   </Dialog>
                 </div>
               </div>
             ))}
 
-          {/* Add New Item Button */}
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <div className="flex min-h-[300px] cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-blue-300 p-4 transition-colors hover:border-blue-400 hover:bg-blue-50">
@@ -251,7 +246,7 @@ const AdminMarket = () => {
               items={collection.items || []}
               categories={collection.layers || []}
               attributes={collection.tickets || []}
-              onSubmit={(data) => onAddProduct(data, null)}
+              onSubmit={(data) => onAddProduct(data, marketName, null)}
             />
           </Dialog>
         </div>

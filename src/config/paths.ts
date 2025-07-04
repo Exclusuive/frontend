@@ -27,6 +27,14 @@ export const paths = {
     path: "market",
     getHref: () => "/admin/market",
   },
+  adminProfile: {
+    path: "profile",
+    getHref: () => "/admin/profile",
+  },
+  adminBilling: {
+    path: "billing",
+    getHref: () => "/admin/billing",
+  },
   memberPage: {
     path: "/member",
     getHref: () => "/member",

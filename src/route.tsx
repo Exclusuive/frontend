@@ -14,6 +14,8 @@ const AdminDashboard = lazy(() => import("@/pages/AdminDashboard"));
 const AdminCollection = lazy(() => import("@/pages/AdminCollection"));
 const MemberPage = lazy(() => import("@/pages/Member"));
 const AdminMarket = lazy(() => import("@/pages/AdminMarket"));
+const Profile = lazy(() => import("@/pages/Profile"));
+const AdminBilling = lazy(() => import("@/pages/AdminBilling"));
 
 const router = createBrowserRouter([
   {
@@ -50,6 +52,14 @@ const router = createBrowserRouter([
       {
         path: paths.adminMarket.path,
         element: <AdminMarket />,
+      },
+      {
+        path: paths.adminProfile.path,
+        element: <Profile />,
+      },
+      {
+        path: paths.adminBilling.path,
+        element: <AdminBilling />,
       },
     ],
   },

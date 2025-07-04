@@ -56,7 +56,7 @@ const SetCollectionPage = () => {
           <div>
             <div className="mb-2 font-semibold text-[#474747]">내 프로필</div>
             <div className="flex items-center gap-2">
-              <img src={user.profile.avatar} alt="profile" className="h-10 w-10 rounded-full" />
+              <img src={user.profile.imgUrl} alt="profile" className="h-10 w-10 rounded-full" />
               <div>
                 <div className="text-sm font-bold text-[#474747]">{user.profile.name}</div>
                 <div className="text-sm text-[#636363]">
