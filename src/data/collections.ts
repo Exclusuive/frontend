@@ -1,3 +1,5 @@
+import { initialMissions } from "./missions";
+
 export const collections = [
   {
     name: "Art Collection",
@@ -67,6 +69,7 @@ export const collections = [
         ],
       },
     ],
+    missions: initialMissions,
   },
   {
     name: "Music Collection",
@@ -76,6 +79,7 @@ export const collections = [
     layers: ["Layer 1", "Layer 2", "Layer 3"],
     attributes: ["Property 1", "Property 2", "Property 3"],
     tickets: ["Ticket 1", "Ticket 2", "Ticket 3"],
+    missions: [],
   },
   {
     name: "Sports Collection",
@@ -85,5 +89,6 @@ export const collections = [
     layers: ["Layer 1", "Layer 2", "Layer 3"],
     attributes: ["Property 1", "Property 2", "Property 3"],
     tickets: ["Ticket 1", "Ticket 2", "Ticket 3"],
+    missions: [],
   },
 ];

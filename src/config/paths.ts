@@ -35,6 +35,10 @@ export const paths = {
     path: "billing",
     getHref: () => "/admin/billing",
   },
+  adminMission: {
+    path: "mission",
+    getHref: () => "/admin/mission",
+  },
   memberPage: {
     path: "/member",
     getHref: () => "/member",

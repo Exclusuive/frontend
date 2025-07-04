@@ -16,6 +16,7 @@ const MemberPage = lazy(() => import("@/pages/Member"));
 const AdminMarket = lazy(() => import("@/pages/AdminMarket"));
 const Profile = lazy(() => import("@/pages/Profile"));
 const AdminBilling = lazy(() => import("@/pages/AdminBilling"));
+const AdminMission = lazy(() => import("@/pages/AdminMission"));
 
 const router = createBrowserRouter([
   {
@@ -60,6 +61,10 @@ const router = createBrowserRouter([
       {
         path: paths.adminBilling.path,
         element: <AdminBilling />,
+      },
+      {
+        path: paths.adminMission.path,
+        element: <AdminMission />,
       },
     ],
   },

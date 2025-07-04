@@ -1,3 +1,5 @@
+import { Mission } from "./mission";
+
 export interface Item {
   name: string;
   address: string;
@@ -34,4 +36,5 @@ export interface Collection {
   tickets?: string[];
   items?: Item[];
   market?: Market[];
+  missions?: Mission[];
 }
