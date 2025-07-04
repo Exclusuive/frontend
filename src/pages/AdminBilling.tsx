@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Card, CardTitle, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, Crown, Users, Zap, Shield, Star } from "lucide-react";
+import { Check, Crown, Star } from "lucide-react";
 import { useAuthStore } from "@/stores/useAuthStore";
 
 // 플랜 타입 정의
@@ -24,7 +24,7 @@ interface Plan {
 }
 
 const AdminBilling = () => {
-  const { user, updateProfile } = useAuthStore();
+  const { user } = useAuthStore();
   const [currentPlan, setCurrentPlan] = useState<PlanType>(
     (user?.profile.plan as PlanType) || "free",
   );
