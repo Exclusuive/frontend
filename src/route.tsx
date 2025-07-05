@@ -6,17 +6,20 @@ import { AdminLayout } from "@/layouts/AdminLayout";
 import AdminProtectedRouter from "./components/provider/AdminProtectedRouter";
 import UserProtectedRouter from "./components/provider/UserProtectedRouter";
 import { UserLayout } from "./layouts/UserLayout";
-import AdminItems from "./pages/AdminItems";
 
 const LandingPage = lazy(() => import("@/pages/LandingPage"));
 const SetCollectionPage = lazy(() => import("@/pages/SetCollection"));
 const AdminDashboard = lazy(() => import("@/pages/AdminDashboard"));
 const AdminCollection = lazy(() => import("@/pages/AdminCollection"));
-const MemberPage = lazy(() => import("@/pages/Member"));
 const AdminMarket = lazy(() => import("@/pages/AdminMarket"));
+const AdminItems = lazy(() => import("@/pages/AdminItems"));
+const MemberMyCharacter = lazy(() => import("@/pages/MemberMyCharacter"));
 const Profile = lazy(() => import("@/pages/Profile"));
 const AdminBilling = lazy(() => import("@/pages/AdminBilling"));
 const AdminMission = lazy(() => import("@/pages/AdminMission"));
+const MemberExplore = lazy(() => import("@/pages/MemberExplore"));
+const MemberMarket = lazy(() => import("@/pages/memberMarket"));
+const MemberMission = lazy(() => import("@/pages/MemberMission"));
 
 const router = createBrowserRouter([
   {
@@ -73,10 +76,33 @@ const router = createBrowserRouter([
     element: (
       <UserProtectedRouter>
         <UserLayout>
-          <MemberPage />
+          <AppRoot />
         </UserLayout>
       </UserProtectedRouter>
     ),
+    ErrorBoundary: AppRootErrorBoundary,
+    children: [
+      {
+        path: paths.memberMyCharacter.path,
+        element: <MemberMyCharacter />,
+      },
+      {
+        path: paths.memberProfile.path,
+        element: <Profile />,
+      },
+      {
+        path: paths.memberExplore.path,
+        element: <MemberExplore />,
+      },
+      {
+        path: paths.memberMarket.path,
+        element: <MemberMarket />,
+      },
+      {
+        path: paths.memberMission.path,
+        element: <MemberMission />,
+      },
+    ],
   },
 
   {

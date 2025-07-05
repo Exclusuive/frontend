@@ -6,7 +6,7 @@ export default function AdminProtectedRouter({ children }: { children: React.Rea
   const account = useCurrentAccount();
   const { user } = useAuthStore();
 
-  if (!account || user?.address !== account.address || !user) {
+  if (!account || user?.address !== account.address || user?.role !== "admin") {
     return <Navigate to="/" />;
   }
 

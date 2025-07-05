@@ -8,6 +8,9 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./
 import { useState } from "react";
 import { paths } from "@/config/paths";
 import { cn } from "@/lib/utils";
+import { useMembershipStore } from "@/stores/useMembershipStore";
+import { Collection } from "@/types/collection";
+import { Membership, User } from "@/types/user";
 
 interface MenuItem {
   label: string;
@@ -36,18 +39,18 @@ const AdminMenuItems = [
 
 const UserMenuItems = [
   {
-    label: "My Collection",
+    label: "My Membership",
     subMenu: [
-      { label: "My Membership", path: paths.memberPage.path },
-      // { label: "Market", path: paths.userMarket.path },
-      // { label: "Mission", path: paths.userMission.path },
+      { label: "My Character", path: paths.memberMyCharacter.path },
+      { label: "Market", path: paths.memberMarket.path },
+      { label: "Mission", path: paths.memberMission.path },
     ],
   },
   {
     label: "My Page",
     subMenu: [
-      { label: "Profile", path: paths.memberPage.path },
-      { label: "Explore Collections", path: paths.memberPage.path },
+      { label: "Profile", path: paths.memberProfile.path },
+      { label: "Explore Collections", path: paths.memberExplore.path },
     ],
   },
 ];
@@ -71,7 +74,14 @@ function ProfileSection({ user }: { user: any }) {
   );
 }
 
-function CollectionSection({ collection }: { collection: any }) {
+function CollectionSection({
+  collection,
+  user,
+}: {
+  collection: Collection | null;
+  user: User | null;
+}) {
+  if (user?.role !== "admin") return null;
   if (!collection) return null;
   return (
     <div className="my-8">
@@ -98,16 +108,42 @@ function CollectionSection({ collection }: { collection: any }) {
   );
 }
 
+function MembershipSection({
+  membership,
+  user,
+}: {
+  membership: Membership | null;
+  user: User | null;
+}) {
+  if (user?.role !== "member") return null;
+  if (!membership) return null;
+  return (
+    <div className="my-8">
+      <p className="text-md font-bold text-[#474747]">Selected Membership</p>
+      <div className="my-4 flex items-center gap-2">
+        <img src={membership.imgUrl} alt="membership" className="h-10 w-10 rounded-full" />
+        <div>
+          <div className="text-sm font-bold text-[#474747]">{membership.name}</div>
+        </div>
+      </div>
+      <Link to="/setCollection" className="w-full">
+        <Button variant="secondary" className="w-full">
+          Change Membership/Role
+        </Button>
+      </Link>
+    </div>
+  );
+}
 function MenuSection({ menuItems }: { menuItems: MenuItem[] }) {
   const location = useLocation();
 
   const isActivePath = (path: string) => {
     // Handle root admin path
-    if (path === "" && location.pathname === "/admin") {
+    if (path === "" && (location.pathname === "/admin" || location.pathname === "/member")) {
       return true;
     }
     // Handle other paths
-    return location.pathname === `/admin/${path}`;
+    return location.pathname === `/admin/${path}` || location.pathname === `/member/${path}`;
   };
 
   return (
@@ -158,7 +194,7 @@ export default function Sidebar() {
   const [open, setOpen] = useState(false);
   const { user } = useAuthStore();
   const { collection } = useCollectionStore();
-
+  const { membership } = useMembershipStore();
   // 모바일 오버레이 메뉴
   const MobileSidebar = () => (
     <div
@@ -174,7 +210,8 @@ export default function Sidebar() {
       />
       <div className="mt-8 flex flex-col">
         <ProfileSection user={user} />
-        <CollectionSection collection={collection} />
+        <CollectionSection collection={collection} user={user} />
+        <MembershipSection membership={membership} user={user} />
         <MenuSection menuItems={user?.role === "admin" ? AdminMenuItems : UserMenuItems} />
       </div>
     </div>
@@ -190,7 +227,8 @@ export default function Sidebar() {
       </Link>
       <div className="mt-8" />
       <ProfileSection user={user} />
-      <CollectionSection collection={collection} />
+      <CollectionSection collection={collection} user={user} />
+      <MembershipSection membership={membership} user={user} />
       <MenuSection menuItems={user?.role === "admin" ? AdminMenuItems : UserMenuItems} />
     </div>
   );

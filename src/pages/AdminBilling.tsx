@@ -35,7 +35,7 @@ const AdminBilling = () => {
     {
       id: "free",
       name: "Free Plan",
-      price: "₩0",
+      price: "0 SUI",
       description: "Suitable for individual users and small projects",
       current: currentPlan === "free",
       features: [

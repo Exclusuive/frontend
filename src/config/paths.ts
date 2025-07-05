@@ -40,7 +40,27 @@ export const paths = {
     getHref: () => "/admin/mission",
   },
   memberPage: {
-    path: "/member",
+    path: "member",
     getHref: () => "/member",
+  },
+  memberMyCharacter: {
+    path: "",
+    getHref: () => "/member",
+  },
+  memberProfile: {
+    path: "profile",
+    getHref: () => "/member/profile",
+  },
+  memberExplore: {
+    path: "explore",
+    getHref: () => "/member/explore",
+  },
+  memberMarket: {
+    path: "market",
+    getHref: () => "/member/market",
+  },
+  memberMission: {
+    path: "mission",
+    getHref: () => "/member/mission",
   },
 };

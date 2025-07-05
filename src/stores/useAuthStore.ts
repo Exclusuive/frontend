@@ -1,21 +1,6 @@
-import { Role } from "@/types/user";
+import { Role, User } from "@/types/user";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-
-interface User {
-  address: string;
-  role: string;
-  profile: {
-    name: string;
-    imgUrl: string;
-    age: number;
-    sex: string;
-    email: string;
-    location: string;
-    birthDate: string;
-    plan: string;
-  };
-}
 
 interface AuthState {
   user: User | null;
@@ -44,6 +29,8 @@ export const useAuthStore = create<AuthState>()(
               plan: "free",
             },
             role: role,
+            memberships: [],
+            itemsInWallet: [],
           },
         });
         return true;
@@ -73,8 +60,8 @@ export const useAuthStore = create<AuthState>()(
       },
     }),
     {
-      name: "auth-storage", // name of the item in the storage
-      storage: createJSONStorage(() => localStorage), // use localStorage
+      name: "auth-storage",
+      storage: createJSONStorage(() => localStorage),
     },
   ),
 );

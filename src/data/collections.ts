@@ -1,6 +1,7 @@
+import { Collection } from "@/types/collection";
 import { initialMissions } from "./missions";
 
-export const collections = [
+export const collections: Collection[] = [
   {
     name: "Art Collection",
     address: "0x123456789012345678901234567890123456781ascdasdcsaㅇ90",

@@ -6,8 +6,9 @@ import ItemsbyCategory from "@/components/ItemsbyCategory";
 import { useCollectionStore } from "@/stores/useCollectionStore";
 import { Item } from "@/types/collection";
 import { getItemsByLayer } from "@/lib/items";
-
+import { Mission } from "@/types/mission";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 // 카드 데이터 배열
 const dashboardCards: DashboardCardProps[] = [
@@ -104,39 +105,11 @@ const renderItemsGrid = (layer: string, items: Item[]) => {
   );
 };
 
-// 미션 타입 및 mock 데이터
-interface Mission {
-  id: string;
-  name: string;
-  description: string;
-  participants: number;
-}
-
-const mockMissions: Mission[] = [
-  {
-    id: "1",
-    name: "첫 미션",
-    description: "NFT를 1개 민팅해보세요.",
-    participants: 23,
-  },
-  {
-    id: "2",
-    name: "커뮤니티 가입",
-    description: "디스코드에 가입하고 인증하세요.",
-    participants: 15,
-  },
-  {
-    id: "3",
-    name: "피드백 남기기",
-    description: "서비스에 대한 피드백을 남겨주세요.",
-    participants: 8,
-  },
-];
-
 const AdminDashboard = () => {
   const { collection } = useCollectionStore();
   const layers = collection?.layers || [];
   const items = collection?.items || [];
+  const missions: Mission[] = collection?.missions || [];
 
   return (
     <div className="flex h-full flex-col p-10">
@@ -167,7 +140,9 @@ const AdminDashboard = () => {
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Current Missions</CardTitle>
               <div className="my-4 flex flex-col gap-2">
-                <Button className="w-fit bg-blue-500 px-10">미션 추가</Button>
+                <Link to="/admin/mission">
+                  <Button className="w-fit bg-blue-500 px-10">미션 추가하러 가기</Button>
+                </Link>
               </div>
             </CardHeader>
             <CardContent>
@@ -185,17 +160,31 @@ const AdminDashboard = () => {
                           설명
                         </th>
                         <th className="px-4 py-2 text-center text-xs font-medium text-gray-500">
+                          활성화 여부
+                        </th>
+                        <th className="px-4 py-2 text-center text-xs font-medium text-gray-500">
                           참여자 수
                         </th>
                       </tr>
                     </thead>
                     <tbody>
-                      {mockMissions.map((mission) => (
+                      {missions.map((mission) => (
                         <tr key={mission.id} className="hover:bg-gray-50">
                           <td className="px-4 py-2 text-sm font-medium text-gray-900">
                             {mission.name}
                           </td>
                           <td className="px-4 py-2 text-sm text-gray-700">{mission.description}</td>
+                          <td className="px-4 py-2 text-center text-sm">
+                            {mission.status === "active" ? (
+                              <span className="inline-block rounded bg-green-100 px-2 py-0.5 text-xs text-green-700">
+                                활성
+                              </span>
+                            ) : (
+                              <span className="inline-block rounded bg-gray-200 px-2 py-0.5 text-xs text-gray-500">
+                                비활성
+                              </span>
+                            )}
+                          </td>
                           <td className="px-4 py-2 text-center text-sm text-gray-900">
                             {mission.participants}
                           </td>
@@ -204,7 +193,7 @@ const AdminDashboard = () => {
                     </tbody>
                   </table>
 
-                  {mockMissions.length === 0 && (
+                  {missions.length === 0 && (
                     <div>
                       <div className="py-8 text-center text-sm text-gray-400">
                         등록된 미션이 없습니다.

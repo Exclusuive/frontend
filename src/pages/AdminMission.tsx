@@ -24,7 +24,6 @@ const AdminMission: React.FC = () => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingMission, setEditingMission] = useState<Mission | null>(null);
   const [activeTab, setActiveTab] = useState<string>("all");
-  console.log(collection);
   // 미션 추가
   const onAddMission = (data: MissionForm) => {
     if (!collection) return;

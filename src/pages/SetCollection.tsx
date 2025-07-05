@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useState } from "react";
-import { Role } from "@/types/user";
+import { Membership, Role } from "@/types/user";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { CirclePlusIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -11,10 +11,20 @@ import { useCollectionStore } from "@/stores/useCollectionStore";
 import { Collection } from "@/types/collection";
 import { collections } from "@/data/collections";
 import CreateCollection from "@/components/CreateCollection";
+import { sampleMemberships } from "@/data/membership";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { MembershipByCollection, organizeMembershipsByCollection } from "@/lib/membership";
+import { useMembershipStore } from "@/stores/useMembershipStore";
 
 const SetCollectionPage = () => {
   const { user, setRole } = useAuthStore();
   const { setCollection } = useCollectionStore();
+  const { setMembership } = useMembershipStore();
   const [changeRoleOpen, setChangeRoleOpen] = useState(false);
   const [createCollectionOpen, setCreateCollectionOpen] = useState(false);
   const navigate = useNavigate();
@@ -41,6 +51,11 @@ const SetCollectionPage = () => {
       </Dialog>
     );
   }
+
+  const handleSelectMembership = (membership: Membership) => {
+    setMembership(membership);
+    navigate(`/${user.role}`);
+  };
 
   const handleSelectCollection = (collection: Collection) => {
     setCollection(collection);
@@ -81,25 +96,72 @@ const SetCollectionPage = () => {
       </div>
 
       <ul className="mt-8 space-y-3">
-        {collections.map((col: Collection) => {
-          return (
-            <li key={col.address}>
-              <button
-                type="button"
-                className={`w-full cursor-pointer rounded-lg border px-4 py-3 text-left transition-colors focus:ring-2 focus:ring-blue-500 focus:outline-none`}
-                onClick={() => handleSelectCollection(col)}
-              >
-                <div className="flex items-center gap-2">
-                  <img src={col.imgUrl} alt="collection" className="h-10 w-10 rounded-full" />
-                  <div>
-                    <div className="text-sm font-bold text-[#474747]">{col.name}</div>
-                    <div className="text-sm text-[#636363]">{col.description}</div>
-                  </div>
-                </div>
-              </button>
-            </li>
-          );
-        })}
+        {user.role === "admin"
+          ? collections.map((col: Collection) => {
+              return (
+                <li key={col.address}>
+                  <button
+                    type="button"
+                    className={`w-full cursor-pointer rounded-lg border px-4 py-3 text-left transition-colors focus:ring-2 focus:ring-blue-500 focus:outline-none`}
+                    onClick={() => handleSelectCollection(col)}
+                  >
+                    <div className="flex items-center gap-2">
+                      <img src={col.imgUrl} alt="collection" className="h-10 w-10 rounded-full" />
+                      <div>
+                        <div className="text-sm font-bold text-[#474747]">{col.name}</div>
+                        <div className="text-sm text-[#636363]">{col.description}</div>
+                      </div>
+                    </div>
+                  </button>
+                </li>
+              );
+            })
+          : organizeMembershipsByCollection(sampleMemberships).map(
+              (membership: MembershipByCollection) => {
+                console.log(membership);
+                return (
+                  <Accordion
+                    key={membership.collectionName}
+                    type="single"
+                    collapsible
+                    className="w-full rounded-lg border border-gray-200 px-2"
+                  >
+                    <AccordionItem value={membership.collectionName}>
+                      <AccordionTrigger>
+                        <div className="flex items-center gap-2 rounded-lg">
+                          <img
+                            src={membership.collectionImgUrl}
+                            alt="collection"
+                            className="h-10 w-10 rounded-full"
+                          />
+                          <div>{membership.collectionName}</div>
+                        </div>
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <div className="flex flex-col gap-2 bg-gray-100 py-4 pl-10">
+                          {membership.memberships.map((membership: Membership) => {
+                            return (
+                              <div
+                                className="flex w-full cursor-pointer items-center gap-2"
+                                key={membership.id}
+                                onClick={() => handleSelectMembership(membership)}
+                              >
+                                <img
+                                  src={membership.imgUrl}
+                                  alt="collection"
+                                  className="h-10 w-10 rounded-full"
+                                />
+                                <div>{membership.id}</div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+                );
+              },
+            )}
       </ul>
       {user.role === "admin" && (
         <Dialog open={createCollectionOpen} onOpenChange={setCreateCollectionOpen}>
