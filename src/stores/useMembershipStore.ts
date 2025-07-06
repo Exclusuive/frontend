@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Collection, Item } from "@/types/collection";
+import { Item } from "@/types/collection";
 import { Membership } from "@/types/user";
 
 interface MembershipState {

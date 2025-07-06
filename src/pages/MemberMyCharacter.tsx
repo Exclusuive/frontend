@@ -7,7 +7,7 @@ import { Item } from "@/types/collection";
 import { useAuthStore } from "@/stores/useAuthStore";
 
 const MemberMyCharacter = () => {
-  const { membership, updateItem } = useMembershipStore();
+  const { membership } = useMembershipStore();
   const { user } = useAuthStore();
 
   if (!membership) return <div>No membership selected</div>;

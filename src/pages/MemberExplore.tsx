@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { Search, Filter, Grid3X3, List } from "lucide-react";
+import { Search, Grid3X3, List } from "lucide-react";
 import { collections } from "@/data/collections";
 import { Collection } from "@/types/collection";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";

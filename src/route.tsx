@@ -18,8 +18,8 @@ const Profile = lazy(() => import("@/pages/Profile"));
 const AdminBilling = lazy(() => import("@/pages/AdminBilling"));
 const AdminMission = lazy(() => import("@/pages/AdminMission"));
 const MemberExplore = lazy(() => import("@/pages/MemberExplore"));
-const MemberMarket = lazy(() => import("@/pages/memberMarket"));
 const MemberMission = lazy(() => import("@/pages/MemberMission"));
+const MemberMarket = lazy(() => import("@/pages/MemberMarketplace"));
 
 const router = createBrowserRouter([
   {
