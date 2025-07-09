@@ -200,7 +200,7 @@ const AdminMarket = () => {
                       </Button>
                     </DialogTrigger>
                     <AddCondition
-                      attributes={collection.tickets || []}
+                      attributes={collection.ticket_types || []}
                       slot={slot}
                       onSubmit={(data) => onAddCondition(data, slot)}
                     />
@@ -222,7 +222,7 @@ const AdminMarket = () => {
                     </DialogTrigger>
                     <AddProduct
                       items={collection.items || []}
-                      layers={collection.layers || []}
+                      layers={collection.layer_types || []}
                       isNew={slot.items.length === 0}
                       onSubmit={(data) => onAddProduct(data, marketName, selectedSlot)}
                     />
@@ -244,8 +244,8 @@ const AdminMarket = () => {
             </DialogTrigger>
             <DisplayItem
               items={collection.items || []}
-              categories={collection.layers || []}
-              attributes={collection.tickets || []}
+              categories={collection.layer_types || []}
+              attributes={collection.ticket_types || []}
               onSubmit={(data) => onAddProduct(data, marketName, null)}
             />
           </Dialog>

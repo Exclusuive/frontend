@@ -27,13 +27,16 @@ export interface Slot {
 }
 
 export interface Collection {
-  address: string;
-  imgUrl?: string;
+  id: string;
+  cap?: string;
   name: string;
-  description?: string;
-  layers?: string[];
-  attributes?: string[];
-  tickets?: string[];
+  configs?: {
+    img_url?: string;
+    description?: string;
+  };
+  layer_types?: string[];
+  attribute_types?: string[];
+  ticket_types?: string[];
   items?: Item[];
   market?: Market[];
   missions?: Mission[];

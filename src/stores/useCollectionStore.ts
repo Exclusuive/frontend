@@ -5,6 +5,7 @@ import { Mission } from "@/types/mission";
 interface CollectionState {
   collection: Collection | null;
   setCollection: (collection: Collection) => void;
+  updateCollection: (collection: Partial<Collection>) => void;
   addMission: (mission: Mission) => void;
   updateMission: (mission: Mission) => void;
   deleteMission: (missionId: string) => void;
@@ -14,6 +15,10 @@ interface CollectionState {
 export const useCollectionStore = create<CollectionState>((set) => ({
   collection: null,
   setCollection: (collection) => set({ collection }),
+  updateCollection: (collection: Partial<Collection>) =>
+    set((state) => ({
+      collection: { ...state.collection, ...collection } as Collection,
+    })),
   addMission: (mission) =>
     set((state) => ({
       collection: state.collection

@@ -4,12 +4,14 @@ import { initialMissions } from "./missions";
 export const collections: Collection[] = [
   {
     name: "Art Collection",
-    address: "0x123456789012345678901234567890123456781ascdasdcsaㅇ90",
-    description: "Art Collection",
-    imgUrl: "https://picsum.photos/200/300",
-    layers: ["Layer 1", "Layer 2", "Layer 3"],
-    attributes: ["Property 1", "Property 2", "Property 3"],
-    tickets: ["Ticket 1", "Ticket 2", "Ticket 3"],
+    id: "0x123456789012345678901234567890123456781ascdasdcsaㅇ90",
+    configs: {
+      img_url: "https://picsum.photos/200/300",
+      description: "Art Collection",
+    },
+    layer_types: ["Layer 1", "Layer 2", "Layer 3"],
+    attribute_types: ["Property 1", "Property 2", "Property 3"],
+    ticket_types: ["Ticket 1", "Ticket 2", "Ticket 3"],
     items: [
       {
         name: "Item 1",
@@ -74,22 +76,26 @@ export const collections: Collection[] = [
   },
   {
     name: "Music Collection",
-    address: "0x1234567890123456789012345678901asdcsdc2345617890",
-    description: "Music Collection",
-    imgUrl: "https://picsum.photos/200/300",
-    layers: ["Layer 1", "Layer 2", "Layer 3"],
-    attributes: ["Property 1", "Property 2", "Property 3"],
-    tickets: ["Ticket 1", "Ticket 2", "Ticket 3"],
+    id: "0x1234567890123456789012345678901asdcsdc2345617890",
+    configs: {
+      img_url: "https://picsum.photos/200/300",
+      description: "Music Collection",
+    },
+    layer_types: ["Layer 1", "Layer 2", "Layer 3"],
+    attribute_types: ["Property 1", "Property 2", "Property 3"],
+    ticket_types: ["Ticket 1", "Ticket 2", "Ticket 3"],
     missions: [],
   },
   {
     name: "Sports Collection",
-    address: "0x12345678901234567890123456789012acaccas34567890",
-    description: "Sports Collection",
-    imgUrl: "https://picsum.photos/200/300",
-    layers: ["Layer 1", "Layer 2", "Layer 3"],
-    attributes: ["Property 1", "Property 2", "Property 3"],
-    tickets: ["Ticket 1", "Ticket 2", "Ticket 3"],
+    id: "0x12345678901234567890123456789012acaccas34567890",
+    configs: {
+      img_url: "https://picsum.photos/200/300",
+      description: "Sports Collection",
+    },
+    layer_types: ["Layer 1", "Layer 2", "Layer 3"],
+    attribute_types: ["Property 1", "Property 2", "Property 3"],
+    ticket_types: ["Ticket 1", "Ticket 2", "Ticket 3"],
     missions: [],
   },
 ];

@@ -31,7 +31,7 @@ const AdminItems = () => {
     );
   }
 
-  const layers = collection.layers || [];
+  const layers = collection.layer_types || [];
   const items: Item[] = collection.items || [];
 
   const [mintAddress, setMintAddress] = useState("");

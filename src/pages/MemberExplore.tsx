@@ -22,7 +22,7 @@ const MemberExplore: React.FC = () => {
     return collections.filter((collection) => {
       const matchesSearch =
         collection.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        collection.description?.toLowerCase().includes(searchTerm.toLowerCase());
+        collection.configs?.description?.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesCategory =
         selectedCategory === "all" ||
         collection.name.toLowerCase().includes(selectedCategory.toLowerCase());
@@ -128,7 +128,7 @@ const MemberExplore: React.FC = () => {
         >
           {filteredCollections.map((collection) => (
             <CollectionCard
-              key={collection.address}
+              key={collection.id}
               collection={collection}
               viewMode={viewMode}
               onClick={() => handleCollectionClick(collection)}
@@ -170,9 +170,9 @@ const CollectionCard: React.FC<CollectionCardProps> = ({ collection, viewMode, o
           viewMode === "list" ? "h-24 w-24 flex-shrink-0 sm:h-32 sm:w-32" : "aspect-square"
         } `}
       >
-        {collection.imgUrl ? (
+        {collection.configs?.img_url ? (
           <img
-            src={collection.imgUrl}
+            src={collection.configs?.img_url}
             alt={collection.name}
             className="h-full w-full object-cover"
             loading="lazy"
@@ -199,9 +199,9 @@ const CollectionCard: React.FC<CollectionCardProps> = ({ collection, viewMode, o
       >
         <CardHeader className={viewMode === "list" ? "p-4 pb-2" : "p-4 pb-2"}>
           <CardTitle className="line-clamp-2 text-lg font-semibold">{collection.name}</CardTitle>
-          {collection.description && (
+          {collection.configs?.description && (
             <CardDescription className="line-clamp-2 text-sm">
-              {collection.description}
+              {collection.configs?.description}
             </CardDescription>
           )}
         </CardHeader>
@@ -224,11 +224,11 @@ const CollectionCard: React.FC<CollectionCardProps> = ({ collection, viewMode, o
           </div>
 
           {/* Layers and Attributes */}
-          {collection.layers && collection.layers.length > 0 && (
+          {collection.layer_types && collection.layer_types.length > 0 && (
             <div className="mb-3">
               <div className="text-muted-foreground mb-1 text-xs">레이어</div>
               <div className="flex flex-wrap gap-1">
-                {collection.layers.slice(0, 3).map((layer, index) => (
+                {collection.layer_types.slice(0, 3).map((layer, index) => (
                   <span
                     key={index}
                     className="bg-primary/10 text-primary rounded-md px-2 py-1 text-xs"
@@ -236,9 +236,9 @@ const CollectionCard: React.FC<CollectionCardProps> = ({ collection, viewMode, o
                     {layer}
                   </span>
                 ))}
-                {collection.layers.length > 3 && (
+                {collection.layer_types.length > 3 && (
                   <span className="bg-muted text-muted-foreground rounded-md px-2 py-1 text-xs">
-                    +{collection.layers.length - 3}
+                    +{collection.layer_types.length - 3}
                   </span>
                 )}
               </div>

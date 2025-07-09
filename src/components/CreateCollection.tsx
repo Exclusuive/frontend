@@ -10,6 +10,9 @@ import { z } from "zod";
 import { useCollectionStore } from "@/stores/useCollectionStore";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { useCreateCollection } from "exclusuive-typescript-sdk";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
 const collectionSchema = z.object({
   name: z.string(),
@@ -21,9 +24,8 @@ const collectionSchema = z.object({
 export type CollectionCreateFormData = z.infer<typeof collectionSchema>;
 
 const CreateCollection = ({ onOpenChange }: { onOpenChange: (open: boolean) => void }) => {
-  const navigate = useNavigate();
-  const { user } = useAuthStore();
-  const { setCollection } = useCollectionStore();
+  const { collection } = useCollectionStore();
+  const { setCollection, updateCollection } = useCollectionStore();
   const { register, handleSubmit, setValue, watch, control } = useForm<CollectionCreateFormData>({
     resolver: zodResolver(collectionSchema),
     defaultValues: {
@@ -33,15 +35,46 @@ const CreateCollection = ({ onOpenChange }: { onOpenChange: (open: boolean) => v
       layers: [],
     },
   });
+  const navigate = useNavigate();
+  const { user } = useAuthStore();
 
-  const onSubmit = (data: CollectionCreateFormData) => {
-    setCollection({
-      ...data,
-      address: "",
+  const { createCollection, isPending, result } = useCreateCollection();
+
+  const onSubmit = async (data: CollectionCreateFormData) => {
+    createCollection({
+      name: data.name,
+      description: data.description,
+      imgUrl: data.imgUrl,
+      layers: data.layers,
     });
-    onOpenChange(false);
-    navigate(`/${user?.role}`);
+    setCollection({
+      id: "",
+      name: data.name,
+      configs: {
+        img_url: data.imgUrl,
+        description: data.description,
+      },
+      layer_types: data.layers,
+    });
   };
+
+  useEffect(() => {
+    if (isPending) {
+      toast.loading("Collection is being created...");
+    }
+    if (result && result.collection && result.cap) {
+      toast.dismiss();
+      toast.success("Collection created successfully");
+
+      updateCollection({
+        ...collection,
+        id: result.collection.objectId,
+        cap: result.cap.objectId,
+      });
+      onOpenChange(false);
+      navigate(`/${user?.role}`);
+    }
+  }, [isPending]);
 
   // 이미지 URL 실시간 반영
   const imageUrl = watch("imgUrl");
@@ -57,7 +90,7 @@ const CreateCollection = ({ onOpenChange }: { onOpenChange: (open: boolean) => v
           onImageChange={(url: string) => setValue("imgUrl", url)}
           isEditing={true}
           className="w-full"
-          showUrl={false}
+          showUrl={true}
         />
         <label className="block text-sm font-medium text-gray-700">Collection Name</label>
 

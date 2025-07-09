@@ -19,8 +19,8 @@ export const organizeMembershipsByCollection = (
 
   memberships.forEach((membership) => {
     const collectionName = membership.collection.name;
-    const collectionAddress = membership.collection.address;
-    const collectionImgUrl = membership.collection.imgUrl || "";
+    const collectionAddress = membership.collection.id;
+    const collectionImgUrl = membership.collection.configs?.img_url || "";
 
     if (!groupedMemberships.has(collectionName)) {
       groupedMemberships.set(collectionName, {

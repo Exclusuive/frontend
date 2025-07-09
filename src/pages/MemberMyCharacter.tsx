@@ -4,11 +4,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import ItemsbyLayer from "@/components/ItemsbyCategory";
 import { Item } from "@/types/collection";
-import { useAuthStore } from "@/stores/useAuthStore";
 
 const MemberMyCharacter = () => {
   const { membership } = useMembershipStore();
-  const { user } = useAuthStore();
 
   if (!membership) return <div>No membership selected</div>;
 
@@ -95,11 +93,11 @@ const MemberMyCharacter = () => {
             {/* Equipped Items */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-gray-900">Equipped Items</h3>
-              {membership.collection?.layers?.length === 0 ? (
+              {membership.collection?.layer_types?.length === 0 ? (
                 <p className="py-4 text-center text-gray-500">No items available</p>
               ) : (
                 <div className="space-y-3">
-                  {membership.collection?.layers?.map((layer) => {
+                  {membership.collection?.layer_types?.map((layer) => {
                     const equippedItem = membership.items.find((item) => item.layer === layer);
                     return (
                       <div
@@ -154,8 +152,8 @@ const MemberMyCharacter = () => {
           </CardHeader>
           <CardContent>
             <ItemsbyLayer
-              categories={membership.collection?.layers || []}
-              items={user?.itemsInWallet || []}
+              categories={membership.collection?.layer_types || []}
+              items={membership.items || []}
               getItemsByCategory={getItemsByCategory}
               renderItemsGrid={renderItemsGrid}
             />

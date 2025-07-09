@@ -11,6 +11,8 @@ import { cn } from "@/lib/utils";
 import TagInput from "@/components/ui/tag-input";
 import ImageUpload from "@/components/ui/image-upload";
 import { Input } from "@/components/ui/input";
+import { useUpdateCollection } from "exclusuive-typescript-sdk";
+import { toast } from "sonner";
 
 // Validation schema for collection form
 const collectionSchema = z.object({
@@ -19,16 +21,15 @@ const collectionSchema = z.object({
     .min(1, "Description is required")
     .max(500, "Description must be less than 500 characters"),
   imgUrl: z.string().optional(),
-  layers: z.array(z.string()).optional(),
-  attributes: z.array(z.string()).optional(),
-  tickets: z.array(z.string()).optional(),
-  markets: z.array(z.string()).optional(),
+  layer_types: z.array(z.string()).optional(),
+  attribute_types: z.array(z.string()).optional(),
+  ticket_types: z.array(z.string()).optional(),
 });
 
 export type CollectionFormData = z.infer<typeof collectionSchema>;
 
 const AdminCollection = () => {
-  const { collection, setCollection } = useCollectionStore();
+  const { collection, updateCollection: updateCollectionStore } = useCollectionStore();
   const [isEditing, setIsEditing] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [mintAddress, setMintAddress] = useState<string>("");
@@ -36,7 +37,8 @@ const AdminCollection = () => {
   const [tempLayers, setTempLayers] = useState<string[]>([]);
   const [tempAttributes, setTempAttributes] = useState<string[]>([]);
   const [tempTickets, setTempTickets] = useState<string[]>([]);
-  const [tempMarkets, setTempMarkets] = useState<string[]>([]);
+
+  const { updateCollection, isPending, error, result } = useUpdateCollection();
 
   const {
     register,
@@ -45,15 +47,15 @@ const AdminCollection = () => {
     reset,
     setValue,
     trigger,
+    getValues,
   } = useForm<CollectionFormData>({
     resolver: zodResolver(collectionSchema),
     defaultValues: {
-      description: collection?.description || "",
-      imgUrl: collection?.imgUrl || "",
-      layers: collection?.layers || [],
-      attributes: collection?.attributes || [],
-      tickets: collection?.tickets || [],
-      markets: collection?.market?.map((market) => market.name) || [],
+      description: collection?.configs?.description || "",
+      imgUrl: collection?.configs?.img_url || "",
+      layer_types: collection?.layer_types || [],
+      attribute_types: collection?.attribute_types || [],
+      ticket_types: collection?.ticket_types || [],
     },
   });
 
@@ -61,18 +63,16 @@ const AdminCollection = () => {
   useEffect(() => {
     if (collection) {
       reset({
-        description: collection.description,
-        imgUrl: collection.imgUrl,
-        layers: collection.layers || [],
-        attributes: collection.attributes || [],
-        tickets: collection.tickets || [],
-        markets: collection.market?.map((market) => market.name) || [],
+        description: collection.configs?.description,
+        imgUrl: collection.configs?.img_url,
+        layer_types: collection.layer_types || [],
+        attribute_types: collection.attribute_types || [],
+        ticket_types: collection.ticket_types || [],
       });
       // Reset temporary states
-      setTempLayers(collection.layers || []);
-      setTempAttributes(collection.attributes || []);
-      setTempTickets(collection.tickets || []);
-      setTempMarkets(collection.market?.map((market) => market.name) || []);
+      setTempLayers(collection.layer_types || []);
+      setTempAttributes(collection.attribute_types || []);
+      setTempTickets(collection.ticket_types || []);
     }
   }, [collection, reset]);
 
@@ -86,32 +86,66 @@ const AdminCollection = () => {
     setUploadedFile(null);
     // Reset temporary states to original values
     if (collection) {
-      setTempLayers(collection.layers || []);
-      setTempAttributes(collection.attributes || []);
-      setTempTickets(collection.tickets || []);
-      setTempMarkets(collection.market?.map((market) => market.name) || []);
+      setTempLayers(collection.layer_types || []);
+      setTempAttributes(collection.attribute_types || []);
+      setTempTickets(collection.ticket_types || []);
     }
   };
 
   const handleSave = (data: CollectionFormData) => {
+    const layerChange = tempLayers.filter((layer) => !collection?.layer_types?.includes(layer));
+    const attributeChange = tempAttributes.filter(
+      (attribute) => !collection?.attribute_types?.includes(attribute),
+    );
+    const ticketChange = tempTickets.filter(
+      (ticket) => !collection?.ticket_types?.includes(ticket),
+    );
+
+    const descriptionChange =
+      data.description !== collection?.configs?.description ? data.description : null;
+    const imgUrlChange = data.imgUrl !== collection?.configs?.img_url ? data.imgUrl : null;
+
     if (collection) {
-      const updatedCollection = {
-        ...collection,
-        ...data,
-        layers: tempLayers,
-        attributes: tempAttributes,
-        tickets: tempTickets,
-        market: tempMarkets.map((market) => ({
-          name: market,
-          address: collection.market?.find((m) => m.name === market)?.address || "",
-          slots: collection.market?.find((m) => m.name === market)?.slots || [],
-        })),
+      const updateData = {
+        col: collection?.id || "",
+        cap: collection?.cap || "",
+        name: collection?.name || "",
+        description: descriptionChange || undefined,
+        img_url: imgUrlChange || undefined,
+        layer_types: layerChange,
+        attribute_types: attributeChange,
+        ticket_types: ticketChange,
       };
-      setCollection(updatedCollection);
+      updateCollection(updateData);
       setIsEditing(false);
       setUploadedFile(null);
     }
   };
+
+  useEffect(() => {
+    if (isPending) {
+      toast.loading("Collection is being updated...");
+    }
+    if (result) {
+      toast.dismiss();
+      toast.success("Collection updated successfully");
+
+      updateCollectionStore({
+        ...collection,
+        configs: {
+          description: result?.description || collection?.configs?.description,
+          img_url: result?.img_url || collection?.configs?.img_url,
+        },
+        layer_types: tempLayers || collection?.layer_types,
+        attribute_types: tempAttributes || collection?.attribute_types,
+        ticket_types: tempTickets || collection?.ticket_types,
+      });
+    } else if (error) {
+      toast.dismiss();
+      toast.error("Failed to update collection");
+      handleCancel();
+    }
+  }, [isPending, result, error]);
 
   const handleImageChange = (imageUrl: string, file?: File) => {
     setValue("imgUrl", imageUrl, { shouldDirty: true, shouldTouch: true });
@@ -130,10 +164,6 @@ const AdminCollection = () => {
 
   const handleTempTicketsChange = (tickets: string[]) => {
     setTempTickets(tickets);
-  };
-
-  const handleTempMarketsChange = (markets: string[]) => {
-    setTempMarkets(markets);
   };
 
   const onMintAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -190,7 +220,9 @@ const AdminCollection = () => {
                 {/* Image Section */}
                 <div className="w-full xl:w-1/2">
                   <ImageUpload
-                    currentImageUrl={collection.imgUrl || ""}
+                    currentImageUrl={
+                      (isPending ? getValues("imgUrl") : collection.configs?.img_url) || ""
+                    }
                     onImageChange={handleImageChange}
                     isEditing={isEditing}
                   />
@@ -228,7 +260,7 @@ const AdminCollection = () => {
                         )}
                       </div>
                     ) : (
-                      <p className="text-sm text-[#636363]">{collection.description}</p>
+                      <p className="text-sm text-[#636363]">{collection.configs?.description}</p>
                     )}
                   </div>
 
@@ -241,13 +273,13 @@ const AdminCollection = () => {
                     placeholder="Layer name"
                   />
 
-                  {/* Properties */}
+                  {/* Attributes */}
                   <TagInput
-                    label="Properties"
+                    label="Attributes"
                     tags={tempAttributes}
                     onTagsChange={handleTempAttributesChange}
                     isEditing={isEditing}
-                    placeholder="Property name"
+                    placeholder="Attribute name"
                   />
 
                   {/* Tickets */}
@@ -257,15 +289,6 @@ const AdminCollection = () => {
                     onTagsChange={handleTempTicketsChange}
                     isEditing={isEditing}
                     placeholder="Ticket name"
-                  />
-
-                  {/* Markets */}
-                  <TagInput
-                    label="Markets"
-                    tags={tempMarkets}
-                    onTagsChange={handleTempMarketsChange}
-                    isEditing={isEditing}
-                    placeholder="Market name"
                   />
                 </div>
               </div>
@@ -278,12 +301,11 @@ const AdminCollection = () => {
                     disabled={
                       !isDirty &&
                       !uploadedFile &&
-                      JSON.stringify(tempLayers) === JSON.stringify(collection?.layers || []) &&
+                      JSON.stringify(tempLayers) ===
+                        JSON.stringify(collection?.layer_types || []) &&
                       JSON.stringify(tempAttributes) ===
-                        JSON.stringify(collection?.attributes || []) &&
-                      JSON.stringify(tempTickets) === JSON.stringify(collection?.tickets || []) &&
-                      JSON.stringify(tempMarkets) ===
-                        JSON.stringify(collection?.market?.map((market) => market.name) || [])
+                        JSON.stringify(collection?.attribute_types || []) &&
+                      JSON.stringify(tempTickets) === JSON.stringify(collection?.ticket_types || [])
                     }
                     className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700"
                   >

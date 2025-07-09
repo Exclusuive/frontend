@@ -80,7 +80,7 @@ const AddItem = ({ category, onSubmit, collection }: AddItemProps) => {
         <AttributeInput
           label="Item Attributes"
           attributes={attributes || []}
-          attributeNameOptions={collection?.attributes || []}
+          attributeNameOptions={collection?.attribute_types || []}
           isEditing={true}
           valuePlaceholder="Attribute value"
           onAttributesChange={handleAttributesChange}

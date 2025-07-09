@@ -6,6 +6,7 @@ import { useState } from "react";
 import { createNetworkConfig, SuiClientProvider, WalletProvider } from "@mysten/dapp-kit";
 import { getFullnodeUrl } from "@mysten/sui/client";
 import { registerSlushWallet } from "@mysten/slush-wallet";
+import { Toaster } from "@/components/ui/sonner";
 
 interface AppProviderProps {
   children: React.ReactNode;
@@ -32,6 +33,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     <QueryClientProvider client={queryClient}>
       <SuiClientProvider networks={networkConfig} defaultNetwork="testnet">
         <WalletProvider autoConnect={true}>
+          <Toaster richColors />
           {children}
           <ReactQueryDevtools initialIsOpen={false} />
         </WalletProvider>

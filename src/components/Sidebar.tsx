@@ -87,11 +87,15 @@ function CollectionSection({
     <div className="my-8">
       <p className="text-md font-bold text-[#474747]">Selected Collection</p>
       <div className="my-4 flex items-center gap-2">
-        <img src={collection.imgUrl} alt="collection" className="h-10 w-10 rounded-full" />
+        <img
+          src={collection.configs?.img_url}
+          alt="collection"
+          className="h-10 w-10 rounded-full"
+        />
         <div>
           <div className="text-sm font-bold text-[#474747]">{collection.name}</div>
           <a
-            href={`https://suiscan.xyz/address/${collection.address}`}
+            href={`https://suiscan.xyz/testnet/object/${collection.id}`}
             target="_blank"
             className="text-sm text-blue-500 underline"
           >

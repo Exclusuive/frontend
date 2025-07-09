@@ -107,9 +107,10 @@ const renderItemsGrid = (layer: string, items: Item[]) => {
 
 const AdminDashboard = () => {
   const { collection } = useCollectionStore();
-  const layers = collection?.layers || [];
+  const layers = collection?.layer_types || [];
   const items = collection?.items || [];
   const missions: Mission[] = collection?.missions || [];
+  console.log(collection);
 
   return (
     <div className="flex h-full flex-col p-10">
