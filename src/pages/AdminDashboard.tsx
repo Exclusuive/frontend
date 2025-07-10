@@ -5,7 +5,7 @@ import DashboardCard, { DashboardCardProps } from "@/components/DashboardCard";
 import ItemsbyCategory from "@/components/ItemsbyCategory";
 import { useCollectionStore } from "@/stores/useCollectionStore";
 import { Item } from "@/types/collection";
-import { getItemsByLayer } from "@/lib/items";
+import { formatItemAttributes, getItemsByLayer } from "@/lib/items";
 import { Mission } from "@/types/mission";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -58,7 +58,7 @@ const renderItemsGrid = (layer: string, items: Item[]) => {
             >
               <div className="flex-shrink-0">
                 <img
-                  src={item.imgUrl}
+                  src={item.img_url}
                   alt={item.name}
                   className="h-9 w-9 rounded object-cover md:h-20 md:w-20"
                 />
@@ -82,7 +82,7 @@ const renderItemsGrid = (layer: string, items: Item[]) => {
                 )}
                 {item.attributes && item.attributes.length > 0 && (
                   <div className="flex flex-wrap gap-1">
-                    {item.attributes.map((attribute) => (
+                    {formatItemAttributes(item.attributes || "").map((attribute) => (
                       <Badge
                         key={attribute.name}
                         variant="secondary"
@@ -108,9 +108,8 @@ const renderItemsGrid = (layer: string, items: Item[]) => {
 const AdminDashboard = () => {
   const { collection } = useCollectionStore();
   const layers = collection?.layer_types || [];
-  const items = collection?.items || [];
+  const items = collection?.item_types || [];
   const missions: Mission[] = collection?.missions || [];
-  console.log(collection);
 
   return (
     <div className="flex h-full flex-col p-10">

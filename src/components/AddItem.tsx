@@ -8,6 +8,7 @@ import { Textarea } from "./ui/textarea";
 import AttributeInput from "./ui/attribute-input";
 import { Button } from "./ui/button";
 import { Collection } from "@/types/collection";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 interface AddItemProps {
   category: string;
@@ -31,6 +32,7 @@ const itemSchema = z.object({
 export type ItemCreateFormData = z.infer<typeof itemSchema>;
 
 const AddItem = ({ category, onSubmit, collection }: AddItemProps) => {
+  const { user } = useAuthStore();
   const { register, handleSubmit, setValue, watch } = useForm<ItemCreateFormData>({
     resolver: zodResolver(itemSchema),
     defaultValues: {
@@ -49,7 +51,7 @@ const AddItem = ({ category, onSubmit, collection }: AddItemProps) => {
   };
 
   return (
-    <DialogContent className="h-3/4 overflow-y-auto">
+    <DialogContent className="h-fit overflow-y-auto">
       <DialogHeader>
         <DialogTitle>Add Item</DialogTitle>
       </DialogHeader>
@@ -59,7 +61,7 @@ const AddItem = ({ category, onSubmit, collection }: AddItemProps) => {
           onImageChange={(url: string) => setValue("imgUrl", url)}
           isEditing={true}
           className="w-full"
-          showUrl={false}
+          showUrl={true}
         />
         <label className="block text-sm font-medium text-gray-700">Item Name</label>
         <Input
@@ -67,24 +69,24 @@ const AddItem = ({ category, onSubmit, collection }: AddItemProps) => {
           aria-label="Item Name"
           {...register("name", { required: true })}
         />
-        <label className="block text-sm font-medium text-gray-700">
-          Item Description (Optional)
-        </label>
-        <Textarea
-          placeholder="Item Description"
-          aria-label="Item Description"
-          rows={2}
-          {...register("description")}
-        />
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Item Description (Pro)</label>
+          <Textarea
+            placeholder="Item Description"
+            aria-label="Item Description"
+            rows={2}
+            {...register("description")}
+          />
 
-        <AttributeInput
-          label="Item Attributes"
-          attributes={attributes || []}
-          attributeNameOptions={collection?.attribute_types || []}
-          isEditing={true}
-          valuePlaceholder="Attribute value"
-          onAttributesChange={handleAttributesChange}
-        />
+          <AttributeInput
+            label="Item Attributes (Pro)"
+            attributes={attributes || []}
+            attributeNameOptions={collection?.attribute_types || []}
+            isEditing={true}
+            valuePlaceholder="Attribute value"
+            onAttributesChange={handleAttributesChange}
+          />
+        </div>
 
         <DialogFooter className="flex-col gap-2 sm:flex-row">
           <Button

@@ -3,10 +3,10 @@ import { Mission } from "./mission";
 export interface Item {
   name: string;
   address: string;
-  imgUrl: string;
+  img_url: string;
   layer: string;
   description?: string;
-  attributes?: Attribute[];
+  attributes?: Attribute[] | string;
 }
 
 export interface Attribute {
@@ -37,7 +37,7 @@ export interface Collection {
   layer_types?: string[];
   attribute_types?: string[];
   ticket_types?: string[];
-  items?: Item[];
+  item_types?: Item[];
   market?: Market[];
   missions?: Mission[];
 }

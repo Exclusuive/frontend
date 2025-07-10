@@ -5,14 +5,17 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddItem, { ItemCreateFormData } from "@/components/AddItem";
 import ItemsbyCategory from "@/components/ItemsbyCategory";
-import { getItemsByLayer } from "@/lib/items";
+import { formatItemAttributes, getItemsByLayer } from "@/lib/items";
 import { Item } from "@/types/collection";
+import { useAddItemType } from "exclusuive-typescript-sdk";
+import { toast } from "sonner";
 
 const AdminItems = () => {
   const { collection, setCollection } = useCollectionStore();
+  const { addItemType, isPending, error, result } = useAddItemType();
 
   if (!collection) {
     return (
@@ -32,7 +35,7 @@ const AdminItems = () => {
   }
 
   const layers = collection.layer_types || [];
-  const items: Item[] = collection.items || [];
+  const items: Item[] = collection.item_types || [];
 
   const [mintAddress, setMintAddress] = useState("");
   const [open, setOpen] = useState(false);
@@ -44,20 +47,36 @@ const AdminItems = () => {
     console.log(mintAddress);
   };
   const onSubmit = (data: ItemCreateFormData) => {
-    if (collection) {
+    addItemType({
+      col: collection.id,
+      cap: collection.cap,
+      layer: data.layer,
+      name: data.name,
+      img_url: data.imgUrl,
+      description: data.description,
+      attributes: data.attributes,
+    });
+  };
+
+  useEffect(() => {
+    if (isPending) {
+      toast.loading("Item is being created...");
+    }
+    if (result) {
+      toast.dismiss();
+      toast.success("Item created successfully");
+
       setCollection({
         ...collection,
-        items: [
-          ...(collection.items || []),
-          {
-            ...data,
-            address: `0x${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`,
-          },
-        ],
+        item_types: [...(collection.item_types || []), result],
       });
+      setOpen(false);
+    } else if (error) {
+      toast.dismiss();
+      toast.error("Failed to create item");
     }
-    setOpen(false);
-  };
+  }, [isPending, result, error]);
+
   // Render items grid component
   const renderItemsGrid = (layer: string, items: Item[]) => (
     <div className="space-y-4">
@@ -72,7 +91,7 @@ const AdminItems = () => {
             <div key={`${item.name}-${index}`} className="rounded-lg border p-4">
               <div className="mb-3 aspect-square">
                 <img
-                  src={item.imgUrl}
+                  src={item.img_url}
                   alt={item.name}
                   className="h-full w-full rounded-md object-cover"
                 />
@@ -90,8 +109,8 @@ const AdminItems = () => {
               </h4>
               <p className="mb-1 truncate text-xs text-gray-500">{item.description}</p>
               <p className="my-2 flex flex-wrap gap-2">
-                {item.attributes?.map((attribute) => (
-                  <Badge key={attribute.name} variant="secondary">
+                {formatItemAttributes(item.attributes || []).map((attribute) => (
+                  <Badge key={attribute.name} variant="secondary" className="text-xs">
                     {attribute.name}: {attribute.value}
                   </Badge>
                 ))}

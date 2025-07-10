@@ -57,7 +57,7 @@ const AdminBilling = () => {
       features: [
         { name: "Unlimited Projects", included: true },
         { name: "Advanced mission system", included: true },
-        { name: "Priority support", included: true },
+        { name: "Generate Items with Attributes", included: true },
         { name: "Full API access", included: true },
         { name: "Advanced analytics", included: true },
         { name: "Dedicated account manager", included: true },

@@ -63,7 +63,6 @@ const SetCollectionPage = () => {
   };
 
   const handleSelectCollection = (collection: Collection) => {
-    console.log(collection);
     setCollection(collection);
     navigate(`/${user.role}`);
   };

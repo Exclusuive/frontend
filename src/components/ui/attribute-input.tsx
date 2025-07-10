@@ -32,7 +32,7 @@ const AttributeInput: React.FC<AttributeInputProps> = ({
   attributes,
   attributeNameOptions,
   isEditing,
-  valuePlaceholder = "Property value",
+  valuePlaceholder = "Attribute value",
   className,
   onAttributesChange,
 }) => {
@@ -131,7 +131,7 @@ const AttributeInput: React.FC<AttributeInputProps> = ({
               onValueChange={(value) => setNewAttribute({ ...newAttribute, name: value })}
             >
               <SelectTrigger className="flex-1">
-                <SelectValue placeholder="Select property name" />
+                <SelectValue placeholder="Select Attribute name" />
               </SelectTrigger>
               <SelectContent>
                 {attributeNameOptions.map((option) => (
