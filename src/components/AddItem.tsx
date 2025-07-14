@@ -7,8 +7,7 @@ import { useForm } from "react-hook-form";
 import { Textarea } from "./ui/textarea";
 import AttributeInput from "./ui/attribute-input";
 import { Button } from "./ui/button";
-import { Collection } from "@/types/collection";
-import { useAuthStore } from "@/stores/useAuthStore";
+import { Attribute, Collection } from "@/types/collection";
 
 interface AddItemProps {
   category: string;
@@ -24,7 +23,7 @@ const itemSchema = z.object({
   attributes: z.array(
     z.object({
       name: z.string(),
-      value: z.number(),
+      value: z.string(),
     }),
   ),
 });
@@ -32,7 +31,6 @@ const itemSchema = z.object({
 export type ItemCreateFormData = z.infer<typeof itemSchema>;
 
 const AddItem = ({ category, onSubmit, collection }: AddItemProps) => {
-  const { user } = useAuthStore();
   const { register, handleSubmit, setValue, watch } = useForm<ItemCreateFormData>({
     resolver: zodResolver(itemSchema),
     defaultValues: {
@@ -46,7 +44,7 @@ const AddItem = ({ category, onSubmit, collection }: AddItemProps) => {
   const imageUrl = watch("imgUrl");
   const attributes = watch("attributes");
 
-  const handleAttributesChange = (newAttributes: Array<{ name: string; value: number }>) => {
+  const handleAttributesChange = (newAttributes: Attribute[]) => {
     setValue("attributes", newAttributes);
   };
 

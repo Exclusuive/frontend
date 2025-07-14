@@ -147,7 +147,7 @@ interface CollectionCardProps {
 }
 
 const CollectionCard: React.FC<CollectionCardProps> = ({ collection, viewMode, onClick }) => {
-  const itemCount = collection.items?.length || 0;
+  const itemCount = collection.item_types?.length || 0;
   const missionCount = collection.missions?.length || 0;
 
   return (

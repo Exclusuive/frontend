@@ -99,9 +99,9 @@ const LayerItemSelector: React.FC<LayerItemSelectorProps> = ({
                   {itemsInSelectedLayer.map((item) => (
                     <SelectItem key={item.address} value={item.address}>
                       <div className="flex items-center gap-2">
-                        {item.imgUrl && (
+                        {item.img_url && (
                           <img
-                            src={item.imgUrl}
+                            src={item.img_url}
                             alt={item.name}
                             className="h-6 w-6 rounded object-cover"
                           />

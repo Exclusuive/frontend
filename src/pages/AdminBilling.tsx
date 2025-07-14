@@ -210,7 +210,7 @@ const AdminBilling = () => {
                 {loading === plan.id ? (
                   <div className="flex items-center gap-2">
                     <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                    변경 중...
+                    Changing...
                   </div>
                 ) : plan.current ? (
                   "Current Plan"

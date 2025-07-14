@@ -11,11 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-
-interface Attribute {
-  name: string;
-  value: number;
-}
+import { Attribute } from "@/types/collection";
 
 interface AttributeInputProps {
   label: string;
@@ -37,7 +33,7 @@ const AttributeInput: React.FC<AttributeInputProps> = ({
   onAttributesChange,
 }) => {
   const [localAttributes, setLocalAttributes] = useState<Attribute[]>(attributes);
-  const [newAttribute, setNewAttribute] = useState<Attribute>({ name: "", value: 0 });
+  const [newAttribute, setNewAttribute] = useState<Attribute>({ name: "", value: "" });
 
   const colors = [
     "bg-blue-100 text-blue-800",
@@ -76,7 +72,7 @@ const AttributeInput: React.FC<AttributeInputProps> = ({
         onAttributesChange(updatedAttributes);
       }
 
-      setNewAttribute({ name: "", value: 0 });
+      setNewAttribute({ name: "", value: "" });
     }
   };
 
@@ -145,7 +141,7 @@ const AttributeInput: React.FC<AttributeInputProps> = ({
               type="number"
               placeholder={valuePlaceholder}
               value={newAttribute.value}
-              onChange={(e) => setNewAttribute({ ...newAttribute, value: Number(e.target.value) })}
+              onChange={(e) => setNewAttribute({ ...newAttribute, value: e.target.value })}
               onKeyDown={handleKeyDown}
               className="flex-1"
             />
@@ -154,7 +150,7 @@ const AttributeInput: React.FC<AttributeInputProps> = ({
               variant="outline"
               size="sm"
               onClick={handleAddProperty}
-              disabled={!newAttribute.name.trim() || newAttribute.value === 0}
+              disabled={!newAttribute.name.trim() || newAttribute.value === ""}
               className="flex items-center gap-1"
             >
               <Plus className="h-3 w-3" />

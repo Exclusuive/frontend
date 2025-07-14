@@ -4,6 +4,7 @@ import ItemsbyCategory from "@/components/ItemsbyCategory";
 import { Item, Slot } from "@/types/collection";
 import { useMembershipStore } from "@/stores/useMembershipStore";
 import { Button } from "@/components/ui/button";
+import { formatItemAttributes } from "@/lib/items";
 
 const MemberMarket = () => {
   const { membership, updateMembership } = useMembershipStore();
@@ -91,7 +92,7 @@ const MemberMarket = () => {
                 <div key={`${index}`} className="rounded-lg border p-4">
                   <div className="mb-3 aspect-square">
                     <img
-                      src={slot.items[0]?.imgUrl}
+                      src={slot.items[0]?.img_url}
                       alt={slot.items[0]?.name}
                       className="h-full w-full rounded-md object-cover"
                     />
@@ -114,7 +115,7 @@ const MemberMarket = () => {
                     {slot.items[0]?.description}
                   </p>
                   <p className="my-2 flex flex-wrap gap-2 border-b pb-2">
-                    {slot.items[0]?.attributes?.map((attribute) => (
+                    {formatItemAttributes(slot.items[0]?.attributes || [])?.map((attribute) => (
                       <Badge key={attribute?.name} variant="secondary">
                         {attribute?.name}: {attribute?.value}
                       </Badge>

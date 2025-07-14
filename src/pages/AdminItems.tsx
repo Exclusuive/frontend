@@ -9,13 +9,14 @@ import { useEffect, useState } from "react";
 import AddItem, { ItemCreateFormData } from "@/components/AddItem";
 import ItemsbyCategory from "@/components/ItemsbyCategory";
 import { formatItemAttributes, getItemsByLayer } from "@/lib/items";
-import { Item } from "@/types/collection";
-import { useAddItemType } from "exclusuive-typescript-sdk";
+import { Attribute, Item } from "@/types/collection";
+import { useAddItemType, useMintItem } from "exclusuive-typescript-sdk";
 import { toast } from "sonner";
 
 const AdminItems = () => {
   const { collection, setCollection } = useCollectionStore();
   const { addItemType, isPending, error, result } = useAddItemType();
+  const { mintItem, isPending: isMinting, error: mintError, result: mintResult } = useMintItem();
 
   if (!collection) {
     return (
@@ -43,13 +44,20 @@ const AdminItems = () => {
     setMintAddress(e.target.value);
   };
 
-  const onMint = () => {
-    console.log(mintAddress);
+  const onMint = (name: string, layer: string, attributes: Attribute[] | string) => {
+    mintItem({
+      col: collection.id,
+      cap: collection.cap || "",
+      layer: layer,
+      name: name,
+      attributes: attributes,
+      recipient: mintAddress,
+    });
   };
   const onSubmit = (data: ItemCreateFormData) => {
     addItemType({
       col: collection.id,
-      cap: collection.cap,
+      cap: collection.cap || "",
       layer: data.layer,
       name: data.name,
       img_url: data.imgUrl,
@@ -76,6 +84,19 @@ const AdminItems = () => {
       toast.error("Failed to create item");
     }
   }, [isPending, result, error]);
+
+  useEffect(() => {
+    if (isMinting) {
+      toast.loading("Minting item...");
+    }
+    if (mintResult) {
+      toast.dismiss();
+      toast.success("Item minted successfully");
+    } else if (mintError) {
+      toast.dismiss();
+      toast.error("Failed to mint item");
+    }
+  }, [isMinting, mintResult, mintError]);
 
   // Render items grid component
   const renderItemsGrid = (layer: string, items: Item[]) => (
@@ -123,7 +144,7 @@ const AdminItems = () => {
                   value={mintAddress}
                 />
                 <Button
-                  onClick={onMint}
+                  onClick={() => onMint(item.name, item.layer, item.attributes || "")}
                   className="w-fit bg-blue-600 hover:bg-blue-700"
                   disabled={!mintAddress}
                 >

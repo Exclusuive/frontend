@@ -20,6 +20,7 @@ const AdminMission = lazy(() => import("@/pages/AdminMission"));
 const MemberExplore = lazy(() => import("@/pages/MemberExplore"));
 const MemberMission = lazy(() => import("@/pages/MemberMission"));
 const MemberMarket = lazy(() => import("@/pages/MemberMarketplace"));
+const OceanDao = lazy(() => import("@/pages/OceanDao"));
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
   {
     path: paths.setCollectionPage.path,
     element: <SetCollectionPage />,
+  },
+  {
+    path: paths.oceanDao.path,
+    element: <OceanDao />,
   },
   {
     path: paths.adminPage.path,

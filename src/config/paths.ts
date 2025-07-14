@@ -63,4 +63,8 @@ export const paths = {
     path: "mission",
     getHref: () => "/member/mission",
   },
+  oceanDao: {
+    path: "/ocean-dao",
+    getHref: () => "/ocean-dao",
+  },
 };

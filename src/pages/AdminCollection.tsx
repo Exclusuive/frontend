@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 import TagInput from "@/components/ui/tag-input";
 import ImageUpload from "@/components/ui/image-upload";
 import { Input } from "@/components/ui/input";
-import { useUpdateCollection } from "exclusuive-typescript-sdk";
+import { useMintMembership, useUpdateCollection } from "exclusuive-typescript-sdk";
 import { toast } from "sonner";
 
 // Validation schema for collection form
@@ -39,6 +39,12 @@ const AdminCollection = () => {
   const [tempTickets, setTempTickets] = useState<string[]>([]);
 
   const { updateCollection, isPending, error, result } = useUpdateCollection();
+  const {
+    mintMembership,
+    isPending: isMinting,
+    error: mintError,
+    result: mintResult,
+  } = useMintMembership();
 
   const {
     register,
@@ -147,6 +153,19 @@ const AdminCollection = () => {
     }
   }, [isPending, result, error]);
 
+  useEffect(() => {
+    if (isMinting) {
+      toast.loading("Minting membership...");
+    }
+    if (mintResult) {
+      toast.dismiss();
+      toast.success("Membership minted successfully");
+    } else if (mintError) {
+      toast.dismiss();
+      toast.error("Failed to mint membership");
+    }
+  }, [isMinting, mintResult, mintError]);
+
   const handleImageChange = (imageUrl: string, file?: File) => {
     setValue("imgUrl", imageUrl, { shouldDirty: true, shouldTouch: true });
     setUploadedFile(file || null);
@@ -171,7 +190,12 @@ const AdminCollection = () => {
   };
 
   const onMint = () => {
-    alert(mintAddress);
+    mintMembership({
+      col: collection?.id || "",
+      cap: collection?.cap || "",
+      img_url: "asdfasdfsdv",
+      recipient: mintAddress,
+    });
   };
 
   if (!collection) {

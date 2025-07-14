@@ -34,7 +34,7 @@ const MemberMyCharacter = () => {
             onClick={() => handleEquipItem(item, layer)}
           >
             <div className="aspect-square w-full overflow-hidden rounded-md">
-              <img src={item.imgUrl} alt={item.name} className="h-full w-full object-cover" />
+              <img src={item.img_url} alt={item.name} className="h-full w-full object-cover" />
             </div>
             <div className="mt-2 text-center">
               <p className="truncate text-xs font-medium text-gray-900">{item.name}</p>
@@ -108,7 +108,7 @@ const MemberMyCharacter = () => {
                           <div className="h-10 w-10 overflow-hidden rounded bg-gray-100">
                             {equippedItem ? (
                               <img
-                                src={equippedItem.imgUrl}
+                                src={equippedItem.img_url}
                                 alt={equippedItem.name}
                                 className="h-full w-full object-cover"
                               />

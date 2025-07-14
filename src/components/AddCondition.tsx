@@ -1,16 +1,17 @@
 import { DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import AttributeInput from "./ui/attribute-input";
-import { Slot } from "@/types/collection";
+import { Attribute, Slot } from "@/types/collection";
 import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "./ui/button";
+import { Listing } from "@/types/market";
 
 const editConditionSchema = z.object({
   conditions: z.array(
     z.object({
       name: z.string(),
-      value: z.number(),
+      value: z.string(),
     }),
   ),
 });
@@ -20,24 +21,24 @@ export type EditConditionFormData = z.infer<typeof editConditionSchema>;
 // 내부 로직만 담당하는 컴포넌트 (Dialog 없이)
 export const ConditionForm = ({
   attributes,
-  slot,
+  listing,
   onSubmit,
   showSubmitButton = true,
 }: {
   attributes: string[];
-  slot?: Slot;
+  listing?: Listing;
   onSubmit: (data: EditConditionFormData) => void;
   showSubmitButton?: boolean;
 }) => {
   const { handleSubmit, setValue, watch } = useForm<EditConditionFormData>({
     resolver: zodResolver(editConditionSchema),
     defaultValues: {
-      conditions: slot?.conditions || [],
+      conditions: listing?.conditions || [],
     },
   });
   const conditions = watch("conditions");
 
-  const handleConditionsChange = (newConditions: Array<{ name: string; value: number }>) => {
+  const handleConditionsChange = (newConditions: Attribute[]) => {
     setValue("conditions", newConditions);
   };
 
@@ -65,11 +66,11 @@ export const ConditionForm = ({
 
 const AddCondition = ({
   attributes,
-  slot,
+  listing,
   onSubmit,
 }: {
   attributes: string[];
-  slot: Slot;
+  listing: Listing;
   onSubmit: (data: EditConditionFormData) => void;
 }) => {
   return (
@@ -79,7 +80,7 @@ const AddCondition = ({
       </DialogHeader>
       <ConditionForm
         attributes={attributes}
-        slot={slot}
+        listing={listing}
         onSubmit={onSubmit}
         showSubmitButton={true}
       />

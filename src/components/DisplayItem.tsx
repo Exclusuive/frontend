@@ -24,7 +24,7 @@ interface DisplayItemProps {
     selectedLayer: string;
     itemAmount: string;
     suiAmount: string;
-    conditions: { name: string; value: number }[];
+    conditions: Attribute[];
   }) => void;
 }
 
@@ -210,9 +210,9 @@ const DisplayItem: React.FC<DisplayItemProps> = ({ items, categories, attributes
                 <h4 className="mb-2 font-medium">Selected Item</h4>
                 <div className="flex flex-wrap gap-2">
                   <div className="flex items-center gap-2">
-                    {selectedItem?.imgUrl && (
+                    {selectedItem?.img_url && (
                       <img
-                        src={selectedItem.imgUrl}
+                        src={selectedItem.img_url}
                         alt={selectedItem.name}
                         className="h-6 w-6 rounded object-cover"
                       />

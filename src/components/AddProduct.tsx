@@ -20,22 +20,25 @@ const productFormSchema = z.object({
     .object({
       address: z.string(),
       name: z.string(),
-      imgUrl: z.string(),
+      img_url: z.string(),
       layer: z.string(),
       description: z.string().optional(),
       attributes: z
-        .array(
-          z.object({
-            name: z.string(),
-            value: z.number(),
-          }),
-        )
+        .union([
+          z.array(
+            z.object({
+              name: z.string(),
+              value: z.string(),
+            }),
+          ),
+          z.string(),
+        ])
         .optional(),
     })
     .optional(),
   itemAmount: z.string().optional(),
   suiAmount: z.string().optional(),
-  conditions: z.array(z.object({ name: z.string(), value: z.number() })).optional(),
+  conditions: z.array(z.object({ name: z.string(), value: z.string() })).optional(),
 });
 
 export type ProductFormData = z.infer<typeof productFormSchema>;

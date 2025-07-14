@@ -11,19 +11,7 @@ export interface Item {
 
 export interface Attribute {
   name: string;
-  value: number;
-}
-
-export interface Market {
-  address: string;
-  name: string;
-  slots: Slot[];
-}
-
-export interface Slot {
-  items: Item[];
-  price: number;
-  conditions?: { name: string; value: number }[];
+  value: string;
 }
 
 export interface Collection {
@@ -38,6 +26,5 @@ export interface Collection {
   attribute_types?: string[];
   ticket_types?: string[];
   item_types?: Item[];
-  market?: Market[];
   missions?: Mission[];
 }
