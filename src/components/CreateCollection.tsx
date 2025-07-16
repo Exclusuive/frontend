@@ -10,11 +10,13 @@ import { z } from "zod";
 import { useCollectionStore } from "@/stores/useCollectionStore";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { useCreateCollection } from "@/hooks/moveCall/useCreateCollection";
+import { useEffect } from "react";
 
 const collectionSchema = z.object({
   name: z.string(),
   description: z.string().optional(),
-  imgUrl: z.string().optional(),
+  img_url: z.string().optional(),
   layers: z.array(z.string()).optional(),
 });
 
@@ -23,28 +25,37 @@ export type CollectionCreateFormData = z.infer<typeof collectionSchema>;
 const CreateCollection = ({ onOpenChange }: { onOpenChange: (open: boolean) => void }) => {
   const navigate = useNavigate();
   const { user } = useAuthStore();
+  const { createCollection, result } = useCreateCollection();
   const { setCollection } = useCollectionStore();
   const { register, handleSubmit, setValue, watch, control } = useForm<CollectionCreateFormData>({
     resolver: zodResolver(collectionSchema),
     defaultValues: {
       name: "",
       description: "",
-      imgUrl: "",
+      img_url: "",
       layers: [],
     },
   });
 
   const onSubmit = (data: CollectionCreateFormData) => {
-    setCollection({
-      ...data,
-      address: "",
+    createCollection({
+      name: data.name,
+      description: data.description,
+      img_url: data.img_url,
+      layers: data.layers || [],
     });
-    onOpenChange(false);
-    navigate(`/${user?.role}`);
   };
 
+  useEffect(() => {
+    if (result) {
+      setCollection(result);
+      onOpenChange(false);
+      navigate(`/${user?.role}`);
+    }
+  }, [result]);
+
   // 이미지 URL 실시간 반영
-  const imageUrl = watch("imgUrl");
+  const imageUrl = watch("img_url");
 
   return (
     <DialogContent className="h-3/4 overflow-y-auto">
@@ -54,10 +65,10 @@ const CreateCollection = ({ onOpenChange }: { onOpenChange: (open: boolean) => v
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
         <ImageUpload
           currentImageUrl={imageUrl || ""}
-          onImageChange={(url: string) => setValue("imgUrl", url)}
+          onImageChange={(url: string) => setValue("img_url", url)}
           isEditing={true}
           className="w-full"
-          showUrl={false}
+          showUrl={true}
         />
         <label className="block text-sm font-medium text-gray-700">Collection Name</label>
 

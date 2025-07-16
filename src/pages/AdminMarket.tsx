@@ -4,16 +4,17 @@ import { useCollectionStore } from "@/stores/useCollectionStore";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ItemsbyCategory from "@/components/ItemsbyCategory";
-import { Item, Slot } from "@/types/collection";
+import { CollectionItem, Listing } from "@/types/collection";
 import DisplayItem from "@/components/DisplayItem";
 import AddCondition from "@/components/AddCondition";
 import AddProduct, { ProductFormData } from "@/components/AddProduct";
-import { EditConditionFormData } from "@/components/AddCondition";
+import { useAddListing } from "@/hooks/moveCall/useAddListing";
+import { useAddProduct } from "@/hooks/moveCall/useAddProduct";
 
 const AdminMarket = () => {
-  const { collection, setCollection } = useCollectionStore();
+  const { collection, addListingToCollection, addProductToCollection } = useCollectionStore();
 
   if (!collection) {
     return (
@@ -32,127 +33,110 @@ const AdminMarket = () => {
     );
   }
 
-  const markets = (collection.market || []).map((market) => market.name);
+  const markets = (collection.markets || []).map((market) => market.name);
   // Flatten all items from all slots in all markets into a 1D array
-  const items = (collection.market || [])
-    .flatMap((market) => market.slots)
-    .flatMap((slot) => slot.items);
+  const items = (collection.markets || [])
+    .flatMap((market) => market.listings)
+    .flatMap((listing) => listing?.item || []);
 
   const [open, setOpen] = useState(false);
   const [conditionOpen, setConditionOpen] = useState(false);
   const [productOpen, setProductOpen] = useState(false);
-  const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
+  const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
+  const { addListing, result: addListingResult } = useAddListing();
+  const { addProduct, result: addProductResult, error } = useAddProduct();
 
-  const getSlotsByMarket = (_items: Item[], marketName: string) => {
-    const market = (collection.market || []).find((m) => m.name === marketName);
+  const getListingsByMarket = (_items: CollectionItem[] | Listing[], marketName: string) => {
+    const market = (collection.markets || []).find((m) => m.name === marketName);
     if (!market) return [];
-    return market.slots;
+    return market.listings;
   };
 
-  const onAddCondition = (data: EditConditionFormData, slot: Slot) => {
-    if (collection) {
-      const updatedMarket =
-        collection.market?.map((market) => ({
-          ...market,
-          slots: market.slots.map((s) => {
-            if (s === slot) {
-              const mergedConditions = data.conditions.map((newCondition) => {
-                const existingCondition = s.conditions?.find(
-                  (existing) => existing.name === newCondition.name,
-                );
-                return existingCondition
-                  ? { ...existingCondition, value: newCondition.value }
-                  : newCondition;
-              });
-
-              return { ...s, conditions: mergedConditions };
-            }
-            return s;
-          }),
-        })) || [];
-
-      setCollection({
-        ...collection,
-        market: updatedMarket,
-      });
-    }
+  const onAddCondition = () => {
+    window.alert("We're working on it");
     setConditionOpen(false);
   };
 
-  const onAddProduct = (data: ProductFormData, marketName: string, targetSlot: Slot | null) => {
+  const onAddProduct = (
+    data: ProductFormData,
+    marketName: string,
+    targetListing: Listing | null,
+  ) => {
     if (!collection) return;
 
-    const updatedMarket = collection.market ? [...collection.market] : [];
+    const selectedMarket = collection.markets?.find((market) => market.name === marketName);
 
-    // Find the target market using selectedMarket instead of markets[0]
-    const targetMarketIndex = updatedMarket.findIndex((market) => market.name === marketName);
-
-    if (targetMarketIndex === -1) {
-      console.error("Target market not found");
-      setProductOpen(false);
-      return;
-    }
-
-    if (data.selectedItem && data.selectedLayer) {
-      // Adding new product - create new slot
-      const newSlot: Slot = {
-        items: Array(parseInt(data?.itemAmount || "0")).fill({
-          ...data.selectedItem,
-        }),
+    if (!targetListing) {
+      addListing({
+        collection_id: collection.collection_id,
+        collection_cap_id: collection.collection_cap_id,
+        market_id: selectedMarket?.market_id || "",
+        market_cap_id: selectedMarket?.market_cap_id || "",
+        listing_number: selectedMarket?.listings?.length || 0,
+        item: data.selectedItem,
+        value: parseInt(data.itemAmount || "0"),
         price: parseInt(data.suiAmount || "0"),
         conditions: data.conditions || [],
-      };
-
-      updatedMarket[targetMarketIndex] = {
-        ...updatedMarket[targetMarketIndex],
-        slots: [...updatedMarket[targetMarketIndex].slots, newSlot],
-      };
-    } else if (targetSlot) {
-      // Adding to existing slot - increase quantity
-      const additionalItems = Array(parseInt(data?.itemAmount || "0")).fill(targetSlot.items[0]);
-
-      updatedMarket[targetMarketIndex] = {
-        ...updatedMarket[targetMarketIndex],
-        slots: updatedMarket[targetMarketIndex].slots.map((slot) =>
-          slot === targetSlot ? { ...slot, items: [...slot.items, ...additionalItems] } : slot,
-        ),
-      };
+      });
+    } else {
+      console.log(targetListing);
+      addProduct({
+        collection_id: collection.collection_id,
+        collection_cap_id: collection.collection_cap_id,
+        market_id: selectedMarket?.market_id || "",
+        market_cap_id: selectedMarket?.market_cap_id || "",
+        listing_number: targetListing.listing_number,
+        item: targetListing.item,
+        value: parseInt(data.itemAmount || "0"),
+      });
     }
-
-    setCollection({
-      ...collection,
-      market: updatedMarket,
-    });
-
-    setProductOpen(false);
-    setOpen(false);
   };
 
+  useEffect(() => {
+    if (addListingResult) {
+      addListingToCollection(addListingResult);
+      setOpen(false);
+      setProductOpen(false);
+      setConditionOpen(false);
+      setSelectedListing(null);
+    }
+  }, [addListingResult]);
+
+  useEffect(() => {
+    if (addProductResult) {
+      addProductToCollection(addProductResult);
+      setProductOpen(false);
+      setOpen(false);
+    }
+    console.log(error);
+  }, [addProductResult, error]);
+
   // Render items grid component
-  const renderItemsGrid = (marketName: string, items: Item[]) => {
+  const renderItemsGrid = (marketName: string, items: CollectionItem[] | Listing[]) => {
     return (
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold">{marketName}</h3>
-          <Badge variant="secondary"> {getSlotsByMarket(items, marketName).length} items</Badge>
+          <Badge variant="secondary"> {getListingsByMarket(items, marketName)?.length} items</Badge>
         </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-          {getSlotsByMarket(items, marketName).length > 0 &&
-            getSlotsByMarket(items, marketName).map((slot: Slot, index: number) => (
-              <div key={`${index}`} className="rounded-lg border p-4">
+          {Array.isArray(getListingsByMarket(items, marketName)) &&
+            getListingsByMarket(items, marketName)!.length > 0 &&
+            getListingsByMarket(items, marketName)!.map((listing: Listing, index: number) => (
+              <div key={index} className="rounded-lg border p-4">
                 <div className="mb-3 aspect-square">
                   <img
-                    src={slot.items[0].imgUrl}
-                    alt={slot.items[0].name}
+                    src={listing.item?.img_url}
+                    alt={listing.item?.name}
                     className="h-full w-full rounded-md object-cover"
                   />
                 </div>
                 <h4 className="mb-1 flex items-center justify-between text-sm font-medium">
                   <div>
-                    {slot.items[0].name}{" "}
+                    {listing.item?.name}{" "}
                     <a
-                      href={`https://suiscan.xyz/address/${slot.items[0].address}`}
+                      href={`https://suiscan.xyz/address/${listing.item?.address}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-xs text-blue-500 hover:text-blue-600"
@@ -160,29 +144,29 @@ const AdminMarket = () => {
                       view on Explorer
                     </a>
                   </div>
-                  <span className="text-end text-xs text-gray-500">{slot.items.length} Left</span>
+                  <span className="text-end text-xs text-gray-500">{listing.value} Left</span>
                 </h4>
-                <p className="mb-1 truncate text-xs text-gray-500">{slot.items[0].description}</p>
+                <p className="mb-1 truncate text-xs text-gray-500">{listing.item?.description}</p>
                 <p className="my-2 flex flex-wrap gap-2 border-b pb-2">
-                  {slot.items[0].attributes?.map((attribute) => (
+                  {listing.item?.attributes?.map((attribute) => (
                     <Badge key={attribute.name} variant="secondary">
                       {attribute.name}: {attribute.value}
                     </Badge>
                   ))}
                 </p>
 
-                {slot.price > 0 && (
+                {listing.price > 0 && (
                   <div>
-                    <p>Price : {slot.price} SUI</p>
+                    <p>Price : {listing.price} SUI</p>
                   </div>
                 )}
 
-                {slot.conditions && slot.conditions.length > 0 && (
+                {listing.conditions && listing.conditions.length > 0 && (
                   <div>
                     <p>Requirements : </p>
 
                     <div className="mt-2 flex flex-wrap items-center gap-x-2">
-                      {slot.conditions?.map((condition) => (
+                      {listing.conditions?.map((condition) => (
                         <div className="flex items-center gap-2">
                           <Badge variant="secondary">{condition.name}</Badge>
                           <span className="text-xs text-gray-500">: {condition.value}</span>
@@ -201,21 +185,21 @@ const AdminMarket = () => {
                     </DialogTrigger>
                     <AddCondition
                       attributes={collection.tickets || []}
-                      slot={slot}
-                      onSubmit={(data) => onAddCondition(data, slot)}
+                      listing={listing}
+                      onSubmit={onAddCondition}
                     />
                   </Dialog>
                   <Dialog
                     open={productOpen}
                     onOpenChange={(open) => {
                       setProductOpen(open);
-                      if (!open) setSelectedSlot(null);
+                      if (!open) setSelectedListing(null);
                     }}
                   >
                     <DialogTrigger asChild>
                       <Button
                         className="w-full bg-blue-600 hover:bg-blue-700"
-                        onClick={() => setSelectedSlot(slot)}
+                        onClick={() => setSelectedListing(listing)}
                       >
                         Add Product
                       </Button>
@@ -223,8 +207,10 @@ const AdminMarket = () => {
                     <AddProduct
                       items={collection.items || []}
                       layers={collection.layers || []}
-                      isNew={slot.items.length === 0}
-                      onSubmit={(data) => onAddProduct(data, marketName, selectedSlot)}
+                      isNew={listing.value === 0}
+                      onSubmit={(data) => {
+                        onAddProduct(data, marketName, selectedListing);
+                      }}
                     />
                   </Dialog>
                 </div>
@@ -262,9 +248,11 @@ const AdminMarket = () => {
           <p className="text-sm text-gray-600">Collection: {collection.name}</p>
         </CardHeader>
         <ItemsbyCategory
+          collection={collection}
+          label="markets"
           categories={markets}
           items={items}
-          getItemsByCategory={getSlotsByMarket}
+          getItemsByCategory={(items, marketName) => getListingsByMarket(items, marketName) || []}
           renderItemsGrid={renderItemsGrid}
         />
       </Card>

@@ -8,9 +8,9 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./
 import { useState } from "react";
 import { paths } from "@/config/paths";
 import { cn } from "@/lib/utils";
-import { useMembershipStore } from "@/stores/useMembershipStore";
-import { Collection } from "@/types/collection";
-import { Membership, User } from "@/types/user";
+import { Collection, Membership } from "@/types/collection";
+import { User } from "@/types/user";
+import CharacterImage from "./CharacterImage";
 
 interface MenuItem {
   label: string;
@@ -19,13 +19,14 @@ interface MenuItem {
 
 const AdminMenuItems = [
   {
-    label: "My Collection",
+    label: "Collection",
     subMenu: [
       { label: "Dashboard", path: paths.adminDashboard.path },
       { label: "Collection", path: paths.adminCollection.path },
       { label: "Items", path: paths.adminItems.path },
       { label: "Market", path: paths.adminMarket.path },
       { label: "Mission", path: paths.adminMission.path },
+      { label: "Explore Other Collections", path: paths.adminExplore.path },
     ],
   },
   {
@@ -39,19 +40,17 @@ const AdminMenuItems = [
 
 const UserMenuItems = [
   {
-    label: "My Membership",
+    label: "Membership",
     subMenu: [
       { label: "My Character", path: paths.memberMyCharacter.path },
       { label: "Market", path: paths.memberMarket.path },
       { label: "Mission", path: paths.memberMission.path },
+      { label: "Explore Other Collections", path: paths.memberExplore.path },
     ],
   },
   {
     label: "My Page",
-    subMenu: [
-      { label: "Profile", path: paths.memberProfile.path },
-      { label: "Explore Collections", path: paths.memberExplore.path },
-    ],
+    subMenu: [{ label: "Profile", path: paths.memberProfile.path }],
   },
 ];
 
@@ -59,15 +58,15 @@ function ProfileSection({ user }: { user: any }) {
   if (!user) return null;
   return (
     <div className="flex items-center gap-2">
-      <img src={user.profile.imgUrl} alt="profile" className="h-10 w-10 rounded-full" />
+      <img src={user.profile?.imgUrl} alt="profile" className="h-10 w-10 rounded-full" />
       <div>
         <div className="flex items-center gap-2 text-sm font-bold text-[#474747]">
-          {user.profile.name}
+          {user.profile?.name}
           <Badge className="rounded-full bg-[#4DA2FF] px-2 text-xs text-white">{user.role}</Badge>
         </div>
         <div className="text-sm text-[#636363]">
-          <span className="font-medium">Address:</span> {user.address.slice(0, 6)}...
-          {user.address.slice(-4)}
+          <span className="font-medium">Address:</span> {user.address?.slice(0, 6)}...
+          {user.address?.slice(-4)}
         </div>
       </div>
     </div>
@@ -82,16 +81,15 @@ function CollectionSection({
   user: User | null;
 }) {
   if (user?.role !== "admin") return null;
-  if (!collection) return null;
   return (
     <div className="my-8">
       <p className="text-md font-bold text-[#474747]">Selected Collection</p>
       <div className="my-4 flex items-center gap-2">
-        <img src={collection.imgUrl} alt="collection" className="h-10 w-10 rounded-full" />
+        <img src={collection?.img_url} alt="collection" className="h-10 w-10 rounded-full" />
         <div>
-          <div className="text-sm font-bold text-[#474747]">{collection.name}</div>
+          <div className="text-sm font-bold text-[#474747]">{collection?.name}</div>
           <a
-            href={`https://suiscan.xyz/address/${collection.address}`}
+            href={`https://suiscan.xyz/address/${collection?.collection_id}`}
             target="_blank"
             className="text-sm text-blue-500 underline"
           >
@@ -121,9 +119,14 @@ function MembershipSection({
     <div className="my-8">
       <p className="text-md font-bold text-[#474747]">Selected Membership</p>
       <div className="my-4 flex items-center gap-2">
-        <img src={membership.imgUrl} alt="membership" className="h-10 w-10 rounded-full" />
+        <div className="relative h-10 w-10 rounded-full border">
+          <CharacterImage membership={membership} />
+        </div>
         <div>
-          <div className="text-sm font-bold text-[#474747]">{membership.name}</div>
+          <div className="text-sm font-bold text-[#474747]">
+            {membership?.address.slice(0, 10)}...
+            {membership?.address.slice(-10)}
+          </div>
         </div>
       </div>
       <Link to="/setCollection" className="w-full">
@@ -194,7 +197,8 @@ export default function Sidebar() {
   const [open, setOpen] = useState(false);
   const { user } = useAuthStore();
   const { collection } = useCollectionStore();
-  const { membership } = useMembershipStore();
+  const membership = collection?.selected_membership || null;
+
   // 모바일 오버레이 메뉴
   const MobileSidebar = () => (
     <div

@@ -11,18 +11,21 @@ import { cn } from "@/lib/utils";
 import TagInput from "@/components/ui/tag-input";
 import ImageUpload from "@/components/ui/image-upload";
 import { Input } from "@/components/ui/input";
+import { useUpdateCollection } from "@/hooks/moveCall/useUpdateCollection";
+import { useMintMembership } from "@/hooks/moveCall/useMintMembership";
 
 // Validation schema for collection form
 const collectionSchema = z.object({
   description: z
     .string()
     .min(1, "Description is required")
-    .max(500, "Description must be less than 500 characters"),
-  imgUrl: z.string().optional(),
+    .max(500, "Description must be less than 500 characters")
+    .nullable()
+    .optional(),
+  img_url: z.string().nullable().optional(),
   layers: z.array(z.string()).optional(),
   attributes: z.array(z.string()).optional(),
   tickets: z.array(z.string()).optional(),
-  markets: z.array(z.string()).optional(),
 });
 
 export type CollectionFormData = z.infer<typeof collectionSchema>;
@@ -36,7 +39,9 @@ const AdminCollection = () => {
   const [tempLayers, setTempLayers] = useState<string[]>([]);
   const [tempAttributes, setTempAttributes] = useState<string[]>([]);
   const [tempTickets, setTempTickets] = useState<string[]>([]);
-  const [tempMarkets, setTempMarkets] = useState<string[]>([]);
+
+  const { updateCollection, result } = useUpdateCollection();
+  const { mintMembership } = useMintMembership();
 
   const {
     register,
@@ -48,12 +53,11 @@ const AdminCollection = () => {
   } = useForm<CollectionFormData>({
     resolver: zodResolver(collectionSchema),
     defaultValues: {
-      description: collection?.description || "",
-      imgUrl: collection?.imgUrl || "",
+      description: collection?.description || null,
+      img_url: collection?.img_url || null,
       layers: collection?.layers || [],
       attributes: collection?.attributes || [],
       tickets: collection?.tickets || [],
-      markets: collection?.market?.map((market) => market.name) || [],
     },
   });
 
@@ -62,17 +66,15 @@ const AdminCollection = () => {
     if (collection) {
       reset({
         description: collection.description,
-        imgUrl: collection.imgUrl,
+        img_url: collection.img_url,
         layers: collection.layers || [],
         attributes: collection.attributes || [],
         tickets: collection.tickets || [],
-        markets: collection.market?.map((market) => market.name) || [],
       });
       // Reset temporary states
       setTempLayers(collection.layers || []);
       setTempAttributes(collection.attributes || []);
       setTempTickets(collection.tickets || []);
-      setTempMarkets(collection.market?.map((market) => market.name) || []);
     }
   }, [collection, reset]);
 
@@ -89,34 +91,47 @@ const AdminCollection = () => {
       setTempLayers(collection.layers || []);
       setTempAttributes(collection.attributes || []);
       setTempTickets(collection.tickets || []);
-      setTempMarkets(collection.market?.map((market) => market.name) || []);
     }
   };
 
   const handleSave = (data: CollectionFormData) => {
+    const layerChange = tempLayers.filter((layer) => !collection?.layers?.includes(layer));
+    const attributeChange = tempAttributes.filter(
+      (attribute) => !collection?.attributes?.includes(attribute),
+    );
+    const ticketChange = tempTickets.filter((ticket) => !collection?.tickets?.includes(ticket));
+
+    const descriptionChange =
+      data.description !== collection?.description ? data.description : null;
+    const imgUrlChange = data.img_url !== collection?.img_url ? data.img_url : null;
+
     if (collection) {
-      const updatedCollection = {
-        ...collection,
-        ...data,
-        layers: tempLayers,
-        attributes: tempAttributes,
-        tickets: tempTickets,
-        market: tempMarkets.map((market) => ({
-          name: market,
-          address: collection.market?.find((m) => m.name === market)?.address || "",
-          slots: collection.market?.find((m) => m.name === market)?.slots || [],
-        })),
+      const updateData = {
+        collection_id: collection?.collection_id || "",
+        collection_cap_id: collection?.collection_cap_id || "",
+        name: collection?.name || "",
+        description: descriptionChange || "",
+        img_url: imgUrlChange || "",
+        layers: layerChange || [],
+        attributes: attributeChange || [],
+        tickets: ticketChange || [],
       };
-      setCollection(updatedCollection);
+      updateCollection(updateData);
       setIsEditing(false);
       setUploadedFile(null);
     }
   };
 
+  useEffect(() => {
+    if (result) {
+      setCollection(result);
+    }
+  }, [result]);
+
   const handleImageChange = (imageUrl: string, file?: File) => {
-    setValue("imgUrl", imageUrl, { shouldDirty: true, shouldTouch: true });
+    setValue("img_url", imageUrl, { shouldDirty: true, shouldTouch: true });
     setUploadedFile(file || null);
-    trigger("imgUrl");
+    trigger("img_url");
   };
 
   // Temporary tag change handlers
@@ -132,16 +147,16 @@ const AdminCollection = () => {
     setTempTickets(tickets);
   };
 
-  const handleTempMarketsChange = (markets: string[]) => {
-    setTempMarkets(markets);
-  };
-
   const onMintAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMintAddress(e.target.value);
   };
 
   const onMint = () => {
-    alert(mintAddress);
+    mintMembership({
+      collection_id: collection?.collection_id || "",
+      collection_cap_id: collection?.collection_cap_id || "",
+      recipient: mintAddress,
+    });
   };
 
   if (!collection) {
@@ -190,7 +205,7 @@ const AdminCollection = () => {
                 {/* Image Section */}
                 <div className="w-full xl:w-1/2">
                   <ImageUpload
-                    currentImageUrl={collection.imgUrl || ""}
+                    currentImageUrl={collection.img_url || ""}
                     onImageChange={handleImageChange}
                     isEditing={isEditing}
                   />
@@ -241,13 +256,13 @@ const AdminCollection = () => {
                     placeholder="Layer name"
                   />
 
-                  {/* Properties */}
+                  {/* Attribute */}
                   <TagInput
-                    label="Properties"
+                    label="Attribute"
                     tags={tempAttributes}
                     onTagsChange={handleTempAttributesChange}
                     isEditing={isEditing}
-                    placeholder="Property name"
+                    placeholder="Attribute name"
                   />
 
                   {/* Tickets */}
@@ -257,15 +272,6 @@ const AdminCollection = () => {
                     onTagsChange={handleTempTicketsChange}
                     isEditing={isEditing}
                     placeholder="Ticket name"
-                  />
-
-                  {/* Markets */}
-                  <TagInput
-                    label="Markets"
-                    tags={tempMarkets}
-                    onTagsChange={handleTempMarketsChange}
-                    isEditing={isEditing}
-                    placeholder="Market name"
                   />
                 </div>
               </div>
@@ -281,9 +287,7 @@ const AdminCollection = () => {
                       JSON.stringify(tempLayers) === JSON.stringify(collection?.layers || []) &&
                       JSON.stringify(tempAttributes) ===
                         JSON.stringify(collection?.attributes || []) &&
-                      JSON.stringify(tempTickets) === JSON.stringify(collection?.tickets || []) &&
-                      JSON.stringify(tempMarkets) ===
-                        JSON.stringify(collection?.market?.map((market) => market.name) || [])
+                      JSON.stringify(tempTickets) === JSON.stringify(collection?.tickets || [])
                     }
                     className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700"
                   >

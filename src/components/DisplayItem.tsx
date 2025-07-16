@@ -9,18 +9,18 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Attribute, Item } from "@/types/collection";
+import { Attribute, CollectionItem } from "@/types/collection";
 import { Badge } from "@/components/ui/badge";
 import LayerItemSelector from "./LayerItemSelector";
 import { ProductFormData } from "./AddProduct";
 import AttributeInput from "./ui/attribute-input";
 
 interface DisplayItemProps {
-  items: Item[];
+  items: CollectionItem[];
   categories: string[];
   attributes: string[];
   onSubmit: (data: {
-    selectedItem: Item;
+    selectedItem: CollectionItem;
     selectedLayer: string;
     itemAmount: string;
     suiAmount: string;
@@ -50,7 +50,7 @@ const DisplayItem: React.FC<DisplayItemProps> = ({ items, categories, attributes
   const watchedValues = watch();
   const { selectedItem, selectedLayer, itemAmount, suiAmount, conditions } = watchedValues;
 
-  const handleItemSelect = (item: Item) => {
+  const handleItemSelect = (item: CollectionItem) => {
     setValue("selectedItem", item);
   };
 
@@ -114,7 +114,7 @@ const DisplayItem: React.FC<DisplayItemProps> = ({ items, categories, attributes
               items={items}
               onItemSelect={handleItemSelect}
               selectedLayer={selectedLayer}
-              selectedItem={selectedItem?.address}
+              selectedItem={selectedItem?.name}
               onLayerChange={handleLayerChange}
             />
             {selectedItem && (
@@ -210,9 +210,9 @@ const DisplayItem: React.FC<DisplayItemProps> = ({ items, categories, attributes
                 <h4 className="mb-2 font-medium">Selected Item</h4>
                 <div className="flex flex-wrap gap-2">
                   <div className="flex items-center gap-2">
-                    {selectedItem?.imgUrl && (
+                    {selectedItem?.img_url && (
                       <img
-                        src={selectedItem.imgUrl}
+                        src={selectedItem.img_url}
                         alt={selectedItem.name}
                         className="h-6 w-6 rounded object-cover"
                       />

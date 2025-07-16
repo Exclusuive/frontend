@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { Link, useNavigate } from "react-router-dom";
 import { CirclePlay } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import SetRolePopup from "@/components/SetRolePopup";
+import EventPopup from "@/components/EventPopup";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { useCurrentAccount, useWallets } from "@mysten/dapp-kit";
 import { useConnectWallet } from "@mysten/dapp-kit";
@@ -18,6 +19,16 @@ export default function LandingPage() {
   const { login } = useAuthStore();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const [isEventPopupOpen, setIsEventPopupOpen] = useState(false);
+
+  // 페이지 로드 시 OceanDao 이벤트 팝업 자동 표시
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsEventPopupOpen(true);
+    }, 1000); // 1초 후 팝업 표시
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleOpenChange = (newOpen: boolean) => {
     setIsOpen(newOpen);
@@ -50,6 +61,10 @@ export default function LandingPage() {
         );
       }
     }
+  };
+
+  const handleCloseEventPopup = () => {
+    setIsEventPopupOpen(false);
   };
 
   return (
@@ -162,6 +177,9 @@ export default function LandingPage() {
           </Card>
         </div>
       </section>
+
+      {/* OceanDao 이벤트 팝업 */}
+      <EventPopup isOpen={isEventPopupOpen} onClose={handleCloseEventPopup} />
     </div>
   );
 }

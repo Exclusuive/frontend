@@ -6,13 +6,15 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import AddItem, { ItemCreateFormData } from "@/components/AddItem";
+import AddItem from "@/components/AddItem";
 import ItemsbyCategory from "@/components/ItemsbyCategory";
 import { getItemsByLayer } from "@/lib/items";
-import { Item } from "@/types/collection";
+import { CollectionItem } from "@/types/collection";
+import { useMintItem } from "@/hooks/moveCall/useMintItem";
 
 const AdminItems = () => {
-  const { collection, setCollection } = useCollectionStore();
+  const { collection } = useCollectionStore();
+  const { mintItem } = useMintItem();
 
   if (!collection) {
     return (
@@ -32,7 +34,7 @@ const AdminItems = () => {
   }
 
   const layers = collection.layers || [];
-  const items: Item[] = collection.items || [];
+  const items: CollectionItem[] = collection.items || [];
 
   const [mintAddress, setMintAddress] = useState("");
   const [open, setOpen] = useState(false);
@@ -40,26 +42,17 @@ const AdminItems = () => {
     setMintAddress(e.target.value);
   };
 
-  const onMint = () => {
-    console.log(mintAddress);
+  const onMint = (item: CollectionItem) => {
+    mintItem({
+      collection_id: collection.collection_id,
+      collection_cap_id: collection.collection_cap_id,
+      item,
+      recipient: mintAddress,
+    });
   };
-  const onSubmit = (data: ItemCreateFormData) => {
-    if (collection) {
-      setCollection({
-        ...collection,
-        items: [
-          ...(collection.items || []),
-          {
-            ...data,
-            address: `0x${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`,
-          },
-        ],
-      });
-    }
-    setOpen(false);
-  };
+
   // Render items grid component
-  const renderItemsGrid = (layer: string, items: Item[]) => (
+  const renderItemsGrid = (layer: string, items: CollectionItem[]) => (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold">{layer}</h3>
@@ -68,26 +61,16 @@ const AdminItems = () => {
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 2xl:grid-cols-3">
         {getItemsByLayer(items, layer).length > 0 &&
-          getItemsByLayer(items, layer).map((item: Item, index: number) => (
+          getItemsByLayer(items, layer).map((item: CollectionItem, index: number) => (
             <div key={`${item.name}-${index}`} className="rounded-lg border p-4">
               <div className="mb-3 aspect-square">
                 <img
-                  src={item.imgUrl}
+                  src={item.img_url}
                   alt={item.name}
                   className="h-full w-full rounded-md object-cover"
                 />
               </div>
-              <h4 className="mb-1 text-sm font-medium">
-                {item.name}{" "}
-                <a
-                  href={`https://suiscan.xyz/address/${item.address}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs text-blue-500 hover:text-blue-600"
-                >
-                  view on Explorer
-                </a>
-              </h4>
+              <h4 className="mb-1 text-sm font-medium">{item.name} </h4>
               <p className="mb-1 truncate text-xs text-gray-500">{item.description}</p>
               <p className="my-2 flex flex-wrap gap-2">
                 {item.attributes?.map((attribute) => (
@@ -104,7 +87,7 @@ const AdminItems = () => {
                   value={mintAddress}
                 />
                 <Button
-                  onClick={onMint}
+                  onClick={() => onMint(item)}
                   className="w-fit bg-blue-600 hover:bg-blue-700"
                   disabled={!mintAddress}
                 >
@@ -126,7 +109,7 @@ const AdminItems = () => {
               </div>
             </div>
           </DialogTrigger>
-          <AddItem category={layer} onSubmit={onSubmit} collection={collection} />
+          <AddItem category={layer} collection={collection} onOpenChange={setOpen} />
         </Dialog>
       </div>
     </div>
@@ -140,10 +123,12 @@ const AdminItems = () => {
           <p className="text-sm text-gray-600">Collection: {collection.name}</p>
         </CardHeader>
         <ItemsbyCategory
+          collection={collection}
+          label="layers"
           categories={layers}
           items={items}
           getItemsByCategory={getItemsByLayer}
-          renderItemsGrid={renderItemsGrid}
+          renderItemsGrid={(layer, items) => renderItemsGrid(layer, items as CollectionItem[])}
         />
       </Card>
     </div>

@@ -1,40 +1,70 @@
 import { Mission } from "./mission";
 
-export interface Item {
-  name: string;
-  address: string;
-  imgUrl: string;
-  layer: string;
-  description?: string;
-  attributes?: Attribute[];
-}
-
 export interface Attribute {
   name: string;
   value: number;
 }
 
-export interface Market {
-  address: string;
+export interface Ticket {
   name: string;
-  slots: Slot[];
+  value: number;
 }
 
-export interface Slot {
-  items: Item[];
+export interface Market {
+  market_id: string;
+  market_cap_id: string;
+  collection_id: string;
+  name: string;
+  listings?: Listing[];
+}
+
+export interface Listing {
+  market_id: string;
+  listing_number: number;
+  item: CollectionItem;
+  value: number;
   price: number;
-  conditions?: { name: string; value: number }[];
+  conditions?: Ticket[];
+  created_at: string;
+  updated_at: string;
+}
+
+// Type definition based on the provided JSON structure
+export interface CollectionItem {
+  id: string;
+  collection_id: string;
+  name: string;
+  img_url: string;
+  layer: string;
+  description?: string;
+  attributes?: Attribute[];
+  created_at?: string;
+  address?: string;
+}
+
+export interface Membership {
+  collection_id: string;
+  membership_id: string;
+  address: string;
+  img_url: string;
+  equipped_items?: CollectionItem[];
 }
 
 export interface Collection {
-  address: string;
-  imgUrl?: string;
+  collection_id: string;
+  collection_cap_id: string;
   name: string;
+  img_url?: string;
   description?: string;
-  layers?: string[];
+  category?: string | null;
+  created_at: string;
+  updated_at: string;
   attributes?: string[];
+  layers?: string[];
   tickets?: string[];
-  items?: Item[];
-  market?: Market[];
+  items?: CollectionItem[];
   missions?: Mission[];
+  markets?: Market[];
+  memberships?: Membership[];
+  selected_membership?: Membership;
 }

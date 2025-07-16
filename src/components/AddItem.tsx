@@ -8,11 +8,14 @@ import { Textarea } from "./ui/textarea";
 import AttributeInput from "./ui/attribute-input";
 import { Button } from "./ui/button";
 import { Collection } from "@/types/collection";
+import { useAddItem } from "@/hooks/moveCall/useAddItem";
+import { useEffect } from "react";
+import { useCollectionStore } from "@/stores/useCollectionStore";
 
 interface AddItemProps {
   category: string;
-  onSubmit: (data: ItemCreateFormData) => void;
   collection: Collection;
+  onOpenChange: (open: boolean) => void;
 }
 
 const itemSchema = z.object({
@@ -30,8 +33,10 @@ const itemSchema = z.object({
 
 export type ItemCreateFormData = z.infer<typeof itemSchema>;
 
-const AddItem = ({ category, onSubmit, collection }: AddItemProps) => {
-  const { register, handleSubmit, setValue, watch } = useForm<ItemCreateFormData>({
+const AddItem = ({ category, collection, onOpenChange }: AddItemProps) => {
+  const { addItem, result } = useAddItem();
+  const { addItemToCollection } = useCollectionStore();
+  const { register, handleSubmit, setValue, watch, reset } = useForm<ItemCreateFormData>({
     resolver: zodResolver(itemSchema),
     defaultValues: {
       name: "",
@@ -48,6 +53,27 @@ const AddItem = ({ category, onSubmit, collection }: AddItemProps) => {
     setValue("attributes", newAttributes);
   };
 
+  const onSubmit = (data: ItemCreateFormData) => {
+    addItem({
+      collection_id: collection.collection_id,
+      collection_cap_id: collection.collection_cap_id,
+      name: data.name,
+      description: data.description,
+      img_url: data.imgUrl,
+      layer: data.layer,
+      attributes: data.attributes,
+    });
+    reset();
+  };
+
+  useEffect(() => {
+    if (result) {
+      console.log(result);
+      addItemToCollection(result);
+      onOpenChange(false);
+    }
+  }, [result]);
+
   return (
     <DialogContent className="h-3/4 overflow-y-auto">
       <DialogHeader>
@@ -59,7 +85,7 @@ const AddItem = ({ category, onSubmit, collection }: AddItemProps) => {
           onImageChange={(url: string) => setValue("imgUrl", url)}
           isEditing={true}
           className="w-full"
-          showUrl={false}
+          showUrl={true}
         />
         <label className="block text-sm font-medium text-gray-700">Item Name</label>
         <Input

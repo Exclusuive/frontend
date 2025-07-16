@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import DashboardCard, { DashboardCardProps } from "@/components/DashboardCard";
 import ItemsbyCategory from "@/components/ItemsbyCategory";
 import { useCollectionStore } from "@/stores/useCollectionStore";
-import { Item } from "@/types/collection";
+import { CollectionItem } from "@/types/collection";
 import { getItemsByLayer } from "@/lib/items";
 import { Mission } from "@/types/mission";
 import { Button } from "@/components/ui/button";
@@ -46,19 +46,19 @@ const dashboardCards: DashboardCardProps[] = [
   },
 ];
 
-const renderItemsGrid = (layer: string, items: Item[]) => {
+const renderItemsGrid = (layer: string, items: CollectionItem[]) => {
   return (
     <div className="space-y-4">
       <div className="flex flex-col gap-4 overflow-y-auto">
         {getItemsByLayer(items, layer).length > 0 &&
-          getItemsByLayer(items, layer).map((item: Item, index: number) => (
+          getItemsByLayer(items, layer).map((item: CollectionItem, index: number) => (
             <div
               key={`${item.name}-${index}`}
               className="flex items-center gap-3 rounded-md border p-3"
             >
               <div className="flex-shrink-0">
                 <img
-                  src={item.imgUrl}
+                  src={item.img_url}
                   alt={item.name}
                   className="h-9 w-9 rounded object-cover md:h-20 md:w-20"
                 />
@@ -66,16 +66,6 @@ const renderItemsGrid = (layer: string, items: Item[]) => {
               <div className="flex flex-1 flex-col gap-1.5">
                 <div className="flex items-center gap-1.5">
                   <h4 className="text-sm font-semibold">{item.name}</h4>
-                  <a
-                    href={`https://suiscan.xyz/address/${item.address}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs text-blue-500 underline hover:text-blue-600"
-                    tabIndex={0}
-                    aria-label={`View ${item.name} on Explorer`}
-                  >
-                    view on Explorer
-                  </a>
                 </div>
                 {item.description && (
                   <p className="truncate text-xs text-gray-500">{item.description}</p>
@@ -127,10 +117,14 @@ const AdminDashboard = () => {
             </CardHeader>
             <CardContent>
               <ItemsbyCategory
+                collection={collection!}
+                label="layers"
                 categories={layers}
                 items={items}
                 getItemsByCategory={getItemsByLayer}
-                renderItemsGrid={renderItemsGrid}
+                renderItemsGrid={(layer, items) =>
+                  renderItemsGrid(layer, items as CollectionItem[])
+                }
               />
             </CardContent>
           </Card>

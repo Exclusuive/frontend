@@ -17,9 +17,9 @@ const MemberMyCharacter = lazy(() => import("@/pages/MemberMyCharacter"));
 const Profile = lazy(() => import("@/pages/Profile"));
 const AdminBilling = lazy(() => import("@/pages/AdminBilling"));
 const AdminMission = lazy(() => import("@/pages/AdminMission"));
-const MemberExplore = lazy(() => import("@/pages/MemberExplore"));
+const Explore = lazy(() => import("@/pages/Explore"));
 const MemberMission = lazy(() => import("@/pages/MemberMission"));
-const MemberMarket = lazy(() => import("@/pages/MemberMarketplace"));
+const MemberMarket = lazy(() => import("@/pages/MemberMarket"));
 
 const router = createBrowserRouter([
   {
@@ -30,6 +30,7 @@ const router = createBrowserRouter([
     path: paths.setCollectionPage.path,
     element: <SetCollectionPage />,
   },
+
   {
     path: paths.adminPage.path,
     element: (
@@ -69,6 +70,10 @@ const router = createBrowserRouter([
         path: paths.adminMission.path,
         element: <AdminMission />,
       },
+      {
+        path: paths.adminExplore.path,
+        element: <Explore />,
+      },
     ],
   },
   {
@@ -90,10 +95,7 @@ const router = createBrowserRouter([
         path: paths.memberProfile.path,
         element: <Profile />,
       },
-      {
-        path: paths.memberExplore.path,
-        element: <MemberExplore />,
-      },
+
       {
         path: paths.memberMarket.path,
         element: <MemberMarket />,
@@ -101,6 +103,10 @@ const router = createBrowserRouter([
       {
         path: paths.memberMission.path,
         element: <MemberMission />,
+      },
+      {
+        path: paths.memberExplore.path,
+        element: <Explore />,
       },
     ],
   },

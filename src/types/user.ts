@@ -1,4 +1,4 @@
-import { Collection, Item } from "./collection";
+import { Collection, CollectionItem } from "./collection";
 
 export interface User {
   address: string;
@@ -14,7 +14,7 @@ export interface User {
     plan: string;
   };
   memberships?: Membership[];
-  itemsInWallet?: Item[];
+  itemsInWallet?: CollectionItem[];
 }
 
 export interface Role {
@@ -30,5 +30,5 @@ export interface Membership {
   imgUrl?: string;
   ownerAddress: string;
   collection: Collection;
-  items: Item[];
+  items: CollectionItem[];
 }

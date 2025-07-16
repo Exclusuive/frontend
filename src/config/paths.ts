@@ -7,6 +7,7 @@ export const paths = {
     path: "/setCollection",
     getHref: () => "/setCollection",
   },
+
   adminPage: {
     path: "/admin",
     getHref: () => "/admin",
@@ -26,6 +27,10 @@ export const paths = {
   adminMarket: {
     path: "market",
     getHref: () => "/admin/market",
+  },
+  adminExplore: {
+    path: "explore",
+    getHref: () => "/admin/explore",
   },
   adminProfile: {
     path: "profile",
@@ -51,10 +56,7 @@ export const paths = {
     path: "profile",
     getHref: () => "/member/profile",
   },
-  memberExplore: {
-    path: "explore",
-    getHref: () => "/member/explore",
-  },
+
   memberMarket: {
     path: "market",
     getHref: () => "/member/market",
@@ -62,5 +64,9 @@ export const paths = {
   memberMission: {
     path: "mission",
     getHref: () => "/member/mission",
+  },
+  memberExplore: {
+    path: "explore",
+    getHref: () => "/member/explore",
   },
 };

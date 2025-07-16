@@ -10,17 +10,19 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Item } from "@/types/collection";
+import { CollectionItem } from "@/types/collection";
 import LayerItemSelector from "./LayerItemSelector";
 
 // Unified form schema
 const productFormSchema = z.object({
-  selectedLayer: z.string().optional(),
+  selectedLayer: z.string(),
   selectedItem: z
     .object({
-      address: z.string(),
+      id: z.string(),
+      collection_id: z.string(),
+      created_at: z.string().optional(),
       name: z.string(),
-      imgUrl: z.string(),
+      img_url: z.string(),
       layer: z.string(),
       description: z.string().optional(),
       attributes: z
@@ -33,7 +35,7 @@ const productFormSchema = z.object({
         .optional(),
     })
     .optional(),
-  itemAmount: z.string().optional(),
+  itemAmount: z.string(),
   suiAmount: z.string().optional(),
   conditions: z.array(z.object({ name: z.string(), value: z.number() })).optional(),
 });
@@ -42,7 +44,7 @@ export type ProductFormData = z.infer<typeof productFormSchema>;
 
 interface AddProductProps {
   isNew: boolean;
-  items: Item[];
+  items: CollectionItem[];
   layers?: string[];
   onSubmit: (data: ProductFormData) => void;
 }
@@ -72,9 +74,9 @@ const AddProduct: React.FC<AddProductProps> = ({ isNew, items, layers = [], onSu
   const watchedItemAmount = watch("itemAmount");
   const watchedSuiAmount = watch("suiAmount");
 
-  const handleItemSelect = (item: Item) => {
-    setValue("selectedItem", item, { shouldValidate: true });
-    clearErrors("selectedItem");
+  // 선택 시 전체 CollectionItem 객체를 setSelectedItem에 저장
+  const handleSelectItem = (item: CollectionItem) => {
+    setValue("selectedItem", item);
   };
 
   const handleLayerChange = (layer: string) => {
@@ -104,9 +106,9 @@ const AddProduct: React.FC<AddProductProps> = ({ isNew, items, layers = [], onSu
             <LayerItemSelector
               layers={layers}
               items={items}
-              onItemSelect={handleItemSelect}
+              onItemSelect={handleSelectItem}
               selectedLayer={watchedLayer || ""}
-              selectedItem={watchedItem?.address || ""}
+              selectedItem={watchedItem?.name || ""}
               onLayerChange={handleLayerChange}
               placeholder={{
                 layer: "Choose a layer",

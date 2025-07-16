@@ -24,8 +24,6 @@ const MemberMission = () => {
         return "bg-green-100 text-green-800";
       case "inactive":
         return "bg-gray-100 text-gray-800";
-      case "completed":
-        return "bg-blue-100 text-blue-800";
       default:
         return "bg-gray-100 text-gray-800";
     }
@@ -57,7 +55,7 @@ const MemberMission = () => {
     return true;
   };
 
-  const filteredMissions = missions.filter((mission) => mission.status !== "completed");
+  const filteredMissions = missions.filter((mission) => mission.status !== "inactive");
 
   return (
     <div className="flex flex-col gap-6 p-6">
@@ -94,7 +92,6 @@ const MemberMission = () => {
                   <Badge className={getStatusColor(mission.status)}>
                     {mission.status === "active" && "진행중"}
                     {mission.status === "inactive" && "비활성"}
-                    {mission.status === "completed" && "완료"}
                   </Badge>
                 </div>
               </CardHeader>

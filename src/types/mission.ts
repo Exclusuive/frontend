@@ -3,7 +3,7 @@ export interface Mission {
   name: string;
   description: string;
   type: "daily" | "weekly" | "monthly" | "special";
-  status: "active" | "inactive" | "completed";
+  status: "active" | "inactive";
   participants: number;
   maxParticipants?: number;
   reward: string;

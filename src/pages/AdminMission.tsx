@@ -84,7 +84,6 @@ const AdminMission: React.FC = () => {
       if (activeTab === "all") return true;
       if (activeTab === "active") return mission.status === "active";
       if (activeTab === "inactive") return mission.status === "inactive";
-      if (activeTab === "completed") return mission.status === "completed";
       return true;
     });
 
@@ -111,8 +110,6 @@ const AdminMission: React.FC = () => {
         return "bg-green-100 text-green-800";
       case "inactive":
         return "bg-gray-100 text-gray-800";
-      case "completed":
-        return "bg-blue-100 text-blue-800";
       default:
         return "bg-gray-100 text-gray-800";
     }
@@ -169,9 +166,9 @@ const AdminMission: React.FC = () => {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">완료된 미션</p>
+                <p className="text-sm font-medium text-gray-600">총 참여자</p>
                 <p className="text-2xl font-bold text-orange-600">
-                  {collection?.missions?.filter((m) => m.status === "completed").length}
+                  {collection?.missions?.reduce((sum, m) => sum + m.participants, 0)}
                 </p>
               </div>
               <Calendar className="h-8 w-8 text-orange-500" />
@@ -217,9 +214,6 @@ const AdminMission: React.FC = () => {
               </TabsTrigger>
               <TabsTrigger value="inactive">
                 비활성 ({collection?.missions?.filter((m) => m.status === "inactive").length})
-              </TabsTrigger>
-              <TabsTrigger value="completed">
-                완료 ({collection?.missions?.filter((m) => m.status === "completed").length})
               </TabsTrigger>
             </TabsList>
           </Tabs>

@@ -6,13 +6,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Item } from "@/types/collection";
+import { CollectionItem } from "@/types/collection";
 import { getItemsByLayer } from "@/lib/items";
 
 interface LayerItemSelectorProps {
   layers: string[];
-  items: Item[];
-  onItemSelect: (item: Item) => void;
+  items: CollectionItem[];
+  onItemSelect: (item: CollectionItem) => void;
   selectedLayer?: string;
   selectedItem?: string;
   onLayerChange?: (layer: string) => void;
@@ -51,7 +51,7 @@ const LayerItemSelector: React.FC<LayerItemSelectorProps> = ({
   };
 
   const handleItemChange = (itemAddress: string) => {
-    const item = items.find((item) => item.address === itemAddress);
+    const item = items.find((item) => item.name === itemAddress);
     if (item) {
       if (externalSelectedItem === undefined) {
         setInternalSelectedItem(itemAddress);
@@ -97,11 +97,11 @@ const LayerItemSelector: React.FC<LayerItemSelectorProps> = ({
                 </SelectTrigger>
                 <SelectContent>
                   {itemsInSelectedLayer.map((item) => (
-                    <SelectItem key={item.address} value={item.address}>
+                    <SelectItem key={item.name} value={item.name}>
                       <div className="flex items-center gap-2">
-                        {item.imgUrl && (
+                        {item.img_url && (
                           <img
-                            src={item.imgUrl}
+                            src={item.img_url}
                             alt={item.name}
                             className="h-6 w-6 rounded object-cover"
                           />

@@ -1,63 +1,87 @@
-import { useMembershipStore } from "@/stores/useMembershipStore";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import ItemsbyLayer from "@/components/ItemsbyCategory";
-import { Item } from "@/types/collection";
+import { CollectionItem } from "@/types/collection";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { useCollectionStore } from "@/stores/useCollectionStore";
+import { Button } from "@/components/ui/button";
+import { useGetMemberItems } from "@/hooks/useGetMemberItems";
+import { useEquipItem } from "@/hooks/moveCall/useEquipItem";
+import { useEffect } from "react";
+import CharacterImage from "@/components/CharacterImage";
 
 const MemberMyCharacter = () => {
-  const { membership } = useMembershipStore();
   const { user } = useAuthStore();
-
+  const { collection, equipItemToMembership } = useCollectionStore();
+  const membership = collection?.selected_membership;
+  const { items } = useGetMemberItems({ owner: user?.address || "" });
+  const { equipItem, result } = useEquipItem();
   if (!membership) return <div>No membership selected</div>;
 
   // Group items by layer
-  const getItemsByCategory = (items: Item[], layer: string) => {
+  const getItemsByCategory = (items: CollectionItem[], layer: string) => {
     return items.filter((item) => item.layer === layer);
   };
 
-  // Render items grid for each layer
-  const renderItemsGrid = (layer: string, items: Item[]) => {
-    const layerItems = getItemsByCategory(items, layer);
-    const isEquipped = (item: Item) =>
-      membership.items.find((item) => item.layer === layer)?.address === item.address;
+  const handleEquipItem = (item: CollectionItem) => {
+    equipItem({
+      collection_id: collection?.collection_id || "",
+      membership: membership,
+      item: item,
+    });
+  };
 
+  console.log(collection);
+
+  useEffect(() => {
+    if (result) {
+      equipItemToMembership(result);
+    }
+  }, [result]);
+
+  const renderItemsGrid = (layer: string, items: CollectionItem[]) => {
     return (
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-        {layerItems.map((item) => (
-          <div
-            key={item.address}
-            className={`relative cursor-pointer rounded-lg border-2 p-2 transition-all hover:scale-105 ${
-              isEquipped(item)
-                ? "border-blue-500 bg-blue-50"
-                : "border-gray-200 hover:border-gray-300"
-            }`}
-            onClick={() => handleEquipItem(item, layer)}
-          >
-            <div className="aspect-square w-full overflow-hidden rounded-md">
-              <img src={item.imgUrl} alt={item.name} className="h-full w-full object-cover" />
-            </div>
-            <div className="mt-2 text-center">
-              <p className="truncate text-xs font-medium text-gray-900">{item.name}</p>
-              {isEquipped(item) && (
-                <Badge variant="default" className="mt-1 text-xs">
-                  Equipped
-                </Badge>
-              )}
-            </div>
-          </div>
-        ))}
+      <div className="space-y-4">
+        <div className="flex flex-col gap-4 overflow-y-auto">
+          {getItemsByCategory(items, layer).length > 0 &&
+            getItemsByCategory(items, layer).map((item) => (
+              <div key={`${item.name}`} className="flex items-center gap-3 rounded-md border p-3">
+                <div className="flex-shrink-0">
+                  <img
+                    src={item.img_url}
+                    alt={item.name}
+                    className="h-9 w-9 rounded object-cover md:h-20 md:w-20"
+                  />
+                </div>
+                <div className="flex flex-1 flex-col gap-1.5">
+                  <div className="flex items-center gap-1.5">
+                    <h4 className="text-sm font-semibold">{item.name}</h4>
+                  </div>
+                  {item.description && (
+                    <p className="truncate text-xs text-gray-500">{item.description}</p>
+                  )}
+                  {item.attributes && item.attributes.length > 0 && (
+                    <div className="flex flex-wrap gap-1">
+                      {item.attributes.map((attribute) => (
+                        <Badge
+                          key={attribute.name}
+                          variant="secondary"
+                          className="px-1.5 py-0.5 text-[11px]"
+                        >
+                          {attribute.name}: {attribute.value}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <Button variant="outline" size="sm" onClick={() => handleEquipItem(item)}>
+                  Equip
+                </Button>
+              </div>
+            ))}
+        </div>
       </div>
     );
-  };
-
-  const handleEquipItem = (item: Item, layer: string) => {
-    console.log(item, layer);
-  };
-
-  const handleUnequipItem = (layer: string) => {
-    console.log(layer);
   };
 
   return (
@@ -69,38 +93,40 @@ const MemberMyCharacter = () => {
             <CardTitle className="flex items-center gap-3">
               <div className="h-12 w-12 overflow-hidden rounded-full">
                 <img
-                  src={membership.imgUrl || "/placeholder-avatar.png"}
-                  alt={membership.name}
+                  src={collection?.img_url || "/placeholder-avatar.png"}
+                  alt={collection?.name}
                   className="h-full w-full object-cover"
                 />
               </div>
               <div>
-                <h2 className="text-xl font-semibold">{membership.id}</h2>
-                <p className="text-sm text-gray-500">{membership.collection.name}</p>
+                <p className="text-sm text-gray-500">Collection: {collection?.name}</p>
+                <h2 className="text-xl font-semibold">
+                  {membership?.address.slice(0, 10)}...
+                  {membership?.address.slice(-10)}
+                </h2>
               </div>
             </CardTitle>
           </CardHeader>
           <CardContent>
             {/* Character Image */}
             <div className="relative mb-6">
-              <div className="mx-auto aspect-square w-full max-w-md overflow-hidden rounded-lg bg-gray-100">
-                <img
-                  src={membership.imgUrl || "/placeholder-character.png"}
-                  alt="Character"
-                  className="h-full w-full object-cover"
-                />
+              <div className="relative mx-auto aspect-square w-full max-w-md overflow-hidden rounded-lg border">
+                <CharacterImage membership={membership} />
               </div>
             </div>
 
             {/* Equipped Items */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-gray-900">Equipped Items</h3>
-              {membership.collection?.layers?.length === 0 ? (
+              {collection?.layers?.length === 0 ? (
                 <p className="py-4 text-center text-gray-500">No items available</p>
               ) : (
                 <div className="space-y-3">
-                  {membership.collection?.layers?.map((layer) => {
-                    const equippedItem = membership.items.find((item) => item.layer === layer);
+                  {collection?.layers?.map((layer) => {
+                    const equippedItem = membership.equipped_items?.find(
+                      (item) => item.layer === layer,
+                    );
+
                     return (
                       <div
                         key={layer}
@@ -110,7 +136,7 @@ const MemberMyCharacter = () => {
                           <div className="h-10 w-10 overflow-hidden rounded bg-gray-100">
                             {equippedItem ? (
                               <img
-                                src={equippedItem.imgUrl}
+                                src={equippedItem.img_url}
                                 alt={equippedItem.name}
                                 className="h-full w-full object-cover"
                               />
@@ -126,17 +152,14 @@ const MemberMyCharacter = () => {
                               {equippedItem ? equippedItem.name : "Not equipped"}
                             </p>
                           </div>
+                          <div>
+                            {equippedItem?.attributes?.map((attribute) => (
+                              <Badge variant="secondary" className="text-xs">
+                                {attribute.name} : {attribute.value}
+                              </Badge>
+                            ))}
+                          </div>
                         </div>
-                        {equippedItem && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleUnequipItem(layer)}
-                            className="text-xs"
-                          >
-                            Unequip
-                          </Button>
-                        )}
                       </div>
                     );
                   })}
@@ -154,10 +177,14 @@ const MemberMyCharacter = () => {
           </CardHeader>
           <CardContent>
             <ItemsbyLayer
-              categories={membership.collection?.layers || []}
-              items={user?.itemsInWallet || []}
-              getItemsByCategory={getItemsByCategory}
-              renderItemsGrid={renderItemsGrid}
+              categories={collection?.layers || []}
+              items={items || []}
+              getItemsByCategory={(items, layer) =>
+                getItemsByCategory(items as CollectionItem[], layer)
+              }
+              renderItemsGrid={(layer, items) => renderItemsGrid(layer, items as CollectionItem[])}
+              label={collection?.name || ""}
+              collection={collection}
             />
           </CardContent>
         </Card>

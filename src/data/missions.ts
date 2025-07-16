@@ -38,7 +38,7 @@ export const initialMissions: Mission[] = [
     name: "특별 이벤트 참여",
     description: "한정 시간 특별 이벤트에 참여하세요.",
     type: "special",
-    status: "completed",
+    status: "active",
     participants: 1000,
     maxParticipants: 1000,
     reward: "특별 NFT",
