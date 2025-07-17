@@ -12,13 +12,14 @@ export const rewards: EventReward[] = [
     id: "0",
     item: {
       id: "1",
-      collection_id: "0x82bdd350f8c343aa1ddb9dbcb195f6851dd2715c73fe01ef34867ba0b3ba5789",
-      collection_cap_id: "0x1acfe62f7931d2b53627da4df85b555c1e5b5be0b87cc8ffe72714f1d77edb6e",
+      collection_id: "0x965e1118ddbdfd65af1809a80f6e1bf25cd45569ba2c09a13e8f1fb4b31f8a2c",
+      collection_cap_id: "0x1246c99c9424575cf7be82fcc1e2f4e26a8ec3b58676d1f3827ac50c054b17ff",
       img_url:
         "https://ezesepaxcbbzvjjzivwe.supabase.co/storage/v1/object/public/exclusuive/item/1.png",
       layer: "Base",
       name: "Base Character",
-      description: "Exclusive OceanDao participant NFT with unique ocean-themed design",
+      description:
+        "The basic NFT of the Ocean DAO Community. Collect items and customize your NFT!",
     },
     rarity: "base",
     dayOfWeek: 1, // Sunday
@@ -27,8 +28,8 @@ export const rewards: EventReward[] = [
     id: "1",
     item: {
       id: "2",
-      collection_id: "0x82bdd350f8c343aa1ddb9dbcb195f6851dd2715c73fe01ef34867ba0b3ba5789",
-      collection_cap_id: "0x1acfe62f7931d2b53627da4df85b555c1e5b5be0b87cc8ffe72714f1d77edb6e",
+      collection_id: "0x965e1118ddbdfd65af1809a80f6e1bf25cd45569ba2c09a13e8f1fb4b31f8a2c",
+      collection_cap_id: "0x1246c99c9424575cf7be82fcc1e2f4e26a8ec3b58676d1f3827ac50c054b17ff",
       img_url:
         "https://ezesepaxcbbzvjjzivwe.supabase.co/storage/v1/object/public/exclusuive/item/2.png",
       layer: "Clothes",
@@ -43,8 +44,8 @@ export const rewards: EventReward[] = [
     id: "2",
     item: {
       id: "3",
-      collection_id: "0x82bdd350f8c343aa1ddb9dbcb195f6851dd2715c73fe01ef34867ba0b3ba5789",
-      collection_cap_id: "0x1acfe62f7931d2b53627da4df85b555c1e5b5be0b87cc8ffe72714f1d77edb6e",
+      collection_id: "0x965e1118ddbdfd65af1809a80f6e1bf25cd45569ba2c09a13e8f1fb4b31f8a2c",
+      collection_cap_id: "0x1246c99c9424575cf7be82fcc1e2f4e26a8ec3b58676d1f3827ac50c054b17ff",
       img_url:
         "https://ezesepaxcbbzvjjzivwe.supabase.co/storage/v1/object/public/exclusuive/item/3.png",
       layer: "Head",
@@ -58,8 +59,8 @@ export const rewards: EventReward[] = [
     id: "3",
     item: {
       id: "4",
-      collection_id: "0x82bdd350f8c343aa1ddb9dbcb195f6851dd2715c73fe01ef34867ba0b3ba5789",
-      collection_cap_id: "0x1acfe62f7931d2b53627da4df85b555c1e5b5be0b87cc8ffe72714f1d77edb6e",
+      collection_id: "0x965e1118ddbdfd65af1809a80f6e1bf25cd45569ba2c09a13e8f1fb4b31f8a2c",
+      collection_cap_id: "0x1246c99c9424575cf7be82fcc1e2f4e26a8ec3b58676d1f3827ac50c054b17ff",
       img_url:
         "https://ezesepaxcbbzvjjzivwe.supabase.co/storage/v1/object/public/exclusuive/item/4.png",
       layer: "Hand",
@@ -73,8 +74,8 @@ export const rewards: EventReward[] = [
     id: "4",
     item: {
       id: "5",
-      collection_id: "0x82bdd350f8c343aa1ddb9dbcb195f6851dd2715c73fe01ef34867ba0b3ba5789",
-      collection_cap_id: "0x1acfe62f7931d2b53627da4df85b555c1e5b5be0b87cc8ffe72714f1d77edb6e",
+      collection_id: "0x965e1118ddbdfd65af1809a80f6e1bf25cd45569ba2c09a13e8f1fb4b31f8a2c",
+      collection_cap_id: "0x1246c99c9424575cf7be82fcc1e2f4e26a8ec3b58676d1f3827ac50c054b17ff",
       img_url:
         "https://ezesepaxcbbzvjjzivwe.supabase.co/storage/v1/object/public/exclusuive/item/5.png",
       layer: "Accessory",

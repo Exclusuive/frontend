@@ -40,7 +40,7 @@ export function useCheckOceanDAONFTs({ owner }: { owner: string }) {
       }
       return (
         content.fields.type.fields.collection_id ===
-        "0x82bdd350f8c343aa1ddb9dbcb195f6851dd2715c73fe01ef34867ba0b3ba5789"
+        "0x965e1118ddbdfd65af1809a80f6e1bf25cd45569ba2c09a13e8f1fb4b31f8a2c"
       );
     });
 
