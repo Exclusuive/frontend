@@ -100,7 +100,7 @@ const AdminDashboard = () => {
   const layers = collection?.layers || [];
   const items = collection?.items || [];
   const missions: Mission[] = collection?.missions || [];
-
+  console.log(collection);
   return (
     <div className="flex h-full flex-col p-10">
       <section className="grid hidden grid-cols-1 gap-4 sm:grid sm:grid-cols-2 lg:grid-cols-4">

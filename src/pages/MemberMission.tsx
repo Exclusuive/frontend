@@ -62,11 +62,13 @@ const MemberMission = () => {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">미션</h1>
-            <p className="text-sm text-gray-600">다양한 미션에 참여하고 보상을 받아보세요!</p>
+            <h1 className="text-2xl font-bold text-gray-900">Missions</h1>
+            <p className="text-sm text-gray-600">
+              Participate in various missions and earn rewards!
+            </p>
           </div>
           <div className="flex items-center gap-2">
-            <Badge variant="secondary">참여한 미션: {participatedMissions.size}개</Badge>
+            <Badge variant="secondary">Missions Participated: {participatedMissions.size}</Badge>
           </div>
         </div>
 
@@ -84,14 +86,14 @@ const MemberMission = () => {
                 </div>
                 <div className="mt-3 flex items-center gap-2">
                   <Badge className={getTypeColor(mission.type)}>
-                    {mission.type === "daily" && "일일"}
-                    {mission.type === "weekly" && "주간"}
-                    {mission.type === "monthly" && "월간"}
-                    {mission.type === "special" && "특별"}
+                    {mission.type === "daily" && "Daily"}
+                    {mission.type === "weekly" && "Weekly"}
+                    {mission.type === "monthly" && "Monthly"}
+                    {mission.type === "special" && "Special"}
                   </Badge>
                   <Badge className={getStatusColor(mission.status)}>
-                    {mission.status === "active" && "진행중"}
-                    {mission.status === "inactive" && "비활성"}
+                    {mission.status === "active" && "Active"}
+                    {mission.status === "inactive" && "Inactive"}
                   </Badge>
                 </div>
               </CardHeader>
@@ -99,7 +101,7 @@ const MemberMission = () => {
               <CardContent className="pt-0">
                 <div className="space-y-3">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">참여자</span>
+                    <span className="text-gray-600">Participants</span>
                     <span className="font-medium">
                       {mission.participants}
                       {mission.maxParticipants && ` / ${mission.maxParticipants}`}
@@ -107,7 +109,7 @@ const MemberMission = () => {
                   </div>
 
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">보상</span>
+                    <span className="text-gray-600">Reward</span>
                     <span className="font-medium text-green-600">{mission.reward}</span>
                   </div>
 
@@ -125,21 +127,21 @@ const MemberMission = () => {
                   <div className="pt-2">
                     {isParticipated(mission.id) ? (
                       <Button className="w-full bg-green-600 hover:bg-green-700" disabled>
-                        참여 완료
+                        Participated
                       </Button>
                     ) : canParticipate(mission) ? (
                       <Button
                         className="w-full bg-blue-600 hover:bg-blue-700"
                         onClick={() => handleParticipate(mission.id)}
                       >
-                        미션 참여
+                        Join Mission
                       </Button>
                     ) : (
                       <Button className="w-full bg-gray-400 hover:bg-gray-500" disabled>
-                        {mission.status === "inactive" && "비활성"}
+                        {mission.status === "inactive" && "Inactive"}
                         {mission.maxParticipants &&
                           mission.participants >= mission.maxParticipants &&
-                          "참여 마감"}
+                          "Participation Closed"}
                       </Button>
                     )}
                   </div>
@@ -154,9 +156,9 @@ const MemberMission = () => {
             <CardContent className="flex items-center justify-center p-8">
               <div className="text-center">
                 <p className="mb-2 text-lg font-medium text-gray-600">
-                  현재 참여 가능한 미션이 없습니다
+                  There are currently no available missions.
                 </p>
-                <p className="text-sm text-gray-500">새로운 미션이 추가될 때까지 기다려주세요.</p>
+                <p className="text-sm text-gray-500">Please wait for new missions to be added.</p>
               </div>
             </CardContent>
           </Card>

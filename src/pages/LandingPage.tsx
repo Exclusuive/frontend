@@ -40,8 +40,8 @@ export default function LandingPage() {
       login(account.address, selectedRole.id);
       navigate("/setCollection");
     } else {
-      const wallet = wallets.find((w) => w.name.includes("Slush"))
-        ? wallets.find((w) => w.name.includes("Slush"))
+      const wallet = wallets.find((w) => w.name.includes("Suiet"))
+        ? wallets.find((w) => w.name.includes("Suiet"))
         : wallets[0];
 
       if (wallet) {

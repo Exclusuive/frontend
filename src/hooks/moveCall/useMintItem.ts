@@ -5,14 +5,14 @@ import { useSignAndExecuteTransaction } from "@mysten/dapp-kit";
 import { Transaction } from "@mysten/sui/transactions";
 import { MODULE } from "@/types/moveRegistry";
 import { COLLECTION_MODULE_FUNCTIONS, UPGRADED_PACKAGE_ID } from "@/types/moveRegistry";
-import { CollectionItem, Membership } from "@/types/collection";
+import { CollectionItem } from "@/types/collection";
 
 export function useMintItem() {
   const account = useCurrentAccount();
   const client = useSuiClient();
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<Membership | null>(null);
+  const [result, setResult] = useState<CollectionItem | null>(null);
 
   const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction({
     execute: async ({ bytes, signature }) =>
@@ -90,8 +90,10 @@ export function useMintItem() {
       {
         onSuccess: () => {
           setIsPending(false);
+          setResult(item);
         },
         onError: (err: any) => {
+          setIsPending(false);
           setError(err.message);
         },
         onSettled: () => {

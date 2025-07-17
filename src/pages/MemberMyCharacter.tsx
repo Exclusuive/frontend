@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import ItemsbyLayer from "@/components/ItemsbyCategory";
-import { CollectionItem } from "@/types/collection";
+import { Collection, CollectionItem } from "@/types/collection";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useCollectionStore } from "@/stores/useCollectionStore";
 import { Button } from "@/components/ui/button";
@@ -9,13 +9,14 @@ import { useGetMemberItems } from "@/hooks/useGetMemberItems";
 import { useEquipItem } from "@/hooks/moveCall/useEquipItem";
 import { useEffect } from "react";
 import CharacterImage from "@/components/CharacterImage";
+import { toast } from "sonner";
 
 const MemberMyCharacter = () => {
   const { user } = useAuthStore();
   const { collection, equipItemToMembership } = useCollectionStore();
   const membership = collection?.selected_membership;
-  const { items } = useGetMemberItems({ owner: user?.address || "" });
-  const { equipItem, result } = useEquipItem();
+  const { items, refetch } = useGetMemberItems({ owner: user?.address || "" });
+  const { equipItem, isPending, result, error } = useEquipItem();
   if (!membership) return <div>No membership selected</div>;
 
   // Group items by layer
@@ -31,13 +32,19 @@ const MemberMyCharacter = () => {
     });
   };
 
-  console.log(collection);
-
   useEffect(() => {
-    if (result) {
+    if (isPending) {
+      toast.loading("Equipping item...");
+    } else if (result) {
+      toast.dismiss();
       equipItemToMembership(result);
+      refetch();
+      toast.success("Item equipped successfully");
+    } else if (error) {
+      toast.dismiss();
+      toast.error(error);
     }
-  }, [result]);
+  }, [result, error, isPending]);
 
   const renderItemsGrid = (layer: string, items: CollectionItem[]) => {
     return (
@@ -58,7 +65,9 @@ const MemberMyCharacter = () => {
                     <h4 className="text-sm font-semibold">{item.name}</h4>
                   </div>
                   {item.description && (
-                    <p className="truncate text-xs text-gray-500">{item.description}</p>
+                    <p className="line-clamp-2 text-xs break-words text-gray-500">
+                      {item.description}
+                    </p>
                   )}
                   {item.attributes && item.attributes.length > 0 && (
                     <div className="flex flex-wrap gap-1">
@@ -111,7 +120,7 @@ const MemberMyCharacter = () => {
             {/* Character Image */}
             <div className="relative mb-6">
               <div className="relative mx-auto aspect-square w-full max-w-md overflow-hidden rounded-lg border">
-                <CharacterImage membership={membership} />
+                <CharacterImage membership={membership} enableDownload={true} />
               </div>
             </div>
 
@@ -184,7 +193,7 @@ const MemberMyCharacter = () => {
               }
               renderItemsGrid={(layer, items) => renderItemsGrid(layer, items as CollectionItem[])}
               label={collection?.name || ""}
-              collection={collection}
+              collection={collection || ({} as Collection)}
             />
           </CardContent>
         </Card>

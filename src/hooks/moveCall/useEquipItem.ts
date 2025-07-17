@@ -46,6 +46,8 @@ export function useEquipItem() {
 
     if (!account) return;
 
+    const pop = membership.equipped_items?.find((i) => i.layer === item.layer);
+
     const tx = new Transaction();
 
     tx.moveCall({
@@ -59,6 +61,16 @@ export function useEquipItem() {
       ],
     });
 
+    if (pop) {
+      const [item_object] = tx.moveCall({
+        package: UPGRADED_PACKAGE_ID,
+        module: COLLECTION,
+        target: COLLECTION_MODULE_FUNCTIONS.pop_latest_item_from_bag,
+        arguments: [tx.object(membership.address), tx.pure.string(item.layer || "")],
+      });
+      tx.transferObjects([item_object], account.address);
+    }
+
     signAndExecuteTransaction(
       {
         transaction: tx.serialize(),
@@ -68,6 +80,7 @@ export function useEquipItem() {
           supabase
             .rpc("equip_item_to_membership", {
               p_item_name: item.name,
+              p_layer_name: item.layer,
               p_membership_id: membership.membership_id,
             })
             .then((res) => {

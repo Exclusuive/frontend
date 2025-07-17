@@ -5,16 +5,17 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddItem from "@/components/AddItem";
 import ItemsbyCategory from "@/components/ItemsbyCategory";
 import { getItemsByLayer } from "@/lib/items";
 import { CollectionItem } from "@/types/collection";
 import { useMintItem } from "@/hooks/moveCall/useMintItem";
+import { toast } from "sonner";
 
 const AdminItems = () => {
   const { collection } = useCollectionStore();
-  const { mintItem } = useMintItem();
+  const { mintItem, isPending, result, error } = useMintItem();
 
   if (!collection) {
     return (
@@ -50,6 +51,18 @@ const AdminItems = () => {
       recipient: mintAddress,
     });
   };
+
+  useEffect(() => {
+    if (isPending) {
+      toast.loading("Minting item...");
+    } else if (result) {
+      toast.dismiss();
+      toast.success("Item minted successfully");
+    } else if (error) {
+      toast.dismiss();
+      toast.error(error);
+    }
+  }, [result, error, isPending]);
 
   // Render items grid component
   const renderItemsGrid = (layer: string, items: CollectionItem[]) => (
