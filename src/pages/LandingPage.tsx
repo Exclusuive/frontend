@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { CirclePlay } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import SetRolePopup from "@/components/SetRolePopup";
@@ -20,14 +20,17 @@ export default function LandingPage() {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isEventPopupOpen, setIsEventPopupOpen] = useState(false);
+  const [searchParams] = useSearchParams();
+
+  const showPopup = searchParams.get("showpopup");
 
   // 페이지 로드 시 OceanDao 이벤트 팝업 자동 표시
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsEventPopupOpen(true);
-    }, 1000); // 1초 후 팝업 표시
-
-    return () => clearTimeout(timer);
+    if (!showPopup) {
+      setTimeout(() => {
+        setIsEventPopupOpen(true);
+      }, 1000); // 1초 후 팝업 표시
+    }
   }, []);
 
   const handleOpenChange = (newOpen: boolean) => {
@@ -40,8 +43,8 @@ export default function LandingPage() {
       login(account.address, selectedRole.id);
       navigate("/setCollection");
     } else {
-      const wallet = wallets.find((w) => w.name.includes("Suiet"))
-        ? wallets.find((w) => w.name.includes("Suiet"))
+      const wallet = wallets.find((w) => w.name.includes("Slush"))
+        ? wallets.find((w) => w.name.includes("Slush"))
         : wallets[0];
 
       if (wallet) {

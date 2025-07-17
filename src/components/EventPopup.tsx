@@ -1,14 +1,6 @@
-import React, { useState, useEffect } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog";
+import React, { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { Gift, Clock, Star } from "lucide-react";
+import { Gift, Clock, Star, X } from "lucide-react";
 import { rewards, getCurrentReward, EventReward } from "@/data/rewards";
 import {
   Carousel,
@@ -97,6 +89,9 @@ const EventPopup: React.FC<OceanDaoEventPopupProps> = ({ isOpen, onClose }) => {
     } else if (result) {
       toast.dismiss();
       toast.success("OceanDAO NFT created successfully");
+      setTimeout(() => {
+        window.location.href = "/?showpopup=false";
+      }, 2000);
     } else if (error) {
       toast.dismiss();
       toast.error(error);
@@ -108,24 +103,71 @@ const EventPopup: React.FC<OceanDaoEventPopupProps> = ({ isOpen, onClose }) => {
     return days[dayOfWeek];
   };
 
+  // ESC 키로 닫기
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
+  // body 스크롤 방지
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
+  // 오버레이 클릭 시 닫기
+  const handleOverlayClick = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (e.target === e.currentTarget) {
+        onClose();
+      }
+    },
+    [onClose],
+  );
+
+  if (!isOpen) return null;
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-cyan-50">
-        <DialogHeader className="space-y-4 text-center">
-          <DialogTitle className="flex items-center justify-center gap-2 text-3xl font-bold text-blue-500">
-            🌊Ocean Dao Special Event🌊
-          </DialogTitle>
-          <DialogDescription className="text-center text-lg text-blue-700">
-            <img src="FinalNFT.jpg" alt="loading..." className="rounded-xl" />
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+      onClick={handleOverlayClick}
+      role="dialog"
+      aria-modal="true"
+    >
+      <div className="relative max-h-[90vh] w-full max-w-4/5 overflow-y-auto rounded-xl border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-cyan-50 p-0 shadow-xl lg:max-w-2xl">
+        {/* 닫기(X) 버튼 */}
+        <button
+          onClick={onClose}
+          aria-label="Close popup"
+          className="absolute top-3 right-3 z-10 rounded-full p-1 text-blue-500 hover:bg-blue-100 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+        >
+          <X className="h-6 w-6" />
+        </button>
+        {/* 기존 DialogHeader, DialogContent, DialogFooter 내용 유지 */}
+        <div className="space-y-4 px-4 pt-8 pb-2 text-center">
+          <div className="flex items-center justify-center gap-2 text-lg font-bold text-blue-500 md:text-3xl">
+            Exclusuive x Ocean DAO
+          </div>
+          <div className="text-center text-lg text-blue-700">
+            <img src="FinalNFT.jpg" alt="loading..." className="mx-auto w-fit rounded-xl" />
             <span className="mt-2 block text-base font-semibold text-blue-800">
               Check in daily, collect items, and complete your NFT.
               <br />
               Get a special keyring and bonus rewards on the last day!
             </span>
-          </DialogDescription>
-        </DialogHeader>
-
-        <div className="space-y-6">
+          </div>
+        </div>
+        <div className="space-y-6 px-4 pb-4">
           {/* Current Day-based Reward */}
           <div className="gap-4 rounded-lg border border-blue-200 bg-white/50 p-4">
             <div className="text-center">
@@ -136,14 +178,12 @@ const EventPopup: React.FC<OceanDaoEventPopupProps> = ({ isOpen, onClose }) => {
               <div className="my-2 font-mono text-sm text-blue-900">{currentReward.item.name}</div>
             </div>
           </div>
-
           {/* Rewards Section */}
           <div className="space-y-4">
             <h3 className="flex items-center gap-2 text-xl font-semibold text-blue-900">
               <Gift className="h-5 w-5 text-yellow-500" />
               All Available Rewards
             </h3>
-
             <Carousel className="mx-auto w-full max-w-xs">
               <CarouselContent defaultValue={currentReward.id}>
                 {rewards.map((reward) => (
@@ -170,7 +210,6 @@ const EventPopup: React.FC<OceanDaoEventPopupProps> = ({ isOpen, onClose }) => {
               <CarouselNext />
             </Carousel>
           </div>
-
           {/* Special Benefits */}
           <div className="rounded-lg border border-blue-300 bg-gradient-to-r from-blue-100 to-cyan-100 p-4">
             <h4 className="mb-3 flex items-center gap-2 font-semibold text-blue-900">
@@ -193,32 +232,27 @@ const EventPopup: React.FC<OceanDaoEventPopupProps> = ({ isOpen, onClose }) => {
             </ul>
           </div>
         </div>
-
-        <DialogFooter className="flex flex-col gap-3 pt-6 sm:flex-row">
+        <div className="flex flex-col gap-3 px-4 pt-6 pb-6 sm:flex-row">
           {account ? (
-            <>
-              <Button
-                onClick={handleClaimRewards}
-                className="flex-1 bg-gradient-to-r from-blue-600 to-cyan-600 font-semibold text-white hover:from-blue-700 hover:to-cyan-700"
-              >
-                <Gift className="h-4 w-4" />
-                Claim Daily Rewards
-              </Button>
-            </>
+            <Button
+              onClick={handleClaimRewards}
+              className="flex-1 bg-gradient-to-r from-blue-600 to-cyan-600 font-semibold text-white hover:from-blue-700 hover:to-cyan-700"
+            >
+              <Gift className="h-4 w-4" />
+              Claim Daily Rewards
+            </Button>
           ) : (
-            <>
-              <Button
-                onClick={handleLogin}
-                className="flex-1 bg-gradient-to-r from-blue-600 to-cyan-600 font-semibold text-white hover:from-blue-700 hover:to-cyan-700"
-              >
-                <Gift className="h-4 w-4" />
-                Connect Wallet to join the event
-              </Button>
-            </>
+            <Button
+              onClick={handleLogin}
+              className="flex-1 bg-gradient-to-r from-blue-600 to-cyan-600 font-semibold text-white hover:from-blue-700 hover:to-cyan-700"
+            >
+              <Gift className="h-4 w-4" />
+              Connect Wallet to join the event
+            </Button>
           )}
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </div>
+      </div>
+    </div>
   );
 };
 

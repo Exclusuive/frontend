@@ -160,7 +160,6 @@ const SetCollectionPage = () => {
                     <AccordionContent>
                       <div className="flex flex-col gap-2 bg-gray-100 py-4 pl-10">
                         {collection.memberships?.map((membership: Membership) => {
-                          console.log(membership);
                           return (
                             <div
                               className="flex w-full cursor-pointer items-center gap-2"

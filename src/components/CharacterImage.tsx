@@ -86,6 +86,8 @@ const CharacterImage = ({
   //     }
   //   }, "image/png");
   // };
+  console.log(membership);
+  console.log(item_images);
 
   return (
     <div ref={containerRef} className="relative h-full w-full">

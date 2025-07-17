@@ -7,7 +7,7 @@ import { useCollectionStore } from "@/stores/useCollectionStore";
 import { Button } from "@/components/ui/button";
 import { useGetMemberItems } from "@/hooks/useGetMemberItems";
 import { useEquipItem } from "@/hooks/moveCall/useEquipItem";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import CharacterImage from "@/components/CharacterImage";
 import { toast } from "sonner";
 
@@ -15,9 +15,14 @@ const MemberMyCharacter = () => {
   const { user } = useAuthStore();
   const { collection, equipItemToMembership } = useCollectionStore();
   const membership = collection?.selected_membership;
-  const { items, refetch } = useGetMemberItems({ owner: user?.address || "" });
+  const { items: fetchedItems } = useGetMemberItems({ owner: user?.address || "" });
+  const [items, setItems] = useState<CollectionItem[]>([]);
   const { equipItem, isPending, result, error } = useEquipItem();
   if (!membership) return <div>No membership selected</div>;
+
+  useEffect(() => {
+    setItems(fetchedItems || []);
+  }, [fetchedItems]);
 
   // Group items by layer
   const getItemsByCategory = (items: CollectionItem[], layer: string) => {
@@ -38,7 +43,7 @@ const MemberMyCharacter = () => {
     } else if (result) {
       toast.dismiss();
       equipItemToMembership(result);
-      refetch();
+      setItems((prevItems) => prevItems.filter((i) => i.id !== result.id));
       toast.success("Item equipped successfully");
     } else if (error) {
       toast.dismiss();
@@ -122,6 +127,9 @@ const MemberMyCharacter = () => {
               <div className="relative mx-auto aspect-square w-full max-w-md overflow-hidden rounded-lg border">
                 <CharacterImage membership={membership} enableDownload={true} />
               </div>
+              <p className="text-center text-sm text-gray-500">
+                After equipping items, please refresh the page
+              </p>
             </div>
 
             {/* Equipped Items */}

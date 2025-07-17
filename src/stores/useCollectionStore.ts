@@ -74,6 +74,7 @@ export const useCollectionStore = create<CollectionState>((set) => ({
       collection: state.collection
         ? {
             ...state.collection,
+
             selected_membership: state.collection.selected_membership
               ? {
                   ...state.collection.selected_membership,
