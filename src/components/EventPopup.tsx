@@ -2,13 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Gift, Clock, Star, X } from "lucide-react";
 import { rewards, getCurrentReward, EventReward } from "@/data/rewards";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { useCheckOceanDAONFTs } from "@/hooks/useGetOceanDAONFTs";
 import { useCurrentAccount, useWallets } from "@mysten/dapp-kit";
 import { useConnectWallet } from "@mysten/dapp-kit";
@@ -206,8 +200,6 @@ const EventPopup: React.FC<OceanDaoEventPopupProps> = ({ isOpen, onClose }) => {
                   </CarouselItem>
                 ))}
               </CarouselContent>
-              <CarouselPrevious />
-              <CarouselNext />
             </Carousel>
           </div>
           {/* Special Benefits */}
