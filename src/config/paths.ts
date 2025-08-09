@@ -69,4 +69,8 @@ export const paths = {
     path: "explore",
     getHref: () => "/member/explore",
   },
+  test: {
+    path: "test",
+    getHref: () => "/test",
+  },
 };

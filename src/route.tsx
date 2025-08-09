@@ -20,6 +20,7 @@ const AdminMission = lazy(() => import("@/pages/AdminMission"));
 const Explore = lazy(() => import("@/pages/Explore"));
 const MemberMission = lazy(() => import("@/pages/MemberMission"));
 const MemberMarket = lazy(() => import("@/pages/MemberMarket"));
+const Home = lazy(() => import("@/pages/Home"));
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
   {
     path: paths.setCollectionPage.path,
     element: <SetCollectionPage />,
+  },
+  {
+    path: paths.test.path,
+    element: <Home />,
   },
 
   {

@@ -4,7 +4,7 @@ export interface EventReward {
   id: string;
   item: CollectionItem & { collection_cap_id: string };
   rarity: "common" | "rare" | "epic" | "legendary" | "base";
-  dayOfWeek: number; // 0-6(Sunday-Saturday)
+  date: string;
 }
 
 export const rewards: EventReward[] = [
@@ -22,7 +22,7 @@ export const rewards: EventReward[] = [
         "The basic NFT of the Ocean DAO Community. Collect items and customize your NFT!",
     },
     rarity: "base",
-    dayOfWeek: 1, // Sunday
+    date: "08-11 Blockthon2025 Hacker House",
   },
   {
     id: "1",
@@ -38,7 +38,7 @@ export const rewards: EventReward[] = [
         "A legendary robe inspired by Socrates, symbolizing wisdom and philosophical insight.",
     },
     rarity: "legendary",
-    dayOfWeek: 2, // Monday
+    date: "08-11 ~ 08-15 Blockthon2025 Online Mentoring Session",
   },
   {
     id: "2",
@@ -53,7 +53,7 @@ export const rewards: EventReward[] = [
       description: "A rare helmet inspired by Spartan warriors, representing courage and strength.",
     },
     rarity: "epic",
-    dayOfWeek: 3, // Tuesday
+    date: "08-22 Blockthon2025 대면 해커톤",
   },
   {
     id: "3",
@@ -68,64 +68,6 @@ export const rewards: EventReward[] = [
       description: "A rare Olympic torch commemorating the spirit of ancient Athens.",
     },
     rarity: "rare",
-    dayOfWeek: 4, // Wednesday
-  },
-  {
-    id: "4",
-    item: {
-      id: "5",
-      collection_id: "0x965e1118ddbdfd65af1809a80f6e1bf25cd45569ba2c09a13e8f1fb4b31f8a2c",
-      collection_cap_id: "0x1246c99c9424575cf7be82fcc1e2f4e26a8ec3b58676d1f3827ac50c054b17ff",
-      img_url:
-        "https://ezesepaxcbbzvjjzivwe.supabase.co/storage/v1/object/public/exclusuive/item/5.png",
-      layer: "Accessory",
-      name: "Sui Badge",
-      description: "A badge that proudly represents your place in the Sui community.",
-    },
-    rarity: "common",
-    dayOfWeek: 5, // Thursday
+    date: "08-23 Blockthon2025 데모데이",
   },
 ];
-
-// Time-based reward selection utility functions
-export const getCurrentReward = (): EventReward => {
-  const now = new Date();
-  const currentDay = now.getDay();
-
-  // Find the reward that matches current day
-  const currentReward = rewards.find((reward) => {
-    return reward.dayOfWeek === currentDay;
-  });
-
-  // If no specific day-based reward, return the first reward as default
-  return currentReward || rewards[0];
-};
-
-export const getNextReward = (): { reward: EventReward; timeUntil: number } => {
-  const now = new Date();
-  const currentDay = now.getDay();
-
-  // Find the next reward
-  for (let dayOffset = 1; dayOffset <= 7; dayOffset++) {
-    const targetDay = (currentDay + dayOffset) % 7;
-    const nextReward = rewards.find((reward) => reward.dayOfWeek === targetDay);
-    if (nextReward) {
-      // Calculate time until next reward (in minutes)
-      const timeUntil = dayOffset * 24 * 60; // Convert days to minutes
-      return { reward: nextReward, timeUntil };
-    }
-  }
-
-  // Fallback to first reward
-  return { reward: rewards[0], timeUntil: 0 };
-};
-
-export const formatTimeRemaining = (minutes: number): string => {
-  const hours = Math.floor(minutes / 60);
-  const mins = minutes % 60;
-
-  if (hours > 0) {
-    return `${hours}h ${mins}m`;
-  }
-  return `${mins}m`;
-};
