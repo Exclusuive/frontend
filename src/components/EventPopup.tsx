@@ -2,12 +2,18 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Gift, X } from "lucide-react";
 import { rewards, EventReward } from "@/data/rewards";
-import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
-import { useCheckOceanDAONFTs } from "@/hooks/useGetOceanDAONFTs";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
+} from "@/components/ui/carousel";
 import { useCurrentAccount, useWallets } from "@mysten/dapp-kit";
 import { useConnectWallet } from "@mysten/dapp-kit";
-import { useMakeOceanDAONFT } from "@/hooks/moveCall/useOceanDAONFT";
 import { toast } from "sonner";
+import { useGetBlockthon } from "@/hooks/useGetBlockthon";
+import { useUserMintMemberships } from "@/hooks/moveCall/useUserMintMemberships";
 
 interface OceanDaoEventPopupProps {
   isOpen: boolean;
@@ -21,10 +27,11 @@ const EventPopup: React.FC<OceanDaoEventPopupProps> = ({ isOpen, onClose }) => {
   const wallets = useWallets();
   const { mutate: connect } = useConnectWallet();
   const [currentReward, setCurrentReward] = useState(rewards[0]);
-  const { makeOceanDAONFT, isPending, error, result } = useMakeOceanDAONFT();
-  const { result: hasOceanDAONFT } = useCheckOceanDAONFTs({
+  const { mintMembership, isPending, error, result } = useUserMintMemberships();
+  const { hasMembership } = useGetBlockthon({
     owner: account?.address || "",
   });
+  // const hasMembership = false;
 
   const getRarityColor = (rarity: string) => {
     switch (rarity) {
@@ -62,10 +69,12 @@ const EventPopup: React.FC<OceanDaoEventPopupProps> = ({ isOpen, onClose }) => {
   };
 
   const handleClaimRewards = () => {
-    makeOceanDAONFT({
-      item: currentReward.item,
+    console.log(currentReward);
+
+    mintMembership({
+      membership_type: currentReward.membership_type,
+      img_url: currentReward.item.img_url,
       recipient: account?.address || "",
-      isNew: !hasOceanDAONFT,
     });
   };
 
@@ -75,12 +84,12 @@ const EventPopup: React.FC<OceanDaoEventPopupProps> = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     if (isPending) {
-      toast.loading("Creating OceanDAO NFT...");
+      toast.loading("Minting Membership...");
     } else if (result) {
       toast.dismiss();
-      toast.success("OceanDAO NFT created successfully");
+      toast.success("Membership minted successfully");
       setTimeout(() => {
-        window.location.href = "/?showpopup=false";
+        window.location.href = "/Blockthon";
       }, 2000);
     } else if (error) {
       toast.dismiss();
@@ -142,67 +151,62 @@ const EventPopup: React.FC<OceanDaoEventPopupProps> = ({ isOpen, onClose }) => {
         <div className="space-y-4 px-4 pt-8 pb-2 text-center">
           <div className="text-center text-lg text-blue-700">
             <img src="Event.png" alt="loading..." className="mx-auto my-4 w-fit rounded-xl" />
-            <h1 className="mb-2 text-3xl font-extrabold text-blue-800 drop-shadow-sm">
-              Blockthon 2025 <span className="text-cyan-600">x</span> ExcluSuive Event
+            <h1 className="mb-2 text-3xl font-extrabold text-black drop-shadow-sm">
+              DOKPAMI Membership
             </h1>
-            <p className="mb-4 flex items-center justify-center gap-2 text-lg font-medium text-cyan-700">
-              <span role="img" aria-label="water drop">
-                💧
-              </span>
-              Move Your Code, Make It <span className="font-bold text-blue-600">Sui-per!</span>
-            </p>
-            <div className="mx-auto max-w-xl rounded-lg bg-blue-50/80 p-4 text-left shadow-sm">
-              <p className="mb-3 flex items-center gap-2 text-base font-semibold text-blue-900">
-                <span role="img" aria-label="party">
-                  🎉
-                </span>
-                Blockthon2025에 오신 여러분을 환영합니다!
-              </p>
-              <p className="mb-2 text-sm text-blue-800">
-                <span className="font-bold text-blue-700">Blockthon2025</span>는{" "}
-                <span className="font-bold text-blue-700">
-                  연세대학교 블록체인 동아리 ‘블록블록’
-                </span>
-                이 주최하는, 대학생 및 블록체인 개발자를 위한{" "}
-                <span className="font-bold text-cyan-700">Sui 해커톤</span>입니다.
-              </p>
-              <ul className="mb-2 ml-4 list-disc space-y-1 text-sm text-blue-800">
-                <li>비(非) Sui 개발자도 손쉽게 Sui로 온보딩할 수 있도록 설계</li>
-                <li>대한민국 대학교 블록체인 동아리에서 주도하는 최초의 Sui 해커톤</li>
-              </ul>
-              <p className="mb-2 text-sm text-blue-800">
-                <span className="font-bold text-blue-700">ExcluSuive</span>는 Blockthon2025의 공식
-                파트너사로서, 참가자 여러분께 더욱 특별한 경험을 선사합니다. 참가자분들은
-                Blockthon2025의 다양한 행사에 참여하며{" "}
-                <span className="font-bold text-cyan-700">NFT</span>를 성장시킬 수 있습니다. 완성된
-                NFT는 Blockthon2025 대면 해커톤 현장에서{" "}
-                <span className="font-bold text-blue-700">실물 보상</span>으로 지급될 예정입니다.
-              </p>
-              <div className="mt-4 rounded bg-cyan-100/60 p-3">
-                <p className="mb-2 flex items-center gap-2 text-base font-bold text-blue-900">
-                  <span role="img" aria-label="calendar">
-                    📅
-                  </span>
-                  Blockthon2025 주요 일정
+          </div>
+
+          {/* Welcome Message */}
+          <div className="mx-auto max-w-2xl">
+            <div className="rounded-2xl border border-blue-100/50 bg-gradient-to-br from-blue-50 via-white to-cyan-50 p-6 shadow-xl backdrop-blur-sm">
+              <div className="mb-4 flex items-center gap-3">
+                <h2 className="text-xl font-bold text-blue-900">
+                  Blockthon2025에 오신 여러분을 환영합니다! 🎉
+                </h2>
+              </div>
+
+              <div className="space-y-4 text-left">
+                <p className="rounded-lg border-l-4 border-blue-400 bg-white/60 p-4 text-base leading-relaxed text-blue-800">
+                  <span className="font-semibold text-blue-900">독팜희</span>는 2024년 5월에 탄생해,
+                  지금까지 <span className="font-bold text-blue-700">연세대학교 학생 1,000명</span>
+                  이 함께하고 있는 캐릭터 커뮤니티입니다.
+                  <br />
+                  <br />
+                  이번 Blockthon 2025를 맞아, 역대 시즌별 독팜희 멤버십이
+                  <span className="font-bold text-blue-700"> 한정 재출시</span>됩니다!
                 </p>
-                <ul className="ml-4 list-disc space-y-1 text-sm text-blue-900">
-                  <li>
-                    <span className="font-semibold text-blue-700">08.11</span> Blockthon2025 Hacker
-                    House
-                  </li>
-                  <li>
-                    <span className="font-semibold text-blue-700">08.11 ~ 08.15</span> Blockthon2025
-                    Online Mentoring Session
-                  </li>
-                  <li>
-                    <span className="font-semibold text-blue-700">08.22</span> Blockthon2025 대면
-                    해커톤
-                  </li>
-                  <li>
-                    <span className="font-semibold text-blue-700">08.23</span> Blockthon2025
-                    데모데이
-                  </li>
-                </ul>
+
+                <p className="text-sm text-blue-700 italic">
+                  그동안 놓쳤던 팜희가 있다면, 이번 기회에 꼭 받아가세요! ✨
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Rewards Section */}
+          <div className="mx-auto max-w-2xl">
+            <div className="rounded-2xl border border-cyan-100/50 bg-gradient-to-br from-cyan-50 via-white to-blue-50 p-6 shadow-xl">
+              <div className="mb-4 flex items-center gap-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 text-lg font-bold text-white">
+                  🎁
+                </div>
+                <h3 className="text-xl font-bold text-cyan-900">독팜희 멤버십 리워드</h3>
+              </div>
+
+              <div className="grid gap-3">
+                <div className="flex items-center gap-3 rounded-lg border border-cyan-200/50 bg-white/80 p-3">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-cyan-500 text-xs font-bold text-white">
+                    1
+                  </div>
+                  <span className="font-medium text-cyan-800">독팜희 멤버십 키링 제공</span>
+                </div>
+
+                <div className="flex items-center gap-3 rounded-lg border border-cyan-200/50 bg-white/80 p-3">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-cyan-500 text-xs font-bold text-white">
+                    2
+                  </div>
+                  <span className="font-medium text-cyan-800">랜덤 가챠 1회 무료</span>
+                </div>
               </div>
             </div>
           </div>
@@ -224,28 +228,37 @@ const EventPopup: React.FC<OceanDaoEventPopupProps> = ({ isOpen, onClose }) => {
               <Gift className="h-5 w-5 text-yellow-500" />
               All Available Rewards
             </h3> */}
-            <Carousel defaultValue={currentReward.id} className="mx-auto w-full max-w-xs">
-              <CarouselContent>
-                {rewards.map((reward) => (
-                  <CarouselItem key={reward.id} onClick={() => handleNFTClick(reward)}>
-                    <div
-                      className={`rounded-lg border-2 p-4 ${getRarityColor(reward.rarity)} cursor-pointer transition-all ${
-                        currentReward.id === reward.id ? "shadow-lg" : "opacity-80"
-                      }`}
-                    >
-                      <img src={reward.item.img_url} alt="loading..." className="rounded-xl" />
-                      <div className="mt-2 flex items-start gap-3">
-                        <div className="flex-1">
-                          <div className="text-sm font-semibold">{reward.date} 보상</div>
-                          <div className="mt-1 text-xs opacity-80">{reward.item.name}</div>
-                          <div className="mt-1 text-xs opacity-80">{reward.item.description}</div>
+            <div className="relative mx-auto w-full max-w-xs">
+              <Carousel defaultValue={currentReward.id} className="w-full">
+                <CarouselContent>
+                  {rewards.map((reward) => (
+                    <CarouselItem key={reward.id} onClick={() => handleNFTClick(reward)}>
+                      <div
+                        className={`rounded-lg border-2 p-4 ${getRarityColor(reward.rarity)} cursor-pointer transition-all ${
+                          currentReward.id === reward.id ? "shadow-lg" : "opacity-90"
+                        }`}
+                      >
+                        <img src={reward.item.img_url} alt="loading..." className="rounded-xl" />
+                        <div className="mt-2 flex items-start gap-3">
+                          <div className="flex-1">
+                            <div className="text-sm font-semibold">{reward.item.name}</div>
+                            <div className="mt-1 text-xs opacity-80">{reward.item.description}</div>
+                          </div>
                         </div>
+                        <Button
+                          disabled={currentReward.id === reward.id}
+                          className="mx-auto mt-4 w-full bg-gradient-to-r from-blue-600 to-cyan-600 font-semibold text-white hover:from-blue-700 hover:to-cyan-700"
+                        >
+                          {currentReward.id === reward.id ? "선택됨" : "선택하기"}
+                        </Button>
                       </div>
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-            </Carousel>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="absolute top-1/2 left-2 -translate-y-1/2 border-cyan-200 bg-white/80 text-cyan-700 hover:bg-white hover:text-cyan-800" />
+                <CarouselNext className="absolute top-1/2 right-2 -translate-y-1/2 border-cyan-200 bg-white/80 text-cyan-700 hover:bg-white hover:text-cyan-800" />
+              </Carousel>
+            </div>
           </div>
           {/* Special Benefits */}
           {/* <div className="rounded-lg border border-blue-300 bg-gradient-to-r from-blue-100 to-cyan-100 p-4">
@@ -269,14 +282,15 @@ const EventPopup: React.FC<OceanDaoEventPopupProps> = ({ isOpen, onClose }) => {
             </ul>
           </div> */}
         </div>
-        <div className="flex flex-col gap-3 px-4 pt-6 pb-6 sm:flex-row">
+        <div className="flex flex-col gap-3 px-4 pb-6 sm:flex-row">
           {account ? (
             <Button
               onClick={handleClaimRewards}
+              disabled={hasMembership}
               className="flex-1 bg-gradient-to-r from-blue-600 to-cyan-600 font-semibold text-white hover:from-blue-700 hover:to-cyan-700"
             >
               <Gift className="h-4 w-4" />
-              Claim Reward
+              {hasMembership ? "멤버십을 이미 받았어요." : "멤버십 받기"}
             </Button>
           ) : (
             <Button

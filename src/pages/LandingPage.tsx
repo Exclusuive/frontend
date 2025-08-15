@@ -1,24 +1,24 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { CirclePlay } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import SetRolePopup from "@/components/SetRolePopup";
+// import SetRolePopup from "@/components/SetRolePopup";
 import EventPopup from "@/components/EventPopup";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { useCurrentAccount, useWallets } from "@mysten/dapp-kit";
-import { useConnectWallet } from "@mysten/dapp-kit";
-import { useAuthStore } from "@/stores/useAuthStore";
-import { Role } from "@/types/user";
+// import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+// import { useCurrentAccount, useWallets } from "@mysten/dapp-kit";
+// import { useConnectWallet } from "@mysten/dapp-kit";
+// import { useAuthStore } from "@/stores/useAuthStore";
+// import { Role } from "@/types/user";
 
 export default function LandingPage() {
-  const wallets = useWallets();
-  const { mutate: connect } = useConnectWallet();
-  const account = useCurrentAccount();
-  const { login } = useAuthStore();
-  const navigate = useNavigate();
-  const [isOpen, setIsOpen] = useState(false);
+  // const wallets = useWallets();
+  // const { mutate: connect } = useConnectWallet();
+  // const account = useCurrentAccount();
+  // const { login } = useAuthStore();
+  // const navigate = useNavigate();
+  // const [isOpen, setIsOpen] = useState(false);
   const [isEventPopupOpen, setIsEventPopupOpen] = useState(false);
   const [searchParams] = useSearchParams();
 
@@ -33,38 +33,38 @@ export default function LandingPage() {
     }
   }, []);
 
-  const handleOpenChange = (newOpen: boolean) => {
-    setIsOpen(newOpen);
-  };
+  // const handleOpenChange = (newOpen: boolean) => {
+  //   setIsOpen(newOpen);
+  // };
 
-  const handleLogin = (selectedRole: Role) => {
-    if (!selectedRole) return;
-    if (account) {
-      login(account.address, selectedRole.id);
-      navigate("/setCollection");
-    } else {
-      const wallet = wallets.find((w) => w.name.includes("Slush"))
-        ? wallets.find((w) => w.name.includes("Slush"))
-        : wallets[0];
+  // const handleLogin = (selectedRole: Role) => {
+  //   if (!selectedRole) return;
+  //   if (account) {
+  //     login(account.address, selectedRole.id);
+  //     navigate("/setCollection");
+  //   } else {
+  //     const wallet = wallets.find((w) => w.name.includes("Slush"))
+  //       ? wallets.find((w) => w.name.includes("Slush"))
+  //       : wallets[0];
 
-      if (wallet) {
-        connect(
-          { wallet },
-          {
-            onSuccess: (wallet: any) => {
-              if (wallet.accounts[0].address) {
-                login(wallet.accounts[0].address, selectedRole.id);
-                navigate("/setCollection");
-              }
-            },
-            onError: () => {
-              window.alert("Failed to connect wallet");
-            },
-          },
-        );
-      }
-    }
-  };
+  //     if (wallet) {
+  //       connect(
+  //         { wallet },
+  //         {
+  //           onSuccess: (wallet: any) => {
+  //             if (wallet.accounts[0].address) {
+  //               login(wallet.accounts[0].address, selectedRole.id);
+  //               navigate("/setCollection");
+  //             }
+  //           },
+  //           onError: () => {
+  //             window.alert("Failed to connect wallet");
+  //           },
+  //         },
+  //       );
+  //     }
+  //   }
+  // };
 
   const handleCloseEventPopup = () => {
     setIsEventPopupOpen(false);
@@ -83,7 +83,7 @@ export default function LandingPage() {
             <br className="hidden sm:block" /> and real-world NFT use cases that drive lasting value
           </p>
           <div className="my-8 flex flex-col gap-y-6 sm:flex-row sm:gap-x-16">
-            <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+            {/* <Dialog open={isOpen} onOpenChange={handleOpenChange}>
               <DialogTrigger asChild>
                 <Button className="h-full w-fit bg-gradient-to-r from-[#5656F2] to-[#4CA3FF] leading-[normal] font-bold transition-transform duration-200 ease-in-out hover:scale-105 focus:scale-105 active:scale-100">
                   <div className="flex items-center px-10 py-2 text-xl">
@@ -93,7 +93,15 @@ export default function LandingPage() {
                 </Button>
               </DialogTrigger>
               <SetRolePopup onOpenChange={handleOpenChange} onConfirm={handleLogin} />
-            </Dialog>
+            </Dialog> */}
+            <Link to="/blockthon">
+              <Button className="h-full w-fit bg-gradient-to-r from-[#5656F2] to-[#4CA3FF] leading-[normal] font-bold transition-transform duration-200 ease-in-out hover:scale-105 focus:scale-105 active:scale-100">
+                <div className="flex items-center px-10 py-2 text-xl">
+                  <span className="pr-2">Try it out</span>
+                  <ArrowRightIcon className="h-4 w-4 font-bold" />
+                </div>
+              </Button>
+            </Link>
 
             <Link
               to="https://www.youtube.com/live/W0eBDO3raEI?si=AvaVP5f-v4ViY9wm&t=5600"

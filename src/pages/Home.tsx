@@ -2,9 +2,8 @@ import { useSuiClientQuery } from "@mysten/dapp-kit";
 
 const Homes = () => {
   const { data } = useSuiClientQuery("getObject", {
-    id: "0x4c8b2f68629f408b598568d38e0eef710ad6c784604dfae82f04a94cfe1f1262",
+    id: "0x0e820c764ff2591233658c3e08605653b402f17f8da7a2eedf3dbd7a96c80e6c",
     options: {
-      showType: true,
       showContent: true,
     },
   });

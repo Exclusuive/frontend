@@ -546,6 +546,15 @@
     "@gql.tada/internal" "1.0.8"
     graphql "^15.5.0 || ^16.0.0 || ^17.0.0"
 
+"@gql.tada/cli-utils@1.7.1":
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/@gql.tada/cli-utils/-/cli-utils-1.7.1.tgz#2e849c4c5d7e0d4914b34d167a74e3022d0a79d1"
+  integrity sha512-wg5ysZNQxtNQm67T3laVWmZzLpGb7QfyYWZdaUD2r1OjDj5Bgftq7eQlplmH+hsdffjuUyhJw/b5XAjeE2mJtg==
+  dependencies:
+    "@0no-co/graphqlsp" "^1.12.13"
+    "@gql.tada/internal" "1.0.8"
+    graphql "^15.5.0 || ^16.0.0 || ^17.0.0"
+
 "@gql.tada/internal@1.0.8", "@gql.tada/internal@^1.0.0":
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/@gql.tada/internal/-/internal-1.0.8.tgz#3ba9fa6534809788bbbe103492f70b8e9d754027"
@@ -831,6 +840,14 @@
     "@mysten/utils" "0.1.0"
     "@scure/base" "^1.2.6"
 
+"@mysten/bcs@1.7.0":
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/@mysten/bcs/-/bcs-1.7.0.tgz#efe765d3ba13febd26a51c2fde2575758656c0c8"
+  integrity sha512-8zE2Jzj2ai55RlVXx2pEMbbq+X3vB+uPGBvZr0F79IdTwuwcu4QdFG3PT/zHsytsvATkn+z0f2YDWhM5916u2A==
+  dependencies:
+    "@mysten/utils" "0.1.1"
+    "@scure/base" "^1.2.6"
+
 "@mysten/dapp-kit@^0.16.13":
   version "0.16.13"
   resolved "https://registry.yarnpkg.com/@mysten/dapp-kit/-/dapp-kit-0.16.13.tgz#71647291127f8dac4f98735cb0176d91f6ce1c67"
@@ -879,12 +896,45 @@
     poseidon-lite "^0.2.0"
     valibot "^0.36.0"
 
+"@mysten/sui@1.37.2":
+  version "1.37.2"
+  resolved "https://registry.yarnpkg.com/@mysten/sui/-/sui-1.37.2.tgz#f8f2aaf1d0148e5c7f5a884a1b5ee35ca1f36724"
+  integrity sha512-HZLsKfiqbIgZvmoSPdW+AVNEzj9OYf9TV/VP9qEAIKERLS9EEeBYpz3Ju7WR6apuQvjOtPGs5yimEOuQQ7sRww==
+  dependencies:
+    "@graphql-typed-document-node/core" "^3.2.0"
+    "@mysten/bcs" "1.7.0"
+    "@mysten/utils" "0.1.1"
+    "@noble/curves" "^1.9.4"
+    "@noble/hashes" "^1.8.0"
+    "@scure/base" "^1.2.6"
+    "@scure/bip32" "^1.7.0"
+    "@scure/bip39" "^1.6.0"
+    gql.tada "^1.8.12"
+    graphql "^16.11.0"
+    poseidon-lite "^0.2.0"
+    valibot "^0.36.0"
+
 "@mysten/utils@0.1.0":
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/@mysten/utils/-/utils-0.1.0.tgz#115ba377d3962b0ab64bf0ad66e905da8411c3ed"
   integrity sha512-nFxqArh4cr629elLsIk7UZmx5dFVshblwrfwaG7Dm2L/ii2C65bhK5tdTs6UiC3K0tCr8q8svrgzXyF9L0CN/A==
   dependencies:
     "@scure/base" "^1.2.6"
+
+"@mysten/utils@0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@mysten/utils/-/utils-0.1.1.tgz#4f2e24234bcf8b6977e47fd5469f46af57de5575"
+  integrity sha512-jvhJC6/2la1QHltukQXzfyTZ+VVHxe187JjPx+mEXRUWyAo6jCSdioOQJIfaGu4K4i+37KeiydXRwV/bq/7UJQ==
+  dependencies:
+    "@scure/base" "^1.2.6"
+
+"@mysten/wallet-standard@0.16.10":
+  version "0.16.10"
+  resolved "https://registry.yarnpkg.com/@mysten/wallet-standard/-/wallet-standard-0.16.10.tgz#d7b72ff5cc0700e12c8a414013968858f56bea13"
+  integrity sha512-JXki0DFI8EvoQPlXmcNdEdO2slsidCZh6F4VEAeMHC58fkKuZOfUmTORHsTW3wHdLJkny952ROzYIHBhO3sRYg==
+  dependencies:
+    "@mysten/sui" "1.37.2"
+    "@wallet-standard/core" "1.1.1"
 
 "@mysten/wallet-standard@0.16.3":
   version "0.16.3"
@@ -903,6 +953,28 @@
     jose "^6.0.11"
     valibot "^0.36.0"
 
+"@mysten/window-wallet-core@0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@mysten/window-wallet-core/-/window-wallet-core-0.0.6.tgz#797512996afa41c3cc0b079014515514dfad9a86"
+  integrity sha512-uYjdUVok0pAaMGMxAdZfmW+2SCXgdQok9YtKmno5Tj8zlRQGv9Qet7EuCnDcBKquSbtqid3yhug7fcD+t8/KmA==
+  dependencies:
+    "@mysten/utils" "0.1.1"
+    jose "^6.0.11"
+    valibot "^0.36.0"
+
+"@mysten/zksend@^0.13.20":
+  version "0.13.20"
+  resolved "https://registry.yarnpkg.com/@mysten/zksend/-/zksend-0.13.20.tgz#4f347c44df58b479319383677ddb46ff30c1aaca"
+  integrity sha512-4KyuBWNT0V7geioq1XHVgadWmGH0HhF2OtaaDpJ5JWcEos3sIi+zKMz47Ef5ruXgZVpBkqjzpzT+MsF4FdeNwQ==
+  dependencies:
+    "@mysten/sui" "1.37.2"
+    "@mysten/utils" "0.1.1"
+    "@mysten/wallet-standard" "0.16.10"
+    "@mysten/window-wallet-core" "0.0.6"
+    mitt "^3.0.1"
+    nanostores "^1.0.1"
+    valibot "^0.36.0"
+
 "@napi-rs/wasm-runtime@^0.2.10":
   version "0.2.11"
   resolved "https://registry.yarnpkg.com/@napi-rs/wasm-runtime/-/wasm-runtime-0.2.11.tgz#192c1610e1625048089ab4e35bc0649ce478500e"
@@ -916,6 +988,13 @@
   version "1.9.2"
   resolved "https://registry.yarnpkg.com/@noble/curves/-/curves-1.9.2.tgz#73388356ce733922396214a933ff7c95afcef911"
   integrity sha512-HxngEd2XUcg9xi20JkwlLCtYwfoFw4JGkuZpT+WlsPD4gB/cxkvTD8fSsoAnphGZhFdZYKeQIPCuFlWPm1uE0g==
+  dependencies:
+    "@noble/hashes" "1.8.0"
+
+"@noble/curves@^1.9.4":
+  version "1.9.6"
+  resolved "https://registry.yarnpkg.com/@noble/curves/-/curves-1.9.6.tgz#b45ebedca85bb75782f6be7e7f120f0c423c99e0"
+  integrity sha512-GIKz/j99FRthB8icyJQA51E8Uk5hXmdyThjgQXRKiv9h0zeRlzSCLIzFw6K1LotZ3XuB7yzlf76qk7uBmTdFqA==
   dependencies:
     "@noble/hashes" "1.8.0"
 
@@ -3118,6 +3197,16 @@ gopd@^1.2.0:
   resolved "https://registry.yarnpkg.com/gopd/-/gopd-1.2.0.tgz#89f56b8217bdbc8802bd299df6d7f1081d7e51a1"
   integrity sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==
 
+gql.tada@^1.8.12:
+  version "1.8.13"
+  resolved "https://registry.yarnpkg.com/gql.tada/-/gql.tada-1.8.13.tgz#a724bbdaebe1d851d80bf59c5e8614956914b883"
+  integrity sha512-fYoorairdPgxtE7Sf1X9/6bSN9Kt2+PN8KLg3hcF8972qFnawwUgs1OLVU8efZMHwL7EBHhhKBhrsGPlOs2lZQ==
+  dependencies:
+    "@0no-co/graphql.web" "^1.0.5"
+    "@0no-co/graphqlsp" "^1.12.13"
+    "@gql.tada/cli-utils" "1.7.1"
+    "@gql.tada/internal" "1.0.8"
+
 gql.tada@^1.8.2:
   version "1.8.10"
   resolved "https://registry.yarnpkg.com/gql.tada/-/gql.tada-1.8.10.tgz#096a1b30d3c6fc74212fe07d507f01a4095f7f67"
@@ -3706,6 +3795,11 @@ nanoid@^5.1.5:
   version "5.1.5"
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-5.1.5.tgz#f7597f9d9054eb4da9548cdd53ca70f1790e87de"
   integrity sha512-Ir/+ZpE9fDsNH0hQ3C68uyThDXzYcim2EqcZ8zn8Chtt1iylPT9xXJB0kPCnqzgcEGikO9RxSrh63MsmVCU7Fw==
+
+nanostores@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/nanostores/-/nanostores-1.0.1.tgz#bcc352ff7bf622e9274a3109c92e823a452d6028"
+  integrity sha512-kNZ9xnoJYKg/AfxjrVL4SS0fKX++4awQReGqWnwTRHxeHGZ1FJFVgTqr/eMrNQdp0Tz7M7tG/TDaX8QfHDwVCw==
 
 natural-compare@^1.4.0:
   version "1.4.0"

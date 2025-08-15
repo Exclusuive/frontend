@@ -73,4 +73,12 @@ export const paths = {
     path: "test",
     getHref: () => "/test",
   },
+  zkSend: {
+    path: "zkSend",
+    getHref: () => "/zkSend",
+  },
+  blockthon: {
+    path: "blockthon",
+    getHref: () => "/blockthon",
+  },
 };
