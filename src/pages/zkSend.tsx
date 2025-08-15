@@ -21,6 +21,8 @@ const ZkSend = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isClaimed, setIsClaimed] = useState(false);
 
+  console.log(account);
+
   const onClaim = async () => {
     try {
       setIsLoading(true);
