@@ -19,7 +19,7 @@ const ZkSend = () => {
   const wallets = useWallets();
   const { mutate: connect } = useConnectWallet();
   const [isLoading, setIsLoading] = useState(false);
-  const [isClaimed, setIsClaimed] = useState(true);
+  const [isClaimed, setIsClaimed] = useState(false);
 
   const onClaim = async () => {
     try {
