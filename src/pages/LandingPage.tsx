@@ -5,7 +5,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { CirclePlay } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 // import SetRolePopup from "@/components/SetRolePopup";
-import EventPopup from "@/components/EventPopup";
+// import EventPopup from "@/components/EventPopup";
 // import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 // import { useCurrentAccount, useWallets } from "@mysten/dapp-kit";
 // import { useConnectWallet } from "@mysten/dapp-kit";
@@ -23,6 +23,7 @@ export default function LandingPage() {
   const [searchParams] = useSearchParams();
 
   const showPopup = searchParams.get("showpopup");
+  console.log(isEventPopupOpen);
 
   // 페이지 로드 시 OceanDao 이벤트 팝업 자동 표시
   useEffect(() => {
@@ -66,9 +67,9 @@ export default function LandingPage() {
   //   }
   // };
 
-  const handleCloseEventPopup = () => {
-    setIsEventPopupOpen(false);
-  };
+  // const handleCloseEventPopup = () => {
+  //   setIsEventPopupOpen(false);
+  // };
 
   return (
     <div className="flex min-h-screen w-full min-w-[320px] flex-col bg-gradient-to-b from-[#EDF6FF] to-[#F8F8FF] bg-no-repeat">
@@ -190,7 +191,7 @@ export default function LandingPage() {
       </section>
 
       {/* OceanDao 이벤트 팝업 */}
-      <EventPopup isOpen={isEventPopupOpen} onClose={handleCloseEventPopup} />
+      {/* <EventPopup isOpen={isEventPopupOpen} onClose={handleCloseEventPopup} /> */}
     </div>
   );
 }

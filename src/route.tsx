@@ -23,6 +23,7 @@ const MemberMarket = lazy(() => import("@/pages/MemberMarket"));
 const Home = lazy(() => import("@/pages/Home"));
 const ZkSend = lazy(() => import("@/pages/zkSend"));
 const Blockthon = lazy(() => import("@/pages/Blockthon"));
+const Gatcha = lazy(() => import("@/pages/Gatcha"));
 
 const router = createBrowserRouter([
   {
@@ -45,6 +46,11 @@ const router = createBrowserRouter([
   {
     path: paths.blockthon.path,
     element: <Blockthon />,
+  },
+
+  {
+    path: paths.gatcha.path,
+    element: <Gatcha />,
   },
 
   {

@@ -3,14 +3,10 @@ import { useSuiClient } from "@mysten/dapp-kit";
 import { useState } from "react";
 import { useSignAndExecuteTransaction } from "@mysten/dapp-kit";
 import { Transaction } from "@mysten/sui/transactions";
-import { MODULE } from "@/types/v2_moveRegistry";
-import {
-  MEMBERSHIP_MODULE_FUNCTIONS,
-  UPGRADED_PACKAGE_ID,
-  COMMUNITY_ID,
-} from "@/types/v2_moveRegistry";
+import { MODULE, PAYMENT_MODULE_FUNCTIONS, MARKET_ID } from "@/types/v2_moveRegistry";
+import { UPGRADED_PACKAGE_ID, COMMUNITY_ID } from "@/types/v2_moveRegistry";
 
-export function useUserMintMemberships() {
+export function useJoinGatcha() {
   const account = useCurrentAccount();
   const client = useSuiClient();
   const [isPending, setIsPending] = useState(false);
@@ -28,16 +24,13 @@ export function useUserMintMemberships() {
         },
       }),
   });
-  const { MEMBERSHIP } = MODULE;
 
-  const mintMembership = async ({
-    membership_type,
-    img_url,
-    recipient,
+  const joinGatcha = async ({
+    membership_id,
+    isNew,
   }: {
-    membership_type: string;
-    img_url: string;
-    recipient: string;
+    membership_id: string;
+    isNew: boolean;
   }) => {
     setIsPending(true);
     setError(null);
@@ -47,17 +40,33 @@ export function useUserMintMemberships() {
 
     const tx = new Transaction();
 
-    tx.moveCall({
-      package: UPGRADED_PACKAGE_ID,
-      module: MEMBERSHIP,
-      target: MEMBERSHIP_MODULE_FUNCTIONS.mint_membership,
-      arguments: [
-        tx.object(COMMUNITY_ID),
-        tx.pure.string(membership_type),
-        tx.pure.string(img_url),
-        tx.pure.address(recipient),
-      ],
-    });
+    if (isNew && membership_id) {
+      const [coin_obj] = tx.splitCoins(tx.gas, [tx.pure("u64", 0)]);
+      tx.moveCall({
+        package: UPGRADED_PACKAGE_ID,
+        module: MODULE.PAYMENT,
+        target: PAYMENT_MODULE_FUNCTIONS.process_payment_with_membership,
+        typeArguments: ["0x2::sui::SUI"],
+        arguments: [
+          tx.object(COMMUNITY_ID),
+          tx.object(MARKET_ID),
+          tx.object(coin_obj),
+          tx.pure.u64(0),
+          tx.object(membership_id),
+        ],
+      });
+      tx.transferObjects([coin_obj], account.address);
+    } else {
+      const [coin_obj] = tx.splitCoins(tx.gas, [tx.pure("u64", 3000000000)]);
+      tx.moveCall({
+        package: UPGRADED_PACKAGE_ID,
+        module: MODULE.PAYMENT,
+        target: PAYMENT_MODULE_FUNCTIONS.process_payment_without_membership,
+        typeArguments: ["0x2::sui::SUI"],
+        arguments: [tx.object(MARKET_ID), tx.object(coin_obj), tx.pure.u64(3000000000)],
+      });
+      tx.transferObjects([coin_obj], account.address);
+    }
 
     signAndExecuteTransaction(
       {
@@ -67,6 +76,7 @@ export function useUserMintMemberships() {
         onSuccess: () => {
           setResult(true);
           setIsPending(false);
+          localStorage.setItem("joined_gatcha", "true");
         },
         onError: (err: any) => {
           setResult(false);
@@ -81,7 +91,7 @@ export function useUserMintMemberships() {
   };
 
   return {
-    mintMembership,
+    joinGatcha,
     isPending,
     error,
     result,

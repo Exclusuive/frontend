@@ -67,10 +67,10 @@ const ZkSend = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#4DA2FF] p-4">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <div className="w-full max-w-md">
         {/* Main Content Card */}
-        <div className="rounded-3xl border border-gray-600 bg-white p-8 shadow-xl">
+        <div className="rounded-3xl border border-blue-200 bg-white p-8 shadow-xl">
           {/* Logo/Brand Section */}
           <div className="mb-8 text-center">
             <h1 className="font-Exclusuive text-[40px] font-bold tracking-wider text-gray-800">
@@ -78,7 +78,7 @@ const ZkSend = () => {
               <span className="inline-block -translate-y-2 font-extrabold text-[#4DA2FF]">Sui</span>
               ve
             </h1>
-            <div className="mx-auto h-1 w-16 rounded-full bg-gray-800" />
+            <div className="mx-auto h-1 w-16 rounded-full bg-blue-600" />
           </div>
 
           {/* Promotional Text */}
@@ -90,12 +90,12 @@ const ZkSend = () => {
               <li>
                 <span className="mr-1 rounded-full px-2 py-0.5 text-sm text-black">①</span>
                 NFC 카드를 태그하고{" "}
-                <span className="text-[#4DA2FF] underline underline-offset-4">SUI</span>를
+                <span className="text-blue-600 underline underline-offset-4">SUI</span>를
                 받아가세요.
               </li>
               <li>
                 <span className="mr-1 rounded-full px-2 py-0.5 text-sm text-black">②</span>
-                받은 <span className="text-[#4DA2FF] underline underline-offset-4">SUI</span>로{" "}
+                받은 <span className="text-blue-600 underline underline-offset-4">SUI</span>로{" "}
                 <span className="font-extrabold text-gray-900">ExcluSuive 멤버십</span>에 가입!
               </li>
               <li>
@@ -112,8 +112,7 @@ const ZkSend = () => {
               <Button
                 onClick={onClaim}
                 disabled={isLoading}
-                className="w-full transform cursor-pointer rounded-2xl px-6 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-200 hover:scale-[1.02]"
-                style={{ backgroundColor: "#4DA2FF" }}
+                className="w-full transform cursor-pointer rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-600 px-6 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-200 hover:scale-[1.02] hover:from-blue-700 hover:to-cyan-700"
               >
                 {isLoading ? (
                   <div className="flex items-center justify-center space-x-2">
@@ -127,8 +126,7 @@ const ZkSend = () => {
             ) : (
               <Button
                 onClick={handleConnectWallet}
-                className="w-full transform rounded-2xl px-6 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-200 hover:scale-[1.02]"
-                style={{ backgroundColor: "#4DA2FF" }}
+                className="w-full transform rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-600 px-6 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-200 hover:scale-[1.02] hover:from-blue-700 hover:to-cyan-700"
               >
                 Connect Wallet
               </Button>
@@ -155,7 +153,7 @@ const ZkSend = () => {
 
         {/* Footer */}
         <div className="mt-6 text-center">
-          <p className="text-xs text-gray-400">Powered by ExcluSUive</p>
+          <p className="text-xs text-blue-400">Powered by ExcluSUive</p>
         </div>
       </div>
       <ClaimedDialog isOpen={isClaimed} onClose={() => setIsClaimed(false)} />
@@ -180,7 +178,7 @@ const ClaimedDialog = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
         <DialogFooter>
           <Link to={paths.landingPage.getHref()} className="w-full">
             <Button
-              className="w-full transform rounded-2xl bg-[#4DA2FF] px-6 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-200 hover:scale-[1.02]"
+              className="w-full transform rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-600 px-6 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-200 hover:scale-[1.02] hover:from-blue-700 hover:to-cyan-700"
               onClick={onClose}
             >
               🚀 멤버십 받으러 가기

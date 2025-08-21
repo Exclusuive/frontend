@@ -1,14 +1,16 @@
 export const ORIGIN_PACKAGE_ID =
-  "0xc074172d84e2a9754e2a3bcc65f2e18f0539510f28e8538114338c73422a5e6f";
+  "0x0b38e39e88cbd0bcf1118a7d584793923cbf272c41c7ec4e7a24b2e43079084f";
 export const UPGRADED_PACKAGE_ID =
-  "0xc074172d84e2a9754e2a3bcc65f2e18f0539510f28e8538114338c73422a5e6f";
-export const COMMUNITY_ID = "0x491f598798ba32035cb5ed3cc2f762560a2877f79a8f75965d78b82d7a671bf8";
+  "0x0b38e39e88cbd0bcf1118a7d584793923cbf272c41c7ec4e7a24b2e43079084f";
+export const COMMUNITY_ID = "0x0506a3546577ee218530eab0747f211edb3c291947d16bf05e3757f468a06f11";
+export const MARKET_ID = "0x052b1f15f9a87ddcac27fb8617757539356229c2023384be77de8558edfd9d05";
 
 export const MODULE = {
   COMMUNITY: "community",
-  MEMBERSHIP: "membership",
+  MEMBERSHIP: "exclusuive_membership",
   ITEM: "item",
   MISSION: "mission",
+  PAYMENT: "payment",
 } as const;
 
 // =====================================
@@ -154,3 +156,52 @@ export const ITEM_EVENTS = Object.fromEntries(
     `${UPGRADED_PACKAGE_ID}::${MODULE.ITEM}::${event}`,
   ]),
 ) as Record<keyof typeof ITEM_EVENT_NAMES, string>;
+
+// =====================================
+// ================== Payment Module
+// =====================================
+const PAYMENT_MODULE_STRUCT_NAMES = {
+  // TYPE
+  SlotType: "SlotType",
+  ItemType: "ItemType",
+  TraitType: "TraitType",
+  // Object
+  Item: "Item",
+  Trait: "Trait",
+
+  // KEY
+  SlotTypeKey: "SlotTypeKey",
+  ItemTypeKey: "ItemTypeKey",
+  TraitTypeKey: "TraitTypeKey",
+  ItemKey: "ItemKey",
+} as const;
+
+export const PAYMENT_MODULE_STRUCTS = Object.fromEntries(
+  Object.entries(PAYMENT_MODULE_STRUCT_NAMES).map(([key, struct]) => [
+    key,
+    `${ORIGIN_PACKAGE_ID}::${MODULE.PAYMENT}::${struct}`,
+  ]),
+) as Record<keyof typeof PAYMENT_MODULE_STRUCT_NAMES, string>;
+
+const PAYMENT_MODULE_FUNCTION_NAMES = {
+  process_payment_with_membership: "process_payment_with_membership",
+  process_payment_without_membership: "process_payment_without_membership",
+} as const;
+
+export const PAYMENT_MODULE_FUNCTIONS = Object.fromEntries(
+  Object.entries(PAYMENT_MODULE_FUNCTION_NAMES).map(([key, func]) => [
+    key,
+    `${UPGRADED_PACKAGE_ID}::${MODULE.PAYMENT}::${func}`,
+  ]),
+) as Record<keyof typeof PAYMENT_MODULE_FUNCTION_NAMES, string>;
+
+export const PAYMENT_EVENT_NAMES = {
+  PaymentMinted: "PaymentMinted",
+} as const;
+
+export const PAYMENT_EVENTS = Object.fromEntries(
+  Object.entries(PAYMENT_EVENT_NAMES).map(([key, event]) => [
+    key,
+    `${UPGRADED_PACKAGE_ID}::${MODULE.PAYMENT}::${event}`,
+  ]),
+) as Record<keyof typeof PAYMENT_EVENT_NAMES, string>;

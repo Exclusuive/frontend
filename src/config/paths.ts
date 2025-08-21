@@ -81,4 +81,8 @@ export const paths = {
     path: "blockthon",
     getHref: () => "/blockthon",
   },
+  gatcha: {
+    path: "gatcha",
+    getHref: () => "/gatcha",
+  },
 };

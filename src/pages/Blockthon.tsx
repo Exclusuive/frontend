@@ -1,15 +1,37 @@
 import { useGetBlockthon } from "@/hooks/useGetBlockthon";
-import { useCurrentAccount } from "@mysten/dapp-kit";
+import { useCurrentAccount, useWallets } from "@mysten/dapp-kit";
+import { useConnectWallet } from "@mysten/dapp-kit";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ConnectButton } from "@mysten/dapp-kit";
 import { Link } from "react-router-dom";
 import { rewards } from "@/data/rewards";
+import { Button } from "@/components/ui/button";
+import { Gift } from "lucide-react";
 
 const Blockthon = () => {
   const account = useCurrentAccount();
   const { result } = useGetBlockthon({
     owner: account?.address || "",
   });
+
+  const wallets = useWallets();
+  const { mutate: connect } = useConnectWallet();
+  const handleLogin = () => {
+    const wallet = wallets.find((w) => w.name.includes("Slush"))
+      ? wallets.find((w) => w.name.includes("Slush"))
+      : wallets[0];
+
+    if (wallet) {
+      connect(
+        { wallet },
+        {
+          onSuccess: () => {},
+          onError: () => {
+            window.alert("Failed to connect wallet");
+          },
+        },
+      );
+    }
+  };
 
   // Check if user has account
   if (!account) {
@@ -24,7 +46,13 @@ const Blockthon = () => {
               Blockthon 이벤트에 참여하려면 먼저 로그인해주세요.
             </p>
             <div className="flex justify-center">
-              <ConnectButton />
+              <Button
+                onClick={handleLogin}
+                className="flex-1 bg-gradient-to-r from-blue-600 to-cyan-600 font-semibold text-white hover:from-blue-700 hover:to-cyan-700"
+              >
+                <Gift className="h-4 w-4" />
+                Connect Wallet to join the event
+              </Button>
             </div>
           </CardContent>
         </Card>
@@ -78,7 +106,7 @@ const Blockthon = () => {
           </Link>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="mx-auto max-w-xl">
           {/* Membership Info */}
           <Card>
             <CardHeader>
