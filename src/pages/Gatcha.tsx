@@ -45,7 +45,7 @@ const Gatcha = () => {
           isNew: joined_Gatcha !== "true",
         });
       } else {
-        console.log("no membership");
+        window.alert("먼저 멤버십을 받아주세요!");
       }
     }
   }, [account, userHasMembership]);
