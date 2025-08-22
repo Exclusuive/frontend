@@ -30,7 +30,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SuiClientProvider networks={networkConfig} defaultNetwork="testnet">
+      <SuiClientProvider networks={networkConfig} defaultNetwork="mainnet">
         <WalletProvider autoConnect={true}>
           <Toaster richColors />
 
