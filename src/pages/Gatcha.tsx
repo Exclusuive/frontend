@@ -18,6 +18,7 @@ const Gatcha = () => {
   const [trigger, setTrigger] = useState(true);
 
   console.log(userHasMembership, membership_id, joined_Gatcha);
+  console.log(1);
 
   const handleConnectWallet = () => {
     const wallet = wallets.find((w) => w.name.includes("Slush"))
@@ -39,13 +40,11 @@ const Gatcha = () => {
 
   useEffect(() => {
     if (account) {
-      if (userHasMembership && membership_id) {
-        setTimeout(() => {
-          joinGatcha({
-            membership_id: membership_id ?? "",
-            isNew: joined_Gatcha !== "true",
-          });
-        }, 1000);
+      if (userHasMembership) {
+        joinGatcha({
+          membership_id: membership_id ?? "",
+          isNew: joined_Gatcha !== "true",
+        });
       } else {
         console.log("no membership");
       }
