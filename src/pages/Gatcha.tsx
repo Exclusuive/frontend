@@ -39,13 +39,15 @@ const Gatcha = () => {
 
   useEffect(() => {
     if (account) {
-      if (userHasMembership) {
-        joinGatcha({
-          membership_id: membership_id ?? "",
-          isNew: joined_Gatcha !== "true",
-        });
+      if (userHasMembership && membership_id) {
+        setTimeout(() => {
+          joinGatcha({
+            membership_id: membership_id ?? "",
+            isNew: joined_Gatcha !== "true",
+          });
+        }, 1000);
       } else {
-        window.alert("먼저 멤버십을 받아주세요!");
+        console.log("no membership");
       }
     }
   }, [account, userHasMembership]);
