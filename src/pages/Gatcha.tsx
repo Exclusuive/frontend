@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useCurrentAccount, useConnectWallet, useWallets } from "@mysten/dapp-kit";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCheckMembership } from "@/hooks/useCheckMembership";
 import { useJoinGatcha } from "@/hooks/moveCall/useJoinGatcha";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -38,18 +38,18 @@ const Gatcha = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (account) {
-  //     if (userHasMembership) {
-  //       joinGatcha({
-  //         membership_id: membership_id ?? "",
-  //         isNew: joined_Gatcha !== "true",
-  //       });
-  //     } else {
-  //       console.log("no membership");
-  //     }
-  //   }
-  // }, [account, userHasMembership]);
+  useEffect(() => {
+    if (account) {
+      if (userHasMembership) {
+        joinGatcha({
+          membership_id: membership_id ?? "",
+          isNew: joined_Gatcha !== "true",
+        });
+      } else {
+        console.log("no membership");
+      }
+    }
+  }, [account, userHasMembership]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
