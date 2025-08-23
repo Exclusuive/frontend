@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useCurrentAccount, useConnectWallet, useWallets } from "@mysten/dapp-kit";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useCheckMembership } from "@/hooks/useCheckMembership";
 import { useJoinGatcha } from "@/hooks/moveCall/useJoinGatcha";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
