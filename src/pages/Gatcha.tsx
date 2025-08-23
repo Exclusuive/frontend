@@ -90,7 +90,19 @@ const Gatcha = () => {
 
           {/* Action Section */}
           <div className="space-y-4">
-            {!account && (
+            {account ? (
+              <Button
+                className="w-full transform rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-600 px-6 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-200 hover:scale-[1.02] hover:from-blue-700 hover:to-cyan-700"
+                onClick={() => {
+                  joinGatcha({
+                    membership_id: membership_id ?? "",
+                    isNew: joined_Gatcha !== "true",
+                  });
+                }}
+              >
+                Join Gatcha
+              </Button>
+            ) : (
               <Button
                 onClick={handleConnectWallet}
                 className="w-full transform rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-600 px-6 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-200 hover:scale-[1.02] hover:from-blue-700 hover:to-cyan-700"
