@@ -70,7 +70,7 @@ export function useJoinGatcha() {
 
     signAndExecuteTransaction(
       {
-        transaction: tx.serialize(),
+        transaction: tx,
       },
       {
         onSuccess: () => {
