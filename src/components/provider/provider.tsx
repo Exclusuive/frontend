@@ -31,7 +31,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   return (
     <QueryClientProvider client={queryClient}>
       <SuiClientProvider networks={networkConfig} defaultNetwork="mainnet">
-        <WalletProvider autoConnect={true}>
+        <WalletProvider autoConnect={true} slushWallet={{ name: "Exclusuive" }}>
           <Toaster richColors />
 
           {children}

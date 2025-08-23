@@ -71,6 +71,8 @@ export function useJoinGatcha() {
     signAndExecuteTransaction(
       {
         transaction: tx,
+        account: account,
+        chain: "sui:mainnet",
       },
       {
         onSuccess: () => {
