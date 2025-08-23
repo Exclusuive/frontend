@@ -38,18 +38,18 @@ const Gatcha = () => {
     }
   };
 
-  useEffect(() => {
-    if (account) {
-      if (userHasMembership) {
-        joinGatcha({
-          membership_id: membership_id ?? "",
-          isNew: joined_Gatcha !== "true",
-        });
-      } else {
-        console.log("no membership");
-      }
-    }
-  }, [account, userHasMembership]);
+  // useEffect(() => {
+  //   if (account) {
+  //     if (userHasMembership) {
+  //       joinGatcha({
+  //         membership_id: membership_id ?? "",
+  //         isNew: joined_Gatcha !== "true",
+  //       });
+  //     } else {
+  //       console.log("no membership");
+  //     }
+  //   }
+  // }, [account, userHasMembership]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
