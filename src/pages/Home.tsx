@@ -1,15 +1,61 @@
-import { useSuiClientQuery } from "@mysten/dapp-kit";
+import {
+  ConnectButton,
+  useSuiClient,
+  useCurrentAccount,
+  useSignAndExecuteTransaction,
+} from "@mysten/dapp-kit";
+import { Transaction } from "@mysten/sui/transactions";
+import { useState } from "react";
 
-const Homes = () => {
-  const { data } = useSuiClientQuery("getObject", {
-    id: "0x0e820c764ff2591233658c3e08605653b402f17f8da7a2eedf3dbd7a96c80e6c",
-    options: {
-      showContent: true,
-    },
+function Home() {
+  const client = useSuiClient();
+  const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction({
+    execute: async ({ bytes, signature }) =>
+      await client.executeTransactionBlock({
+        transactionBlock: bytes,
+        signature,
+        options: {
+          // Raw effects are required so the effects can be reported back to the wallet
+          showRawEffects: true,
+          // Select additional data to return
+          showObjectChanges: true,
+        },
+      }),
   });
-  console.log(data);
 
-  return <div>Home</div>;
-};
+  const [digest, setDigest] = useState("");
+  const currentAccount = useCurrentAccount();
 
-export default Homes;
+  return (
+    <div style={{ padding: 20 }}>
+      <ConnectButton />
+      {currentAccount && (
+        <>
+          <div>
+            <button
+              onClick={() => {
+                signAndExecuteTransaction(
+                  {
+                    transaction: new Transaction(),
+                    chain: "sui:mainnet",
+                  },
+                  {
+                    onSuccess: (result) => {
+                      console.log("object changes", result.objectChanges);
+                      setDigest(result.digest);
+                    },
+                  },
+                );
+              }}
+            >
+              Sign and execute transaction
+            </button>
+          </div>
+          <div>Digest: {digest}</div>
+        </>
+      )}
+    </div>
+  );
+}
+
+export default Home;
